@@ -1,6 +1,11 @@
 ---
 title: buuoj刷题记录1
 date: 2019-12-23 19:44:18
+tags: 
+ - ctf
+ - buuoj
+ - web
+ - 0CTF
 ---
 
 ## [0CTF 2016]piapiapia
@@ -10,6 +15,8 @@ date: 2019-12-23 19:44:18
 一般文件的目录又xxx.php.bak/swp，或者查看元素、robots.txt里面有提示，或者`www.zip`等一系列文件中出现网站源码。也可以使用工具扫描
 
 PHP序列化[参考文章](https://www.php.cn/php-notebook-239422.html)
+
+<!--more-->
 
 ### 0x02 分析
 
@@ -26,15 +33,18 @@ config.php
 ?>
 ```
 查看index.php
-​```php
+
+```php
 if($user->login($username, $password)) {
 			$_SESSION['username'] = $username;
 			header('Location: profile.php');//登入后跳转到profile.php
 			exit;	
 		}
 ```
+
 查看profile.php
-​```PHP
+
+```PHP
 <?php   
     require_once('class.php');
 if($_SESSION['username'] == null) { 
@@ -51,9 +61,12 @@ else {
     $email = $profile['email']; 
     $nickname = $profile['nickname'];
     $photo = base64_encode(file_get_contents($profile['photo']));//file_get_contents()此函数可以获得文件内容
+}
 ?>
 ```
+
 update.php
+
 ```php
 if($_POST['phone'] && $_POST['email'] && $_POST['nickname'] && $_FILES['photo']) {
 
@@ -138,11 +151,11 @@ if(preg_match('/[^a-zA-Z0-9_]/', $_POST['nickname']) || strlen($_POST['nickname'
 让nickname的值为`"};s:5:"photo";s:10:"config.php";}`长度为34,传入34个where
 ### 0x03 开始操作
 
-![1](1.png) 传入参数
+![1](/images/1.png) 传入参数
 
 访问profile.php
 
-![2](2.png)
+![2](/images/2.png)
 
 将base64解码
 

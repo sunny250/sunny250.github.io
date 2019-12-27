@@ -1,5 +1,6 @@
 ---
-title: Hello Worl
+title: Hello World
+date: 2019-12-19 20:49:28
 ---
 
 第一次弄好自己的博客，之前都是在onenote上写的，现在准备慢慢向博客转移

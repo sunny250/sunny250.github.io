@@ -5,8 +5,8 @@
 # Site
 title: 晴天`blog
 subtitle: '如果你想要一个好的结局，取决于你在什么地方结束故事。--九号传教士'
-description: ''
-keywords:
+description: '晴天`blog'
+keywords: blog
 author: sunny250
 language: en
 timezone: 'Asia/Shanghai'
@@ -41,7 +41,7 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: true
+post_asset_folder: false
 relative_link: false
 future: true
 highlight:
@@ -99,5 +99,10 @@ theme: ayer
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@github.com:sunny250.github.io.git
+  repo: git@github.com:sunny250/sunny250.github.io.git
   branch: master
+
+# Security
+##
+encrypt:
+  password: f4w8s4e5d8f6
