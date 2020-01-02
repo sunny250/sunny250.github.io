@@ -3,14 +3,14 @@ title: buuoj刷题记录1
 date: 2019-12-23 19:44:18
 tags: 
  - ctf
- - buuoj
+ - buuctf
  - web
  - 0CTF
 ---
 
 ## [0CTF 2016]piapiapia
 
-### 0x01 基础
+### 0x00 基础
 
 一般文件的目录又xxx.php.bak/swp，或者查看元素、robots.txt里面有提示，或者`www.zip`等一系列文件中出现网站源码。也可以使用工具扫描
 
@@ -18,7 +18,7 @@ PHP序列化[参考文章](https://www.php.cn/php-notebook-239422.html)
 
 <!--more-->
 
-### 0x02 分析
+### 0x01 分析
 
 题中`www.zip`中包含源码，下载~~后进行代码审计（不会）~~翻阅PHP手册，各种百度。在config.php中包含flag，要想办法获取到此文件
 config.php
@@ -151,11 +151,11 @@ if(preg_match('/[^a-zA-Z0-9_]/', $_POST['nickname']) || strlen($_POST['nickname'
 让nickname的值为`"};s:5:"photo";s:10:"config.php";}`长度为34,传入34个where
 ### 0x03 开始操作
 
-![1](/images/1.png) 传入参数
+![1](/pic/1.png) 传入参数
 
 访问profile.php
 
-![2](/images/2.png)
+![2](/pic/2.png)
 
 将base64解码
 

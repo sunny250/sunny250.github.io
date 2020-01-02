@@ -10,7 +10,7 @@ tags:
 
 ## [Roarctf]easy_calc
 
-### 0x01 基础
+### 0x00 基础
 
 php内置读取文件内容函数
 
@@ -44,7 +44,7 @@ printf()
 
 `parse_str`函数通常被自动应用于`get`、`post`请求和`cookie`中。使用`parse_str`解析规则绕过waf
 
-### 0x02 分析
+### 0x01 分析
 
 查看源码，发现calc.php
 
@@ -88,7 +88,7 @@ if(!isset($_GET['num'])){
 ?> 
 ```
 
-### 0x03 开始操作
+### 0x02 开始操作
 
 传入`1+1` 显示`403 Forbidden` 传入`1%2b1`就可以。必须传入urldecode后。查看`phpinfo()`，也是`403 Forbidden`，利用PHP自动解析函数`parser_str()`绕过，纤细介绍查看[参考连接](https://www.freebuf.com/articles/web/213359.html)。
 

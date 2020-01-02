@@ -60,6 +60,366 @@
 
     
     
+    <article id="post-元旦安恒月赛" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/01/02/%E5%85%83%E6%97%A6%E5%AE%89%E6%81%92%E6%9C%88%E8%B5%9B/"
+    >元旦安恒月赛</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/01/02/%E5%85%83%E6%97%A6%E5%AE%89%E6%81%92%E6%9C%88%E8%B5%9B/" class="article-date">
+  <time datetime="2020-01-02T06:29:54.000Z" itemprop="datePublished">2020-01-02</time>
+</a>
+      
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h2 id="安恒元旦月赛"><a href="#安恒元旦月赛" class="headerlink" title="安恒元旦月赛"></a>安恒元旦月赛</h2><p>自己就看了这两个题目，其他都是队友解的。</p>
+<h3 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h3><h4 id="爆破鬼才"><a href="#爆破鬼才" class="headerlink" title="爆破鬼才"></a>爆破鬼才</h4><p>首先爆破第一个密码（队友已经爆破出来了）abc123</p>
+<p>解压后还是一个压缩包</p>
+<p><img src="/pic/6.png" alt=""></p>
+<p>发现<code>1.txt、2.txt、3.txt</code>长度不长，应该是要进行CRC32碰撞，附上渣渣脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> zipfile</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"></span><br><span class="line">dic=string.printable</span><br><span class="line">crc = <span class="number">0x7d90ee19</span>   </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> dic :</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> dic:</span><br><span class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> dic:</span><br><span class="line">            <span class="keyword">for</span> q <span class="keyword">in</span> dic:</span><br><span class="line">                s=str(i)+str(j)+str(p)+str(q)</span><br><span class="line">                <span class="keyword">if</span> crc == (binascii.crc32(s) &amp; <span class="number">0xffffffff</span>):</span><br><span class="line">                    <span class="keyword">print</span>  s</span><br></pre></td></tr></table></figure>
+
+<p>这个是计算1.txt的，计算另外两个只要把crc改一下，删除连个for循环就好</p>
+<p>最后得到的结果是<code>Blowitup</code>，打开压缩包，hint.txt中的内容是<code>guess out my birthday!</code>，各种百度找它的生日，找到后提交发现都是错误的。最后提示是答案不是生日，队友提示可能是<a href="https://github.com/crorvick/outguess" target="_blank" rel="noopener"><code>outguess</code></a>加密。开始猜测密码，试了好几个都不是。开始写shell脚本（之前没有学），先跑了一遍2012年的没有正确的，改写脚本时，队友已经跑了出来。队友直接用<code>os.system</code>跑，从而避免重新学shell脚本。结论：队友太厉害，我太菜。</p>
+<p>最后跑出来的密码是20140224。拿着key解密</p>
+<p>得到<code>flag:flag{8322e7eed667c69f27ecbea5f96d86ca}</code></p>
+<h3 id="web"><a href="#web" class="headerlink" title="web"></a>web</h3><h4 id="web1"><a href="#web1" class="headerlink" title="web1"></a>web1</h4><p>是一个小游戏，话不多说开始玩一把。</p>
+<p><img src="/pic/7.png" alt=""></p>
+<p>玩了一把后查看源码，发现有一个js。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> &gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>JS Planet defense game<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"css/style.css"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">"canvas"</span>&gt;</span><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"js/index.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>点进去拉到最后有几条提示</p>
+<p><img src="/pic/8.png" alt=""></p>
+<p>生成一个http请求，将分数发到服务器，将结果显示。</p>
+<p>既然要生成请求，直接上<code>burp suite</code>，会发送一个record</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;f1ag.php HTTP&#x2F;1.1</span><br><span class="line">Host: 183.129.189.60:10001</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko&#x2F;20100101 Firefox&#x2F;71.0</span><br><span class="line">Accept: *&#x2F;*</span><br><span class="line">Accept-Language: zh-CN,zh;q&#x3D;0.8,zh-TW;q&#x3D;0.7,zh-HK;q&#x3D;0.5,en-US;q&#x3D;0.3,en;q&#x3D;0.2</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Content-type: application&#x2F;x-www-form-urlencoded</span><br><span class="line">Content-Length: 9</span><br><span class="line">Origin: http:&#x2F;&#x2F;183.129.189.60:10001</span><br><span class="line">Connection: close</span><br><span class="line">Referer: http:&#x2F;&#x2F;183.129.189.60:10001&#x2F;</span><br><span class="line"></span><br><span class="line">record&#x3D;23</span><br></pre></td></tr></table></figure>
+
+<p>将<code>record</code>改成<code>99999999999999999999999999999999999999999999999999</code>，即可拿到flag</p>
+
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/01/02/%E5%85%83%E6%97%A6%E5%AE%89%E6%81%92%E6%9C%88%E8%B5%9B/" data-id="ck4wg88at0000yk7eghziaddi"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E6%81%92%E6%9C%88%E8%B5%9B2020/" rel="tag">安恒月赛2020</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
+    <article id="post-年末总结" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2019/12/31/%E5%B9%B4%E6%9C%AB%E6%80%BB%E7%BB%93/"
+    >年末总结</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2019/12/31/%E5%B9%B4%E6%9C%AB%E6%80%BB%E7%BB%93/" class="article-date">
+  <time datetime="2019-12-31T15:31:39.000Z" itemprop="datePublished">2019-12-31</time>
+</a>
+      
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <script src=/js/crypto-js.js></script>
+<script>
+function doDecrypt (pwd, onError) {
+	console.log('in doDecrypt');
+	const txt = document.getElementById('enc_content').innerHTML;
+	let plantext;
+	try {
+		const bytes = CryptoJS.AES.decrypt(txt, pwd);
+		var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+	} catch(err) {
+		if(onError) {
+			onError(err);
+		}
+		return;
+	}
+	document.getElementById('enc_content').innerHTML = plaintext;
+	document.getElementById('enc_content').style.display = 'block';
+	document.getElementById('enc_passwd').style.display = 'none';
+	if(typeof MathJax !== 'undefined') {
+		MathJax.Hub.Queue(
+			['resetEquationNumbers', MathJax.InputJax.TeX],
+			['PreProcess', MathJax.Hub],
+			['Reprocess', MathJax.Hub]
+		);
+	}
+}
+</script>
+<div id="enc_content" style="display:none">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</div>
+<div id="enc_passwd"> <input id="enc_pwd_input" type="password" style="border-radius: 5px;border-style: groove;height: 30px;width: 50%;cursor: auto;font-size: 102%;color: currentColor;outline: none;text-overflow: initial;padding-left: 5px;" onkeydown="if (event.keyCode == 13) { decrypt(); return false;}"> <input type="submit" value="解&nbsp;密" onclick="decrypt()" style="width: 58px;height: 34px;border-radius: 5px;background-color: white;border-style: solid;color: currentColor;"><div id="enc_error" style="display: inline-block;color: #d84527;margin-left: 10px"></div>
+<script>
+var onError = function(error) {
+	document.getElementById("enc_error").innerHTML = "password error!"
+};
+function decrypt() {
+var passwd = document.getElementById("enc_pwd_input").value;
+console.log(passwd);
+doDecrypt(passwd, onError);
+}
+</script>
+</div>
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2019/12/31/%E5%B9%B4%E6%9C%AB%E6%80%BB%E7%BB%93/" data-id="ck4wg88b10001yk7edqhj7r35"
+        class="article-share-link">分享</a>
+      
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
+    <article id="post-buuoj刷题记录5" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2019/12/30/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%955/"
+    >buuoj刷题记录5</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2019/12/30/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%955/" class="article-date">
+  <time datetime="2019-12-30T08:19:44.000Z" itemprop="datePublished">2019-12-30</time>
+</a>
+      
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h2 id="网鼎杯-2018-Fakebook"><a href="#网鼎杯-2018-Fakebook" class="headerlink" title="[网鼎杯 2018]Fakebook"></a>[网鼎杯 2018]Fakebook</h2><h3 id="0x00-基础"><a href="#0x00-基础" class="headerlink" title="0x00 基础"></a>0x00 基础</h3><p>一般文件的目录又xxx.php.bak/swp，或者查看元素、robots.txt里面有提示，或者<code>www.zip</code>等一系列文件中出现网站源码。也可以使用工具扫描</p>
+      
+      <a class="article-more-link" href="/2019/12/30/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%955/">阅读更多...</a>
+      
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2019/12/30/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%955/" data-id="ck4wcegh50000yo7e74w97qcq"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/buuctf/" rel="tag">buuctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BD%91%E9%BC%8E%E6%9D%AF2018/" rel="tag">网鼎杯2018</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
+    <article id="post-buuoj刷题记录4" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2019/12/28/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%954/"
+    >buuoj刷题记录4</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2019/12/28/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%954/" class="article-date">
+  <time datetime="2019-12-28T13:16:16.000Z" itemprop="datePublished">2019-12-28</time>
+</a>
+      
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h2 id="De1CTF-2019-SSRF-Me"><a href="#De1CTF-2019-SSRF-Me" class="headerlink" title="[De1CTF 2019]SSRF Me"></a>[De1CTF 2019]SSRF Me</h2><h3 id="0x00-基础"><a href="#0x00-基础" class="headerlink" title="0x00 基础"></a>0x00 基础</h3><p>大致了解flask框架，<a href="http://www.security-database.com/detail.php?alert=CVE-2019-9948" target="_blank" rel="noopener">CVE-2019-9948</a>：<code>urlopen（）可包含本地文件</code>，<a href="https://www.freebuf.com/articles/web/31756.html" target="_blank" rel="noopener">哈希长度扩展攻击</a> 。</p>
+      
+      <a class="article-more-link" href="/2019/12/28/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%954/">阅读更多...</a>
+      
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2019/12/28/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%954/" data-id="ck4s68np80000t47e7n0scb9i"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/De1CTF/" rel="tag">De1CTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/buuctf/" rel="tag">buuctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
+    <article id="post-buuoj刷题记录3" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2019/12/27/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%953/"
+    >buuoj刷题记录3</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2019/12/27/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%953/" class="article-date">
+  <time datetime="2019-12-27T04:42:41.000Z" itemprop="datePublished">2019-12-27</time>
+</a>
+      
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h2 id="CISCN2019-华北赛区-Day2-Web1-Hack-World"><a href="#CISCN2019-华北赛区-Day2-Web1-Hack-World" class="headerlink" title="[CISCN2019 华北赛区 Day2 Web1]Hack World"></a>[CISCN2019 华北赛区 Day2 Web1]Hack World</h2><h3 id="0x00-基础"><a href="#0x00-基础" class="headerlink" title="0x00 基础"></a>0x00 基础</h3><p>SQL盲注，使用<code>if(表达式1，表达式2，表达式3)、ascii(char)、substr（str,pos,len）</code>函数一个一个的猜字符，过滤绕过，空格可以使用<code>+、\t、/**/、()</code>绕过。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if(表达式1，表达式2，表达式3)  如果表达式1的值为真，取表达式二的值，否者取表达式三的值</span><br><span class="line">ascii(char)</span><br><span class="line">substr（str,pos,len)</span><br></pre></td></tr></table></figure>
+      
+      <a class="article-more-link" href="/2019/12/27/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%953/">阅读更多...</a>
+      
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2019/12/27/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%953/" data-id="ck4pc9e4v0005187eb7yv5rj5"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/buuctf/" rel="tag">buuctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ciscn/" rel="tag">ciscn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
     <article id="post-buuoj刷题记录2" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -95,7 +455,7 @@
       
 
       
-      <h2 id="Roarctf-easy-calc"><a href="#Roarctf-easy-calc" class="headerlink" title="[Roarctf]easy_calc"></a>[Roarctf]easy_calc</h2><h3 id="0x01-基础"><a href="#0x01-基础" class="headerlink" title="0x01 基础"></a>0x01 基础</h3><p>php内置读取文件内容函数</p>
+      <h2 id="Roarctf-easy-calc"><a href="#Roarctf-easy-calc" class="headerlink" title="[Roarctf]easy_calc"></a>[Roarctf]easy_calc</h2><h3 id="0x00-基础"><a href="#0x00-基础" class="headerlink" title="0x00 基础"></a>0x00 基础</h3><p>php内置读取文件内容函数</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">file_get_contents</span><br><span class="line">readfile</span><br><span class="line">file</span><br></pre></td></tr></table></figure>
 
 <p>目录扫描函数</p>
@@ -108,7 +468,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://sunny250.github.io/2019/12/26/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%952/" data-id="ck4nmczco0002207e6ffo6620"
+      <a data-url="https://sunny250.github.io/2019/12/26/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%952/" data-id="ck4pc9e4q0003187eglmn5tk2"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Roarctf/" rel="tag">Roarctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/buuoj/" rel="tag">buuoj</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li></ul>
@@ -160,7 +520,7 @@
       
 
       
-      <h2 id="0CTF-2016-piapiapia"><a href="#0CTF-2016-piapiapia" class="headerlink" title="[0CTF 2016]piapiapia"></a>[0CTF 2016]piapiapia</h2><h3 id="0x01-基础"><a href="#0x01-基础" class="headerlink" title="0x01 基础"></a>0x01 基础</h3><p>一般文件的目录又xxx.php.bak/swp，或者查看元素、robots.txt里面有提示，或者<code>www.zip</code>等一系列文件中出现网站源码。也可以使用工具扫描</p>
+      <h2 id="0CTF-2016-piapiapia"><a href="#0CTF-2016-piapiapia" class="headerlink" title="[0CTF 2016]piapiapia"></a>[0CTF 2016]piapiapia</h2><h3 id="0x00-基础"><a href="#0x00-基础" class="headerlink" title="0x00 基础"></a>0x00 基础</h3><p>一般文件的目录又xxx.php.bak/swp，或者查看元素、robots.txt里面有提示，或者<code>www.zip</code>等一系列文件中出现网站源码。也可以使用工具扫描</p>
 <p>PHP序列化<a href="https://www.php.cn/php-notebook-239422.html" target="_blank" rel="noopener">参考文章</a></p>
       
       <a class="article-more-link" href="/2019/12/23/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/">阅读更多...</a>
@@ -170,10 +530,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://sunny250.github.io/2019/12/23/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/" data-id="ck4nmczc90000207eemtn5tbt"
+      <a data-url="https://sunny250.github.io/2019/12/23/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/" data-id="ck4pc9e4m0001187efvop7z5v"
         class="article-share-link">分享</a>
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/0CTF/" rel="tag">0CTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/buuoj/" rel="tag">buuoj</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/0CTF/" rel="tag">0CTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/buuctf/" rel="tag">buuctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li></ul>
 
     </footer>
 
@@ -229,7 +589,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://sunny250.github.io/2019/12/19/hello-world/" data-id="ck4nmczct0005207e50j0hbm1"
+      <a data-url="https://sunny250.github.io/2019/12/19/hello-world/" data-id="ck4pc9e4x0006187ec60kfj7r"
         class="article-share-link">分享</a>
       
     </footer>
@@ -256,7 +616,7 @@
     <ul class="list-inline">
       <li>
         &copy;
-        2019
+        2019-2020
         sunny250
       </li>
       <li>

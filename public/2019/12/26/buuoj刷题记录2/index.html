@@ -74,7 +74,7 @@
       
 
       
-      <h2 id="Roarctf-easy-calc"><a href="#Roarctf-easy-calc" class="headerlink" title="[Roarctf]easy_calc"></a>[Roarctf]easy_calc</h2><h3 id="0x01-基础"><a href="#0x01-基础" class="headerlink" title="0x01 基础"></a>0x01 基础</h3><p>php内置读取文件内容函数</p>
+      <h2 id="Roarctf-easy-calc"><a href="#Roarctf-easy-calc" class="headerlink" title="[Roarctf]easy_calc"></a>[Roarctf]easy_calc</h2><h3 id="0x00-基础"><a href="#0x00-基础" class="headerlink" title="0x00 基础"></a>0x00 基础</h3><p>php内置读取文件内容函数</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">file_get_contents</span><br><span class="line">readfile</span><br><span class="line">file</span><br></pre></td></tr></table></figure>
 
 <p>目录扫描函数</p>
@@ -89,13 +89,13 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var_dump()</span><br><span class="line">printf()</span><br></pre></td></tr></table></figure>
 
 <p><code>parse_str</code>函数通常被自动应用于<code>get</code>、<code>post</code>请求和<code>cookie</code>中。使用<code>parse_str</code>解析规则绕过waf</p>
-<h3 id="0x02-分析"><a href="#0x02-分析" class="headerlink" title="0x02 分析"></a>0x02 分析</h3><p>查看源码，发现calc.php</p>
+<h3 id="0x01-分析"><a href="#0x01-分析" class="headerlink" title="0x01 分析"></a>0x01 分析</h3><p>查看源码，发现calc.php</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    $(<span class="string">'#calc'</span>).submit(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">        $.ajax(&#123;</span><br><span class="line">            url:<span class="string">"calc.php?num="</span>+encodeURIComponent($(<span class="string">"#content"</span>).val()),</span><br><span class="line">            type:<span class="string">'GET'</span>,</span><br><span class="line">            success:<span class="function"><span class="keyword">function</span><span class="params">(data)</span></span>&#123;</span><br><span class="line">                $("#result").html(`&lt;div class="alert alert-success"&gt;</span><br><span class="line">            &lt;strong&gt;答案:&lt;/strong&gt;$&#123;data&#125;</span><br><span class="line">            &lt;/div&gt;`);</span><br><span class="line">            &#125;,</span><br><span class="line">            error:<span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">                alert(<span class="string">"这啥?算不来!"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
 
 <p>进入calc.php,进行代码审计。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>($_GET[<span class="string">'num'</span>]))&#123;</span><br><span class="line">    show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        $str = $_GET[<span class="string">'num'</span>];</span><br><span class="line">        $blacklist = [<span class="string">' '</span>, <span class="string">'\t'</span>, <span class="string">'\r'</span>, <span class="string">'\n'</span>,<span class="string">'\''</span>, <span class="string">'"'</span>, <span class="string">'`'</span>, <span class="string">'\['</span>, <span class="string">'\]'</span>,<span class="string">'\$'</span>,<span class="string">'\\'</span>,<span class="string">'\^'</span>];</span><br><span class="line">        <span class="keyword">foreach</span> ($blacklist <span class="keyword">as</span> $blackitem) &#123;</span><br><span class="line">                <span class="keyword">if</span> (preg_match(<span class="string">'/'</span> . $blackitem . <span class="string">'/m'</span>, $str)) &#123;    </span><br><span class="line">                        <span class="keyword">die</span>(<span class="string">"what are you want to do?"</span>);<span class="comment">//如果包含黑名单中的字符，程序退出</span></span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">eval</span>(<span class="string">'echo '</span>.$str.<span class="string">';'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="0x03-开始操作"><a href="#0x03-开始操作" class="headerlink" title="0x03 开始操作"></a>0x03 开始操作</h3><p>传入<code>1+1</code> 显示<code>403 Forbidden</code> 传入<code>1%2b1</code>就可以。必须传入urldecode后。查看<code>phpinfo()</code>，也是<code>403 Forbidden</code>，利用PHP自动解析函数<code>parser_str()</code>绕过，纤细介绍查看<a href="https://www.freebuf.com/articles/web/213359.html" target="_blank" rel="noopener">参考连接</a>。</p>
+<h3 id="0x02-开始操作"><a href="#0x02-开始操作" class="headerlink" title="0x02 开始操作"></a>0x02 开始操作</h3><p>传入<code>1+1</code> 显示<code>403 Forbidden</code> 传入<code>1%2b1</code>就可以。必须传入urldecode后。查看<code>phpinfo()</code>，也是<code>403 Forbidden</code>，利用PHP自动解析函数<code>parser_str()</code>绕过，纤细介绍查看<a href="https://www.freebuf.com/articles/web/213359.html" target="_blank" rel="noopener">参考连接</a>。</p>
 <p>扫描目录使用<code>scandir()</code>因为<code>/ &#39;  &quot;</code>被过滤无法直接使用<code>/</code>，使用<code>chr()</code>转换payload= <code>?+num=print_r(scandir(chr(47)))</code></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Array ( [0] &#x3D;&gt; . [1] &#x3D;&gt; .. [2] &#x3D;&gt; .dockerenv [3] &#x3D;&gt; bin [4] &#x3D;&gt; boot [5] &#x3D;&gt; dev [6] &#x3D;&gt; etc [7] &#x3D;&gt; f1agg [8] &#x3D;&gt; home [9] &#x3D;&gt; lib [10] &#x3D;&gt; lib64 [11] &#x3D;&gt; media [12] &#x3D;&gt; mnt [13] &#x3D;&gt; opt [14] &#x3D;&gt; proc [15] &#x3D;&gt; root [16] &#x3D;&gt; run [17] &#x3D;&gt; sbin [18] &#x3D;&gt; srv [19] &#x3D;&gt; start.sh [20] &#x3D;&gt; sys [21] &#x3D;&gt; tmp [22] &#x3D;&gt; usr [23] &#x3D;&gt; var ) 1</span><br></pre></td></tr></table></figure>
 
@@ -108,7 +108,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://sunny250.github.io/2019/12/26/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%952/" data-id="ck4nmczco0002207e6ffo6620"
+      <a data-url="https://sunny250.github.io/2019/12/26/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%952/" data-id="ck4pc9e4q0003187eglmn5tk2"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Roarctf/" rel="tag">Roarctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/buuoj/" rel="tag">buuoj</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li></ul>
@@ -120,6 +120,15 @@
   
   
   <nav class="article-nav">
+    
+      <a href="/2019/12/27/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%953/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            buuoj刷题记录3
+          
+        </div>
+      </a>
     
     
       <a href="/2019/12/23/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%951/" class="article-nav-link">
@@ -145,7 +154,7 @@
     <ul class="list-inline">
       <li>
         &copy;
-        2019
+        2019-2020
         sunny250
       </li>
       <li>
