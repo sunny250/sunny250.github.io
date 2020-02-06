@@ -15,15 +15,15 @@ tags:
 php内置读取文件内容函数
 
 ```
-file_get_contents
-readfile
-file
+file_get_contents()
+readfile()
+file()
 ```
 
 目录扫描函数
 
 ```
-scandir
+scandir()
 ```
 
 <!--more-->
@@ -90,7 +90,7 @@ if(!isset($_GET['num'])){
 
 ### 0x02 开始操作
 
-传入`1+1` 显示`403 Forbidden` 传入`1%2b1`就可以。必须传入urldecode后。查看`phpinfo()`，也是`403 Forbidden`，利用PHP自动解析函数`parser_str()`绕过，纤细介绍查看[参考连接](https://www.freebuf.com/articles/web/213359.html)。
+传入`1+1` 显示`403 Forbidden` 传入`1%2b1`就可以。必须传入url编码后的。查看`phpinfo()`，也是`403 Forbidden`，利用PHP自动解析函数`parser_str()`绕过，详细介绍查看[参考连接](https://www.freebuf.com/articles/web/213359.html)。
 
 扫描目录使用`scandir()`因为`/ '  "`被过滤无法直接使用`/`，使用`chr()`转换payload= `?+num=print_r(scandir(chr(47)))`
 
