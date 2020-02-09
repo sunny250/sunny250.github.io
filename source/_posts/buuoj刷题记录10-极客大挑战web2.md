@@ -15,6 +15,8 @@ fuzz了一下发现过滤了空格，单引号报错。如果查询数据为空�
 
 常规操作
 
+<!--more-->
+
 1. #### order by判断字段，字段为3
 
 ![](/pic/38.png)
@@ -339,7 +341,7 @@ F1naI1y表还是只有id,username,password
 
 Flaaaaag表包括id,fl4gawsl
 
-#### RCE ME
+### RCE ME
 
 打开题目有源码
 
@@ -386,10 +388,6 @@ PHP 7 assert ( [mixed](https://www.php.net/manual/zh/language.pseudo-types.php#l
 **assert()** 会检查指定的 `assertion` 并在结果为 **`FALSE`** 时采取适当的行动。
 
 如果 `assertion` 是字符串，它将会被 **assert()** 当做 PHP 代码来执行。 `assertion` 是字符串的优势是当禁用断言时它的开销会更小，并且在断言失败时消息会包含 `assertion` 表达式。 这意味着如果你传入了 boolean 的条件作为 `assertion`，这个条件将不会显示为断言函数的参数；在调用你定义的 [assert_options()](https://www.php.net/manual/zh/function.assert-options.php) 处理函数时，条件会转换为字符串，而布尔值 **`FALSE`** 会被转换成空字符串。
-
-
-
-
 
 ![](/pic/64.png)
 

