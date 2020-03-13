@@ -6,6 +6,8 @@ tags:
  - ctf  
  - buuctf
  - De1CTF
+categories: 
+ - 刷题记录
 ---
 ## [De1CTF 2019]SSRF Me
 

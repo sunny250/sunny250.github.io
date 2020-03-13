@@ -5,6 +5,8 @@ tags:
 - ctf
 - 极客大挑战
 - web
+categories: 
+ - 刷题记录
 ---
 
 # 极客大挑战web
@@ -27,19 +29,19 @@ payload=`?cat=dog`
 
 <!--more-->
 
-![](/pic/9.png)
+![](../pic/9.png)
 
 ### EasySQL
 
 万能密码直接获取结果
 
-![](/pic/10.png)
+![](../pic/10.png)
 
 ### Knife
 
 使用菜刀或者蚁剑连接 密码Syc
 
-![](/pic/11.png)
+![](../pic/11.png)
 
 flag在根目录下
 
@@ -152,7 +154,7 @@ flag在根目录下
 
 一直点，查看记录，发现有一个
 
-![](/pic/12.png)
+![](../pic/12.png)
 
 打开发现源码
 
@@ -302,5 +304,5 @@ var_dump(serialize($a));//O:4:"Name":2:{s:14:"�Name�username";s:5:"admin";s:
 
 `payload：O%3A4%3A%22Name%22%3A2%3A%7Bs%3A14%3A%22%00Name%00username%22%3Bs%3A5%3A%22admin%22%3Bs%3A14%3A%22%00Name%00password%22%3Bi%3A100%3B%7D`
 
-![](/pic/13.png)
+![](../pic/13.png)
 

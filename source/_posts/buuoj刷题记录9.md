@@ -2,6 +2,10 @@
 title: buuoj刷题记录9
 date: 2020-01-24 23:18:32
 tags:
+ - roarctf
+ - web
+categories: 
+ - 刷题记录
 ---
 
 ## [RoarCTF 2019]Easy Java
@@ -11,6 +15,9 @@ tags:
 WEB-INF是Java的WEB应用的安全目录。所谓安全就是客户端无法访问，只有服务端可以访问的目录。
 如果想在页面中直接访问其中的文件，必须通过web.xml文件对要访问的文件进行相应映射才能访问。
 /WEB-INF/web.xml : Web应用程序配置文件，描述了 servlet 和其他的应用组件配置及命名规则。
+
+<!--more-->
+
 /WEB-INF/classes/ : 包含了站点所有用的 class 文件，包括 servlet class 和非servlet class，他们不能包含在 .jar文件中。
 /WEB-INF/lib/ : 存放web应用需要的各种JAR文件，放置仅在这个应用中要求使用的jar文件,如数据库驱动jar文件。
 页面放在WEB-INF目录下面,这样可以限制访问,提高安全性.如JSP,html
@@ -75,6 +82,6 @@ WEB-INF是Java的WEB应用的安全目录。所谓安全就是客户端无法访
 
 下载后直接打开，发现有一串base64编码，解码后就是flag
 
-![](/pic/37.png)
+![](../pic/37.png)
 
 `flag{cb0751c7-6081-482d-8b03-f0edede8e178}`

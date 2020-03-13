@@ -6,6 +6,8 @@ tags:
  - De1CTF
  - sql注入
  - 命令执行
+categories: 
+ - 刷题记录
 ---
 
 ## [De1CTF 2019]Giftbox
@@ -180,7 +182,7 @@ targeting  还有长度限制，code为2，possition为12。
 
 在phpiofo中设置了open_basedir
 
-![](/pic/37.png)
+![](../pic/37.png)
 
 关于open_basedir
    open_basedir是php.ini中的一个配置选项

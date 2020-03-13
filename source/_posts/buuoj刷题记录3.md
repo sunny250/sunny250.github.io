@@ -6,6 +6,8 @@ tags:
  - web
  - ctf
  - buuctf
+categories: 
+ - 刷题记录
 ---
 
 ## [CISCN2019 华北赛区 Day2 Web1]Hack World
@@ -30,7 +32,7 @@ flag{} 里为 uuid
 
 访问页面
 
-![](/pic/3.jpg)
+![](../pic/3.jpg)
 
 
 

