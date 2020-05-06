@@ -4,7 +4,8 @@ date: 2019-12-23 22:08:02
 ---
 
 排名不分先后
-[P牛（离别歌)](https://www.leavesongs.com/)[腹黑's Blog](http://www.lovei.org)
+[P牛（离别歌)‘s Blog](https://www.leavesongs.com/)
+[腹黑's Blog](http://www.lovei.org)
 [October's Blog](https://octoberfirst.github.io)
 [glzjin's Blog](https://www.zhaoj.in)
 [咲夜南梦's Blog](http://blog.ragdoll.work)
@@ -50,3 +51,4 @@ date: 2019-12-23 22:08:02
 [汐小白's Blog](http://www.ximu.xyz)
 [过客's Blog](https://guokeya.github.io)
 [Mrkaixin's Blog](http://github.mrkaixin.computer)
+[刘大哥‘s Blog](https://lyxp1314.github.io)

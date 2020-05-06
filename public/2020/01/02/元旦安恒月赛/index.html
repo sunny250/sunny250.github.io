@@ -25,7 +25,8 @@
 
   
 
-<meta name="generator" content="Hexo 4.1.1"></head>
+<meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="晴天`blog" type="application/atom+xml">
+</head>
 
 </html>
 
@@ -83,7 +84,7 @@
 
 <h3 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h3><h4 id="爆破鬼才"><a href="#爆破鬼才" class="headerlink" title="爆破鬼才"></a>爆破鬼才</h4><p>首先爆破第一个密码（队友已经爆破出来了）abc123</p>
 <p>解压后还是一个压缩包</p>
-<p><img src="../pic/6.png" alt=""></p>
+<p><img src="/pic/6.png" alt=""></p>
 <p>发现<code>1.txt、2.txt、3.txt</code>长度不长，应该是要进行CRC32碰撞，附上渣渣脚本</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> zipfile</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"></span><br><span class="line">dic=string.printable</span><br><span class="line">crc = <span class="number">0x7d90ee19</span>   </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> dic :</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> dic:</span><br><span class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> dic:</span><br><span class="line">            <span class="keyword">for</span> q <span class="keyword">in</span> dic:</span><br><span class="line">                s=str(i)+str(j)+str(p)+str(q)</span><br><span class="line">                <span class="keyword">if</span> crc == (binascii.crc32(s) &amp; <span class="number">0xffffffff</span>):</span><br><span class="line">                    <span class="keyword">print</span>  s</span><br></pre></td></tr></table></figure>
 
@@ -92,12 +93,12 @@
 <p>最后跑出来的密码是20140224。拿着key解密</p>
 <p>得到<code>flag:flag{8322e7eed667c69f27ecbea5f96d86ca}</code></p>
 <h3 id="web"><a href="#web" class="headerlink" title="web"></a>web</h3><h4 id="web1"><a href="#web1" class="headerlink" title="web1"></a>web1</h4><p>是一个小游戏，话不多说开始玩一把。</p>
-<p><img src="../pic/7.png" alt=""></p>
+<p><img src="/pic/7.png" alt=""></p>
 <p>玩了一把后查看源码，发现有一个js。</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> &gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>JS Planet defense game<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"css/style.css"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">"canvas"</span>&gt;</span><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"js/index.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>点进去拉到最后有几条提示</p>
-<p><img src="../pic/8.png" alt=""></p>
+<p><img src="/pic/8.png" alt=""></p>
 <p>生成一个http请求，将分数发到服务器，将结果显示。</p>
 <p>既然要生成请求，直接上<code>burp suite</code>，会发送一个record</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;f1ag.php HTTP&#x2F;1.1</span><br><span class="line">Host: 183.129.189.60:10001</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko&#x2F;20100101 Firefox&#x2F;71.0</span><br><span class="line">Accept: *&#x2F;*</span><br><span class="line">Accept-Language: zh-CN,zh;q&#x3D;0.8,zh-TW;q&#x3D;0.7,zh-HK;q&#x3D;0.5,en-US;q&#x3D;0.3,en;q&#x3D;0.2</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Content-type: application&#x2F;x-www-form-urlencoded</span><br><span class="line">Content-Length: 9</span><br><span class="line">Origin: http:&#x2F;&#x2F;183.129.189.60:10001</span><br><span class="line">Connection: close</span><br><span class="line">Referer: http:&#x2F;&#x2F;183.129.189.60:10001&#x2F;</span><br><span class="line"></span><br><span class="line">record&#x3D;23</span><br></pre></td></tr></table></figure>
@@ -109,7 +110,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://sunny250.github.io/2020/01/02/%E5%85%83%E6%97%A6%E5%AE%89%E6%81%92%E6%9C%88%E8%B5%9B/" data-id="ck4wg88at0000yk7eghziaddi"
+      <a data-url="https://sunny250.github.io/2020/01/02/%E5%85%83%E6%97%A6%E5%AE%89%E6%81%92%E6%9C%88%E8%B5%9B/" data-id="ck7vssfma001epk7e3fxl77yf"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E6%81%92%E6%9C%88%E8%B5%9B2020/" rel="tag">安恒月赛2020</a></li></ul>
@@ -158,11 +159,11 @@
 
   <script type="text/javascript">
     var gitalk = new Gitalk({
-      clientID: 'c2ff86b3b4668317d630# GitHub Application Client ID',
-      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c# Client Secret',
-      repo: 'sunny250.github.io# Repository name',
-      owner: 'sunny250# GitHub ID',
-      admin: ['sunny250# GitHub ID'],
+      clientID: 'c2ff86b3b4668317d630',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c',
+      repo: 'sunny250.github.io',
+      owner: 'sunny250',
+      admin: ['sunny250'],
       // id: location.pathname,      // Ensure uniqueness and length less than 50
       id: md5(location.pathname),
       distractionFreeMode: false,  // Facebook-like distraction free mode

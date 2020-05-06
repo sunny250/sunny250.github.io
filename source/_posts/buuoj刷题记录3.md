@@ -32,7 +32,7 @@ flag{} 里为 uuid
 
 访问页面
 
-![](../pic/3.jpg)
+![](/pic/3.jpg)
 
 
 
@@ -64,7 +64,7 @@ flag{} 里为 uuid
 
 ### 0x02 开始操作
 
-```pytho
+```python
 # -*- coding: utf-8 -*-
 # @Time    : 12/27/2019 6:11 PM
 import requests
@@ -107,7 +107,7 @@ for x in range(1, 43):
     print(result)
 ```
 
-```
+```bash
 f
 fl
 fla

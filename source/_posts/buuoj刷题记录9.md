@@ -82,6 +82,6 @@ WEB-INF是Java的WEB应用的安全目录。所谓安全就是客户端无法访
 
 下载后直接打开，发现有一串base64编码，解码后就是flag
 
-![](../pic/37.png)
+![](/pic/37.png)
 
 `flag{cb0751c7-6081-482d-8b03-f0edede8e178}`

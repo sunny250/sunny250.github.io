@@ -114,3 +114,5 @@ https://www.freebuf.com/articles/system/147768.html
 https://www.freebuf.com/articles/system/178150.html
 
 https://www.freebuf.com/articles/system/153986.html
+
+http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
