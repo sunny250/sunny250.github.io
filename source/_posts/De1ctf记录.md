@@ -13,6 +13,8 @@ categories:
 
 打开链接是一个文件上传页面，抓包发现服务器是php5.4.16版本。上传一句话木马提示文件类型错误。后缀名不能是php，phtml,php2等之类的。还有MIME过滤，还对内容进行了过滤,不能包含一下字符
 
+<!--more-->
+
 ```
 perl|pyth|ph|auto|curl|base|>|rm|ruby|openssl|war|lua|msf|xter|telnet in contents!
 ```

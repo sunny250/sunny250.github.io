@@ -14,13 +14,23 @@ categories:
 打开火绒剑点击Processes，找到QQ/微信的PID
 
 1. 点击Fileter
+
 2. 下拉选择Process Filter
+
+<!--more-->
+
 3. 选择Process
+
 4. 点击add 
+
 5. 选择PID
+
 6. Value填QQ/微信的PID
+
 7. 切换到Action
+
 8. 只选中MT_netmon
+
 9. 点击OK
 
 ![](/pic/136.png)

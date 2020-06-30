@@ -16,6 +16,8 @@ categories:
 
 打开题目就有源码
 
+<!--more-->
+
 ```php
 include 'flag.php';
 $flag='MRCTF{xxxxxxxxxxxxxxxxxxxxxxxxx}';

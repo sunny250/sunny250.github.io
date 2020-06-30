@@ -12,6 +12,8 @@ categories:
 
 在学校的课程中学到了有关网络编程的内容，在此记录一下。
 
+<!--more-->
+
 实验要求
 
 1. 是使用tcp、udp实现一个客户端与服务器的通信
@@ -327,11 +329,13 @@ while 1:
 
 3. ICMP
 
-   +-------------------------+--------------------------+--------------------------+
-   |         8位类型       ｜         8位代码        ｜       8位校验和      ｜
-   +-------------------------+--------------------------+--------------------------+
-   |                       不同类型的代码有不同的内容                          ｜
-   +-------------------------+--------------------------+--------------------------+
+   +-------------------------+--------------------------+---------------------------+
+   |         8位类型       ｜         8位代码        ｜       16位校验和     ｜
+   +-------------------------+--------------------------+---------------------------+
+   |             16位 标识符              ｜           序列号16位                  ｜
+   +---------------------------------------+-----------------------------------------+
+   |                                        选项（若有）                                      ｜
+   +---------------------------------------+-----------------------------------------+
    
    | 类型 | 代码 | 含义                         |
    | ---- | ---- | ---------------------------- |
@@ -367,4 +371,76 @@ while 1:
    | 14   | 0    | 时间戳应答                   |
    | 17   | 0    | 地址掩码请求                 |
    | 18   | 0    | 地址掩码应答                 |
+
+校验和计算
+
+在发送数据时，为了计算数据包的校验和。应该按如下步骤：
+（1）把校验和字段置为0；　　
+（2）把需校验的数据看成以16位为单位的数字组成，依次进行二进制反码求和；
+（3）把得到的结果存入校验和字段中。　　在接收数据时，计算数据包的校验和相对简单，按如下步骤：
+
+> （1）把首部看成以16位为单位的数字组成，依次进行二进制反码求和，包括校验和字段；　　
+> （2）检查计算出的校验和的结果是否为0；
+> （3）如果等于0，说明被整除，校验是和正确。否则，校验和就是错误的，协议栈要抛弃这个数据包。
+
+虽然上面四种报文的校验和算法一样，但在作用范围存在不同：IP校验和只校验20字节的IP报头；而ICMP校验和覆盖整个报文（ICMP报头+ICMP数据）；UDP和TCP校验和不仅覆盖整个报文，而且还有12字节的IP伪首部，包括源IP地址(4字节)、目的IP地址(4字节)、协议(2字节，第一字节补0)和TCP/UDP包长(2字节)。另外UDP、TCP数据报的长度可以为奇数字节，所以在计算校验和时需要在最后增加填充字节0（注意，填充字节只是为了计算校验和，可以不被传送）。
+
+```python
+# -*- coding: utf-8 -*-
+# @Author  : sunny250
+import socket
+import struct
+import binascii
+
+def icmp_check(data):
+    print(data)
+    length = len(data)
+    flag = length % 2  # 判断data长度是否是偶数字节
+    sum = 0  # 记录(十进制)相加的结果
+    data=binascii.b2a_hex(data)
+    print(data)
+    for i in range(0, len(data), 4):  # 将每两个字节(16位)相加（二进制求和）直到最后得出结果
+        sum += int(data[i+2:i+4]+data[i:i+2],16) # 传入data以每两个字节（十六进制）通过ord转十进制，第一字节在低位，第二个字节在高位\
+
+    if flag:  # 传入的data长度是奇数，将执行，且把这个字节（8位）加到前面的结果
+        sum += int(data[-2:],16)
+    print(hex(sum))
+    # 将高于16位与低16位相加
+    sum = (sum >> 16) + (sum & 0xffff)
+    sum += (sum >> 16)  # 如果还有高于16位，将继续与低16位相加
+    answer = ~sum & 0xffff  # 对sum取反(返回的是十进制)
+    # 主机字节序转网络字节序列（参考小端序转大端序）
+    answer = answer >> 8 | (answer << 8 & 0xff00)
+    return answer  # 最终返回的结果就是wireshark里面看到的checksum校验和
+
+
+def icmp_pack():
+    # icmp header
+    icmp_type = 8
+    icmp_code = 0
+    icmp_check_sum = 0
+    icmp_id = 1
+    icmp_seq = 11
+    icmp_date = b'Hello!'
+
+    icmp_header = struct.pack('!BBHHH6s', icmp_type, icmp_code, icmp_check_sum, icmp_id, icmp_seq, icmp_date)
+    icmp_check_sum=icmp_check(icmp_header)
+
+    icmp_header = struct.pack('!BBHHH6s', icmp_type, icmp_code, icmp_check_sum, icmp_id, icmp_seq, icmp_date)
+
+    return icmp_header
+
+
+def main(ip):
+    raw_sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
+    packets = icmp_pack()
+    raw_sock.sendto(packets, (ip, 0))
+    reply_date,address=raw_sock.recvfrom(1024)
+    reply_date=struct.unpack('!BBHHHBBH4s4sBBHHH6s',reply_date)
+    # print(binascii.b2a_hex(reply_date))
+    print('Success! Host is up, the reply from ',ip,' ttl is ',reply_date[5])
+
+if __name__ == '__main__':
+    main('127.0.0.1')
+```
 

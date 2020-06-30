@@ -15,6 +15,8 @@ categories:
 
 题目给出了ssh服务器连接上后export不能用了
 
+<!--more-->
+
 Cat、tac、less等之类都能用后面发现od可以使用. [参考链接](https://www.cnblogs.com/ur10ser/p/7624367.html)
 
 ```bash

