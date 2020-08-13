@@ -432,7 +432,7 @@ payload:/flflflflag.php?file=/tmp/phpylUNtT&1=phpinfo();
 
 ## ezlogin
 
-打开题目，是一个登陆框，随意发送数据后抓包发现传入的数据是xml格式的，猜测是xpath注入。[参考链接](![2C4905CA-9A1B-41E2-B904-8CBBEFC02962](/Users/sx/Library/Containers/com.tencent.qq/Data/Library/Application Support/QQ/Users/209124513/QQ/Temp.db/2C4905CA-9A1B-41E2-B904-8CBBEFC02962.png))
+打开题目，是一个登陆框，随意发送数据后抓包发现传入的数据是xml格式的，猜测是xpath注入。
 
 ![](/pic/164.png)
 
