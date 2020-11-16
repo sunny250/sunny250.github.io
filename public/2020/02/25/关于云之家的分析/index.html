@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="blog" />
+   
+  <meta name="description" content="晴天`blog" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    关于云之家的分析 |  晴天`blog
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+  
+<script src="/js/pace.min.js"></script>
+
+
+  
+
+  
+
+<meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="晴天`blog" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-关于云之家的分析" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  关于云之家的分析
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/02/25/%E5%85%B3%E4%BA%8E%E4%BA%91%E4%B9%8B%E5%AE%B6%E7%9A%84%E5%88%86%E6%9E%90/" class="article-date">
+  <time datetime="2020-02-25T12:50:19.000Z" itemprop="datePublished">2020-02-25</time>
+</a>
+      
+    </div>
+    
+
+    
+    
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <script src=/js/crypto-js.js></script>
+<script>
+function doDecrypt (pwd, onError) {
+	console.log('in doDecrypt');
+	const txt = document.getElementById('enc_content').innerHTML;
+	let plantext;
+	try {
+		const bytes = CryptoJS.AES.decrypt(txt, pwd);
+		var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+	} catch(err) {
+		if(onError) {
+			onError(err);
+		}
+		return;
+	}
+	document.getElementById('enc_content').innerHTML = plaintext;
+	document.getElementById('enc_content').style.display = 'block';
+	document.getElementById('enc_passwd').style.display = 'none';
+	if(typeof MathJax !== 'undefined') {
+		MathJax.Hub.Queue(
+			['resetEquationNumbers', MathJax.InputJax.TeX],
+			['PreProcess', MathJax.Hub],
+			['Reprocess', MathJax.Hub]
+		);
+	}
+}
+</script>
+<div id="enc_content" style="display:none">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</div>
+<div id="enc_passwd"> <input id="enc_pwd_input" type="password" style="border-radius: 5px;border-style: groove;height: 30px;width: 50%;cursor: auto;font-size: 102%;color: currentColor;outline: none;text-overflow: initial;padding-left: 5px;" onkeydown="if (event.keyCode == 13) { decrypt(); return false;}"> <input type="submit" value="解&nbsp;密" onclick="decrypt()" style="width: 58px;height: 34px;border-radius: 5px;background-color: white;border-style: solid;color: currentColor;"><div id="enc_error" style="display: inline-block;color: #d84527;margin-left: 10px"></div>
+<script>
+var onError = function(error) {
+	document.getElementById("enc_error").innerHTML = "password error!"
+};
+function decrypt() {
+var passwd = document.getElementById("enc_pwd_input").value;
+console.log(passwd);
+doDecrypt(passwd, onError);
+}
+</script>
+</div>
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/02/25/%E5%85%B3%E4%BA%8E%E4%BA%91%E4%B9%8B%E5%AE%B6%E7%9A%84%E5%88%86%E6%9E%90/" data-id="ck7vssfnp001wpk7e4q9cbr92"
+        class="article-share-link">分享</a>
+      
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/02/26/%E5%AE%89%E6%81%92%E6%9C%88%E8%B5%9B20200226/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            安恒月赛20200226
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/02/21/ichunqiu%E5%85%AC%E7%9B%8A%E8%B5%9Bweb/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">ichunqiu公益赛web</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+  <div class="gitalk" id="gitalk-container"></div>
+  
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c2ff86b3b4668317d630',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c',
+      repo: 'sunny250.github.io',
+      owner: 'sunny250',
+      admin: ['sunny250'],
+      // id: location.pathname,      // Ensure uniqueness and length less than 50
+      id: md5(location.pathname),
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      pagerDirection: 'last'
+    })
+
+  gitalk.render('gitalk-container')
+  </script>
+
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2020
+        sunny250
+      </li>
+      <li>
+        
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a> by shenyu
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <ul class="list-inline">
+  <li>PV:<span id="busuanzi_value_page_pv"></span></li>
+  <li>UV:<span id="busuanzi_value_site_uv"></span></li>
+</ul>
+        
+      </li>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+    <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    
+    <aside class="sidebar">
+      
+        <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt="晴天`blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives/">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/links/">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about/">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      </aside>
+      
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+
+  
+<script src="/js/tocbot.min.js"></script>
+
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+
+<script src="/js/ayer.js"></script>
+
+
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  </div>
+</body>
+
+</html>
