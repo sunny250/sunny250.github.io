@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="blog" />
+   
+  <meta name="description" content="晴天`blog" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    无参数RCE的研究 |  晴天`blog
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+  
+<script src="/js/pace.min.js"></script>
+
+
+  
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="晴天`blog" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-无参数RCE的研究" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  无参数RCE的研究
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/04/30/%E6%97%A0%E5%8F%82%E6%95%B0RCE%E7%9A%84%E7%A0%94%E7%A9%B6/" class="article-date">
+  <time datetime="2020-04-30T14:49:16.000Z" itemprop="datePublished">2020-04-30</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%97%A5%E5%B8%B8%E7%A7%AF%E7%B4%AF/">日常积累</a>
+  </div>
+
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h1><p>在写一道简单的web题目时候遇到一个奇怪的正则表达式，在此记录一下</p>
+<a id="more"></a>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;[^\W]+\((?R)?\)&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>(?R)是递归匹配整个正则表达式，整个正则能匹配a(b(c(d()))),a(),a(b())这样的表达式，如果里面包含参赛就不能匹配到。</p>
+<p>测试代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> $_GET[<span class="string">'cmd'</span>];  </span><br><span class="line"><span class="keyword">if</span>(<span class="string">';'</span> === preg_replace(<span class="string">'/[^\W]+\((?R)?\)/'</span>, <span class="string">''</span>, $_GET[<span class="string">'code'</span>])) &#123;</span><br><span class="line">  <span class="keyword">eval</span>($_GET[<span class="string">'cmd'</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>传入参数phpinfo()；成功执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost&#x2F;No_Pram_Rec.php?cmd&#x3D;phpinfo();</span><br></pre></td></tr></table></figure>
+
+<p><img src="/pic/151.png" alt=""></p>
+<p>传入参数scandir(“.”);没有显示。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost&#x2F;No_Pram_Rec.php?cmd&#x3D;scandir(&quot;.&quot;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/pic/152.png" alt=""></p>
+<p>也就是可以无限套函数，但是函数必须没有参数</p>
+<h1 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h1><p>在skysec师傅的博客里面介绍了几种利用手法。</p>
+<h3 id="1-getenv"><a href="#1-getenv" class="headerlink" title="1. getenv()"></a>1. getenv()</h3><p>getenv()获取的结果是数组，如何获取特定的数组元素是个问题。</p>
+<p>可以使用array_rand() </p>
+<blockquote>
+<p>从数组中取出一个或多个随机的单元，并返回随机条目的一个或多个键。 它使用了伪随机数产生算法，所以不适合密码学场景。</p>
+<p>如果只取出一个，<strong>array_rand()</strong> 返回随机单元的键名。 否则就返回包含随机键名的数组。 完成后，就可以根据随机的键获取数组的随机值。 取出数量如果超过 array 的长度，就会导致 <strong><code>E_WARNING</code></strong> 错误，并返回 NULL。</p>
+</blockquote>
+<p>一般想要的内容都是数组的值，不是数组的键名。</p>
+<p>此时可以使用</p>
+<p>array_flip()</p>
+<blockquote>
+<p>交换数组的键名和值</p>
+</blockquote>
+<p>相关的数组操作函数</p>
+<ul>
+<li><p>array_pop() 取最后一个数组</p>
+</li>
+<li><p>Array_values() 返回数组所有值组成的数组（键名是0，1，2，3）</p>
+</li>
+<li><p>array_reverse() 将数组逆序</p>
+</li>
+<li><p><a href="https://www.w3school.com.cn/php/func_array_end.asp" target="_blank" rel="noopener">end()</a> – 将内部指针指向数组中的最后一个元素，并输出键值 （参考来自颖奇师傅博客）</p>
+</li>
+<li><p><a href="https://www.w3school.com.cn/php/func_array_next.asp" target="_blank" rel="noopener">next()</a> – 将内部指针指向数组中的下一个元素，并输出键值</p>
+</li>
+<li><p><a href="https://www.w3school.com.cn/php/func_array_prev.asp" target="_blank" rel="noopener">prev()</a> – 将内部指针指向数组中的上一个元素，并输出键值</p>
+</li>
+<li><p><a href="https://www.w3school.com.cn/php/func_array_reset.asp" target="_blank" rel="noopener">reset()</a> – 将内部指针指向数组中的第一个元素，并输出键值</p>
+</li>
+<li><p><a href="https://www.w3school.com.cn/php/func_array_each.asp" target="_blank" rel="noopener">each()</a> – 返回当前元素的键名和键值，并将内部指针向前移动</p>
+</li>
+</ul>
+<h3 id="2-getallheaders"><a href="#2-getallheaders" class="headerlink" title="2.getallheaders()"></a>2.getallheaders()</h3><table>
+<thead>
+<tr>
+<th align="left">版本</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">5.5.7</td>
+<td align="left">此函数可用于 CLI server。</td>
+</tr>
+<tr>
+<td align="left">5.4.0</td>
+<td align="left">此函数可用于 FastCGI。 此前仅在PHP以 Apache 模块方式运行时支持。</td>
+</tr>
+<tr>
+<td align="left">4.3.3</td>
+<td align="left">从 PHP 4.3.3 起，也可在 Netscape/iPlanet/SunONE Web 服务器的 <a href="https://www.php.net/manual/zh/book.nsapi.php" target="_blank" rel="noopener">NSAPI 服务器模块</a>使用此函数。</td>
+</tr>
+<tr>
+<td align="left">4.3.0</td>
+<td align="left">被改名而成为 <a href="https://www.php.net/manual/zh/function.apache-request-headers.php" target="_blank" rel="noopener">apache_request_headers()</a> 的别名。因为此函数仅适用于 Apache 。</td>
+</tr>
+</tbody></table>
+<p>此函数会返回httpheader头部形成一个数组</p>
+<p>在此时可以使用自定义头部。达到rce</p>
+<p><img src="/pic/153.png" alt=""></p>
+<h3 id="3-get-defined-vars"><a href="#3-get-defined-vars" class="headerlink" title="3. get_defined_vars()"></a>3. get_defined_vars()</h3><p>由于部分版本的php只能在apache上运行getallheaders()才有效果。所以当getallheaders()失效时，可以采取本函数。</p>
+<p><img src="/pic/155.png" alt=""></p>
+<p>能返回<code>_GET</code>、<code>_POST</code>、<code>_COOKIE</code>、<code>_FILES</code>数组</p>
+<p>选取<code>_GET</code>进行RCE</p>
+<p><img src="/pic/156.png" alt=""></p>
+<p>尝试<code>_FILES</code>数组（<code>_POST</code>、<code>_COOKIE</code>也是同样的用法）</p>
+<p>通过文件名进行RCE（也可以使用MIME）</p>
+<p>空格会被截断，所以需要进行编码，此处采用base64编码</p>
+<p><img src="/pic/157.png" alt=""></p>
+<h3 id="4-session-id"><a href="#4-session-id" class="headerlink" title="4. session_id()"></a>4. session_id()</h3><p>这里是使用<code>_COOKIE</code>数组，除了直接利用get_defined_vars()，还能利用session_id()</p>
+<blockquote>
+<ul>
+<li><a href="https://www.php.net/manual/zh/function.session-get-cookie-params.php" target="_blank" rel="noopener">session_get_cookie_params</a> — 获取会话 cookie 参数</li>
+<li><a href="https://www.php.net/manual/zh/function.session-id.php" target="_blank" rel="noopener">session_id</a> — 获取/设置当前会话 ID</li>
+<li><a href="https://www.php.net/manual/zh/function.session-name.php" target="_blank" rel="noopener">session_name</a> — 读取/设置会话名称</li>
+<li><a href="https://www.php.net/manual/zh/function.session-start.php" target="_blank" rel="noopener">session_start</a> — 启动新会话或者重用现有会话</li>
+</ul>
+</blockquote>
+<p>经过测试发现PHPSESSID允许字母和数字出现</p>
+
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/04/30/%E6%97%A0%E5%8F%82%E6%95%B0RCE%E7%9A%84%E7%A0%94%E7%A9%B6/" data-id="ckl3uft9j002t1cq2e3wua72q"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%97%A0%E5%8F%82%E6%95%B0Rec/" rel="tag">无参数Rec</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/05/02/De1ctf%E8%AE%B0%E5%BD%95/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            De1ctf记录
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/04/26/GXYCTF2019-web/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">GXYCTF2019-web</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+  <div class="gitalk" id="gitalk-container"></div>
+  
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c2ff86b3b4668317d630',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c',
+      repo: 'sunny250.github.io',
+      owner: 'sunny250',
+      admin: ['sunny250'],
+      // id: location.pathname,      // Ensure uniqueness and length less than 50
+      id: md5(location.pathname),
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      pagerDirection: 'last'
+    })
+
+  gitalk.render('gitalk-container')
+  </script>
+
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        sunny250
+      </li>
+      <li>
+        
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a> by shenyu
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <ul class="list-inline">
+  <li>PV:<span id="busuanzi_value_page_pv"></span></li>
+  <li>UV:<span id="busuanzi_value_site_uv"></span></li>
+</ul>
+        
+      </li>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+    <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    
+    <aside class="sidebar">
+      
+        <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt="晴天`blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives/">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/links/">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about/">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      </aside>
+      
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+
+  
+<script src="/js/tocbot.min.js"></script>
+
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+
+<script src="/js/ayer.js"></script>
+
+
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  </div>
+</body>
+
+</html>

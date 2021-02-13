@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="blog" />
+   
+  <meta name="description" content="晴天`blog" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+     晴天`blog
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+  
+<script src="/js/pace.min.js"></script>
+
+
+  
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="晴天`blog" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      
+<section class="cover">
+    
+  <div class="cover-frame">
+    <div class="bg-box">
+      <img src="/images/cover1.jpg" alt="image frame" />
+    </div>
+    <div class="cover-inner text-center text-white">
+      <h1><a href="/">晴天`blog</a></h1>
+      <h2>如果你想要一个好的结局，取决于你在什么地方结束故事。--九号传教士</h2>
+      <div>
+        
+      </div>
+    </div>
+  </div>
+  <div class="cover-learn-more">
+    <a href="#main" class="anchor"><i class="ri-arrow-down-line"></i></a>
+  </div>
+</section>
+
+<div id="main">
+  <section class="outer">
+  <article class="articles">
+    
+    <h1 class="page-type-title"></h1>
+
+    
+    
+    <article id="post-GKCTF2019-web" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/26/GKCTF2019-web/"
+    >GKCTF2019-web</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/26/GKCTF2019-web/" class="article-date">
+  <time datetime="2020-05-26T12:09:17.000Z" itemprop="datePublished">2020-05-26</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%88%B7%E9%A2%98/">日常刷题</a>
+  </div>
+
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="web"><a href="#web" class="headerlink" title="web"></a>web</h1><h2 id="GKCTF2020-CheckIN"><a href="#GKCTF2020-CheckIN" class="headerlink" title="[GKCTF2020]CheckIN"></a>[GKCTF2020]CheckIN</h2><p>打开题目就有源码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ClassName</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">        <span class="keyword">public</span> $code = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">public</span> $decode = <span class="keyword">null</span>;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">                <span class="keyword">$this</span>-&gt;code = @<span class="keyword">$this</span>-&gt;x()[<span class="string">'Ginkgo'</span>];</span><br><span class="line">                <span class="keyword">$this</span>-&gt;decode = @base64_decode( <span class="keyword">$this</span>-&gt;code );</span><br><span class="line">                @<span class="keyword">Eval</span>(<span class="keyword">$this</span>-&gt;decode);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">x</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> $_REQUEST;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> ClassName();</span><br></pre></td></tr></table></figure>
+
+
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/05/26/GKCTF2019-web/" data-id="ckl3uft8m000a1cq2gmplgc9b"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GKCTF/" rel="tag">GKCTF</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
+    <article id="post-长亭科技面经" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/19/%E9%95%BF%E4%BA%AD%E7%A7%91%E6%8A%80%E9%9D%A2%E7%BB%8F/"
+    >长亭科技面经</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/19/%E9%95%BF%E4%BA%AD%E7%A7%91%E6%8A%80%E9%9D%A2%E7%BB%8F/" class="article-date">
+  <time datetime="2020-05-19T13:13:28.000Z" itemprop="datePublished">2020-05-19</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%97%A5%E5%B8%B8/">日常</a>
+  </div>
+
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <script src=/js/crypto-js.js></script>
+<script>
+function doDecrypt (pwd, onError) {
+	console.log('in doDecrypt');
+	const txt = document.getElementById('enc_content').innerHTML;
+	let plantext;
+	try {
+		const bytes = CryptoJS.AES.decrypt(txt, pwd);
+		var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+	} catch(err) {
+		if(onError) {
+			onError(err);
+		}
+		return;
+	}
+	document.getElementById('enc_content').innerHTML = plaintext;
+	document.getElementById('enc_content').style.display = 'block';
+	document.getElementById('enc_passwd').style.display = 'none';
+	if(typeof MathJax !== 'undefined') {
+		MathJax.Hub.Queue(
+			['resetEquationNumbers', MathJax.InputJax.TeX],
+			['PreProcess', MathJax.Hub],
+			['Reprocess', MathJax.Hub]
+		);
+	}
+}
+</script>
+<div id="enc_content" style="display:none">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</div>
+<div id="enc_passwd"> <input id="enc_pwd_input" type="password" style="border-radius: 5px;border-style: groove;height: 30px;width: 50%;cursor: auto;font-size: 102%;color: currentColor;outline: none;text-overflow: initial;padding-left: 5px;" onkeydown="if (event.keyCode == 13) { decrypt(); return false;}"> <input type="submit" value="解&nbsp;密" onclick="decrypt()" style="width: 58px;height: 34px;border-radius: 5px;background-color: white;border-style: solid;color: currentColor;"><div id="enc_error" style="display: inline-block;color: #d84527;margin-left: 10px"></div>
+<script>
+var onError = function(error) {
+	document.getElementById("enc_error").innerHTML = "password error!"
+};
+function decrypt() {
+var passwd = document.getElementById("enc_pwd_input").value;
+console.log(passwd);
+doDecrypt(passwd, onError);
+}
+</script>
+</div>
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/05/19/%E9%95%BF%E4%BA%AD%E7%A7%91%E6%8A%80%E9%9D%A2%E7%BB%8F/" data-id="ckl3uft9p003e1cq2gw3ngi1w"
+        class="article-share-link">分享</a>
+      
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
+    <article id="post-BJDCTF2020刷题记录" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/13/BJDCTF2020%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/"
+    >BJDCTF2020刷题记录</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/13/BJDCTF2020%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" class="article-date">
+  <time datetime="2020-05-13T02:25:34.000Z" itemprop="datePublished">2020-05-13</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/">刷题记录</a>
+  </div>
+
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="web"><a href="#web" class="headerlink" title="web"></a>web</h1><h2 id="Easy-MD5"><a href="#Easy-MD5" class="headerlink" title="Easy MD5"></a>Easy MD5</h2><p>在题目返回的http header中给出了提示</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from &#39;admin&#39; where password&#x3D;md5($pass,true)</span><br></pre></td></tr></table></figure>
+
+<p>要使得某个字符串的md5值转字符串后出现形如 <code>&#39;or&#39;1</code></p>
+      
+      <a class="article-more-link" href="/2020/05/13/BJDCTF2020%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/">阅读更多...</a>
+      
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/05/13/BJDCTF2020%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" data-id="ckl3uft8k00081cq208pbeqho"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
+    <article id="post-网鼎杯2020记录" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/11/%E7%BD%91%E9%BC%8E%E6%9D%AF2020%E8%AE%B0%E5%BD%95/"
+    >网鼎杯2020记录</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/11/%E7%BD%91%E9%BC%8E%E6%9D%AF2020%E8%AE%B0%E5%BD%95/" class="article-date">
+  <time datetime="2020-05-10T16:09:53.000Z" itemprop="datePublished">2020-05-11</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%88%B7%E9%A2%98/">刷题</a>
+  </div>
+
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="web"><a href="#web" class="headerlink" title="web"></a>web</h1><h2 id="青龙组-filejava"><a href="#青龙组-filejava" class="headerlink" title="青龙组 filejava"></a>青龙组 filejava</h2><p>上传一个文件后得到下载地址，下载地址可以随意读取文件，读取为目录时报错，得到绝对路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">java.io.FileNotFoundException: &#x2F;usr&#x2F;local&#x2F;tomcat&#x2F;webapps&#x2F;ROOT&#x2F;WEB-INF&#x2F;upload&#x2F;15&#x2F;12&#x2F;..&#x2F;..&#x2F;.. (Is a directory)</span><br><span class="line">	java.io.FileInputStream.open0(Native Method)</span><br><span class="line">	java.io.FileInputStream.open(FileInputStream.java:195)</span><br><span class="line">	java.io.FileInputStream.&lt;init&gt;(FileInputStream.java:138)</span><br><span class="line">	java.io.FileInputStream.&lt;init&gt;(FileInputStream.java:93)</span><br><span class="line">	cn.abc.servlet.DownloadServlet.doPost(DownloadServlet.java:43)</span><br><span class="line">	cn.abc.servlet.DownloadServlet.doGet(DownloadServlet.java:22)</span><br><span class="line">	javax.servlet.http.HttpServlet.service(HttpServlet.java:634)</span><br><span class="line">	javax.servlet.http.HttpServlet.service(HttpServlet.java:741)</span><br><span class="line">	org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)</span><br></pre></td></tr></table></figure>
+      
+      <a class="article-more-link" href="/2020/05/11/%E7%BD%91%E9%BC%8E%E6%9D%AF2020%E8%AE%B0%E5%BD%95/">阅读更多...</a>
+      
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/05/11/%E7%BD%91%E9%BC%8E%E6%9D%AF2020%E8%AE%B0%E5%BD%95/" data-id="ckl3uft9m00331cq2ccfy60ji"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%AF%94%E8%B5%9B%E8%BF%87%E7%A8%8B/" rel="tag">比赛过程</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
+    <article id="post-De1ctf记录" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/02/De1ctf%E8%AE%B0%E5%BD%95/"
+    >De1ctf记录</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/02/De1ctf%E8%AE%B0%E5%BD%95/" class="article-date">
+  <time datetime="2020-05-02T02:55:23.000Z" itemprop="datePublished">2020-05-02</time>
+</a>
+      
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="web"><a href="#web" class="headerlink" title="web"></a>web</h1><h2 id="check-in"><a href="#check-in" class="headerlink" title="check in"></a><strong>check in</strong></h2><p>打开链接是一个文件上传页面，抓包发现服务器是php5.4.16版本。上传一句话木马提示文件类型错误。后缀名不能是php，phtml,php2等之类的。还有MIME过滤，还对内容进行了过滤,不能包含一下字符</p>
+      
+      <a class="article-more-link" href="/2020/05/02/De1ctf%E8%AE%B0%E5%BD%95/">阅读更多...</a>
+      
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/05/02/De1ctf%E8%AE%B0%E5%BD%95/" data-id="ckl3uft8i00061cq28yvdhy2z"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/De1CTF2020/" rel="tag">De1CTF2020</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
+    <article id="post-无参数RCE的研究" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/04/30/%E6%97%A0%E5%8F%82%E6%95%B0RCE%E7%9A%84%E7%A0%94%E7%A9%B6/"
+    >无参数RCE的研究</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/04/30/%E6%97%A0%E5%8F%82%E6%95%B0RCE%E7%9A%84%E7%A0%94%E7%A9%B6/" class="article-date">
+  <time datetime="2020-04-30T14:49:16.000Z" itemprop="datePublished">2020-04-30</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%97%A5%E5%B8%B8%E7%A7%AF%E7%B4%AF/">日常积累</a>
+  </div>
+
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h1><p>在写一道简单的web题目时候遇到一个奇怪的正则表达式，在此记录一下</p>
+      
+      <a class="article-more-link" href="/2020/04/30/%E6%97%A0%E5%8F%82%E6%95%B0RCE%E7%9A%84%E7%A0%94%E7%A9%B6/">阅读更多...</a>
+      
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/04/30/%E6%97%A0%E5%8F%82%E6%95%B0RCE%E7%9A%84%E7%A0%94%E7%A9%B6/" data-id="ckl3uft9j002t1cq2e3wua72q"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%97%A0%E5%8F%82%E6%95%B0Rec/" rel="tag">无参数Rec</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
+    <article id="post-GXYCTF2019-web" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/04/26/GXYCTF2019-web/"
+    >GXYCTF2019-web</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/04/26/GXYCTF2019-web/" class="article-date">
+  <time datetime="2020-04-26T07:52:11.000Z" itemprop="datePublished">2020-04-26</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/">刷题记录</a>
+  </div>
+
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="web"><a href="#web" class="headerlink" title="web"></a>web</h1><h2 id="禁止套娃"><a href="#禁止套娃" class="headerlink" title="禁止套娃"></a>禁止套娃</h2><p>扫描目录发现git泄露</p>
+      
+      <a class="article-more-link" href="/2020/04/26/GXYCTF2019-web/">阅读更多...</a>
+      
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/04/26/GXYCTF2019-web/" data-id="ckl3uft8n000d1cq236p54cp7"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gxyctf2019/" rel="tag">gxyctf2019</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
+    <article id="post-ACTF刷题2020" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/04/26/ACTF%E5%88%B7%E9%A2%982020/"
+    >ACTF2020刷题</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/04/26/ACTF%E5%88%B7%E9%A2%982020/" class="article-date">
+  <time datetime="2020-04-26T04:42:45.000Z" itemprop="datePublished">2020-04-26</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/">刷题记录</a>
+  </div>
+
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="web"><a href="#web" class="headerlink" title="web"></a>web</h1><h2 id="Include"><a href="#Include" class="headerlink" title="Include"></a>Include</h2><p>简单为协议包含</p>
+      
+      <a class="article-more-link" href="/2020/04/26/ACTF%E5%88%B7%E9%A2%982020/">阅读更多...</a>
+      
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/04/26/ACTF%E5%88%B7%E9%A2%982020/" data-id="ckl3uft8900001cq27udl2dzq"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/" rel="tag">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" rel="tag">刷题记录</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
+    <article id="post-安恒月赛20200425" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/04/25/%E5%AE%89%E6%81%92%E6%9C%88%E8%B5%9B20200425/"
+    >安恒月赛20200425</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/04/25/%E5%AE%89%E6%81%92%E6%9C%88%E8%B5%9B20200425/" class="article-date">
+  <time datetime="2020-04-25T05:36:03.000Z" itemprop="datePublished">2020-04-25</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95/">比赛记录</a>
+  </div>
+
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="web"><a href="#web" class="headerlink" title="web"></a>web</h1><h2 id="Ezunserialize"><a href="#Ezunserialize" class="headerlink" title="Ezunserialize"></a>Ezunserialize</h2><p>打开就有源码</p>
+      
+      <a class="article-more-link" href="/2020/04/25/%E5%AE%89%E6%81%92%E6%9C%88%E8%B5%9B20200425/">阅读更多...</a>
+      
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/04/25/%E5%AE%89%E6%81%92%E6%9C%88%E8%B5%9B20200425/" data-id="ckl3uft9i002q1cq211y05emo"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/" rel="tag">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%85%E8%A1%A5%E5%85%85/" rel="tag">待补充</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
+    <article id="post-NPUCTF" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/04/19/NPUCTF/"
+    >NPUCTF</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/04/19/NPUCTF/" class="article-date">
+  <time datetime="2020-04-19T12:52:53.000Z" itemprop="datePublished">2020-04-19</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/">刷题记录</a>
+  </div>
+
+    </div>
+    
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="web"><a href="#web" class="headerlink" title="web"></a>web</h1><h2 id="验证🐎"><a href="#验证🐎" class="headerlink" title="验证🐎"></a>验证🐎</h2><p>给了源码</p>
+      
+      <a class="article-more-link" href="/2020/04/19/NPUCTF/">阅读更多...</a>
+      
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/04/19/NPUCTF/" data-id="ckl3uft8q000k1cq2a3nzg5vi"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NPUCTF/" rel="tag">NPUCTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xpath%E6%B3%A8%E5%85%A5/" rel="tag">xpath注入</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%A9%E7%94%A8%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-php%E4%B8%B4%E6%97%B6%E7%BC%93%E5%AD%98%E6%8B%BFshell/" rel="tag">利用文件包含+php临时缓存拿shell</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+
+  
+
+  
+
+</article>
+    
+  </article>
+  
+
+  
+  <nav class="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+  </nav>
+  
+</section>
+</div>
+
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        sunny250
+      </li>
+      <li>
+        
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a> by shenyu
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <ul class="list-inline">
+  <li>PV:<span id="busuanzi_value_page_pv"></span></li>
+  <li>UV:<span id="busuanzi_value_site_uv"></span></li>
+</ul>
+        
+      </li>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+    <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    
+      <aside class="sidebar">
+        
+        <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt="晴天`blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives/">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/links/">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about/">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      </aside>
+      
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+
+
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+
+<script src="/js/ayer.js"></script>
+
+
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  </div>
+</body>
+
+</html>
