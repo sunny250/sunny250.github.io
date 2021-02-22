@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="blog" />
+   
+  <meta name="description" content="sunny250`s blog" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    hook神器FRIDA |  sunny250`s blog
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+  
+<script src="/js/pace.min.js"></script>
+
+
+  
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="sunny250`s blog" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-hook神器FRIDA" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  hook神器FRIDA
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/02/14/hook%E7%A5%9E%E5%99%A8FRIDA/" class="article-date">
+  <time datetime="2021-02-13T16:04:40.000Z" itemprop="datePublished">2021-02-14</time>
+</a>
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="hook神器FRIDA"><a href="#hook神器FRIDA" class="headerlink" title="hook神器FRIDA"></a>hook神器FRIDA</h1><h2 id="0x00-安装"><a href="#0x00-安装" class="headerlink" title="0x00 安装"></a>0x00 安装</h2><ol>
+<li>使用python 一键安装</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip3 install frida</span><br><span class="line">pip3 install frida-tools</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>在安卓手机上安装frida-server</p>
+<p>下载地址<a href="https://github.com/frida/frida/releases" target="_blank" rel="noopener">https://github.com/frida/frida/releases</a></p>
+<p>搜索frida-server，现在的手机一般都是arm64，平板是x86选择对应的版本下载</p>
+<p>使用adb工具将firda-server推送到已root手机的/data/loca/tmp中（其他目录也可以，一般是使用这个目录）</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb push frida-server-14.2.7-android-arm64 /data/<span class="built_in">local</span>/tmp </span><br><span class="line">adb shell chmod +x /data/<span class="built_in">local</span>/tmp/frida-server-14.2.7-android-arm64</span><br><span class="line">adb shell /data/<span class="built_in">local</span>/tmp/frida-server-14.2.7-android-arm64</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<ol start="3">
+<li>使用命令frida-ps查看是否成功链接上frida-server</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">frida-ps -U</span><br></pre></td></tr></table></figure>
+
+<p>​        如果出现了apk的包名则表示成功连接</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">PID  Name</span><br><span class="line">----  -------------------------------</span><br><span class="line"> 261  adbd</span><br><span class="line">1008  android.process.media</span><br><span class="line">1656  com.android.defcontainer</span><br><span class="line">4026  com.android.documentsui</span><br><span class="line">4053  com.android.externalstorage</span><br><span class="line">1759  com.android.gallery3d</span><br><span class="line">1383  com.android.keychain</span><br><span class="line">1718  com.android.phone</span><br><span class="line">1791  com.android.settings</span><br><span class="line">1690  com.android.settings:superuser</span><br><span class="line">4081  com.android.shell</span><br><span class="line"> 743  com.android.systemui</span><br><span class="line"> 824  com.tencent.mm</span><br><span class="line">1140  com.tencent.mm:push</span><br><span class="line">	.....</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x01-基础"><a href="#0x01-基础" class="headerlink" title="0x01 基础"></a>0x01 基础</h2><p>先查看手册<a href="https://frida.re/docs/javascript-api/" target="_blank" rel="noopener">英文原版</a> <a href="https://zhuanlan.kanxue.com/article-342.htm" target="_blank" rel="noopener">中文版上</a><a href="https://zhuanlan.kanxue.com/article-414.htm" target="_blank" rel="noopener">中文版下</a></p>
+<p>roysue大佬写了详细的教程</p>
+<h3 id="1-hook参数修改结果"><a href="#1-hook参数修改结果" class="headerlink" title="1. hook参数修改结果"></a>1. hook参数修改结果</h3><p>例子<a href="https://github.com/11x256/frida-android-examples/tree/master/examples/1" target="_blank" rel="noopener">下载地址</a></p>
+<p>先安装apk，然后启动</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//apk主要代码</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">my_activity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_my_activity);</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;       <span class="comment">//无限循环</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            fun(<span class="number">50</span>,<span class="number">30</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">fun</span><span class="params">(<span class="keyword">int</span> x , <span class="keyword">int</span> y )</span></span>&#123;</span><br><span class="line">        Log.d(<span class="string">"Sum"</span> , String.valueOf(x+y));   <span class="comment">//打印x+y的值</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用adb命令查看程序启动时打印的x+y的值</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">01-21 22:28:04.489  4910  4910 D Sum     : 80</span><br><span class="line">01-21 22:28:05.523  4910  4910 D Sum     : 80</span><br><span class="line">01-21 22:28:06.614  4910  4910 D Sum     : 80</span><br><span class="line">01-21 22:28:07.615  4910  4910 D Sum     : 80</span><br><span class="line">01-21 22:28:08.617  4910  4910 D Sum     : 80</span><br><span class="line">01-21 22:28:09.618  4910  4910 D Sum     : 80</span><br><span class="line">01-21 22:28:10.619  4910  4910 D Sum     : 80</span><br><span class="line">01-21 22:28:11.619  4910  4910 D Sum     : 80</span><br><span class="line">01-21 22:28:12.620  4910  4910 D Sum     : 80</span><br><span class="line">01-21 22:28:13.630  4910  4910 D Sum     : 80</span><br><span class="line">01-21 22:28:14.639  4910  4910 D Sum     : 80</span><br><span class="line">01-21 22:28:15.639  4910  4910 D Sum     : 80</span><br></pre></td></tr></table></figure>
+
+<p>按照官方的手册写一段劫持的js代码,命名为demo1.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">"Script loaded successfully "</span>);</span><br><span class="line">Java.perform(<span class="function"><span class="keyword">function</span> <span class="title">x</span>(<span class="params"></span>) </span>&#123; <span class="comment">//Java.perform(fn): ensure that the current thread is attached to the VM and call fn</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"Inside java perform function"</span>);</span><br><span class="line">    <span class="comment">//添加要劫持的类</span></span><br><span class="line">    <span class="keyword">var</span> my_class = Java.use(<span class="string">"com.example.a11x256.frida_test.my_activity"</span>);</span><br><span class="line">    <span class="comment">//重写函数</span></span><br><span class="line">    my_class.fun.implementation = <span class="function"><span class="keyword">function</span> (<span class="params">x, y</span>) </span>&#123;</span><br><span class="line">        <span class="comment">//打印函数原来的值</span></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"original call: fun("</span> + x + <span class="string">", "</span> + y + <span class="string">")"</span>);</span><br><span class="line">        <span class="comment">//使用2，5代替x,y返回参数</span></span><br><span class="line">        <span class="keyword">var</span> ret_value = <span class="keyword">this</span>.fun(<span class="number">2</span>, <span class="number">5</span>);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"now call: fun(2, 5)"</span>);</span><br><span class="line">        <span class="keyword">return</span> ret_value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>使用python调用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys, frida</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">"./demo1.js"</span>,<span class="string">"r+"</span>) <span class="keyword">as</span> jsfile:   <span class="comment">#读取刚才写的js的内容</span></span><br><span class="line">    jscode=jsfile.read()</span><br><span class="line"></span><br><span class="line">device = frida.get_usb_device()  //获取usb设备</span><br><span class="line">pid = device.spawn(<span class="string">"com.example.a11x256.frida_test"</span>)   <span class="comment">#注入apk</span></span><br><span class="line">device.resume(pid)      </span><br><span class="line">time.sleep(<span class="number">1</span>)     <span class="comment">#休眠1秒，如无此操作，部分类可能无法hook</span></span><br><span class="line">session = device.attach(pid)</span><br><span class="line">script = session.create_script(jscode)   <span class="comment">#创建脚本</span></span><br><span class="line">script.load()     <span class="comment">#加载脚本</span></span><br><span class="line"></span><br><span class="line">sys.stdin.read()  <span class="comment">#持续查看输入</span></span><br></pre></td></tr></table></figure>
+
+<p> 当执行此脚本时，观察logcat打印的信息，发现不是打印80而是改成7了。</p>
+<p>当脚本执行时</p>
+<p><img src="/pic/demo1.png" alt=""></p>
+<p><img src="/pic/demo1_stop.png" alt=""></p>
+<h3 id="2-劫持重载函数，主动调用"><a href="#2-劫持重载函数，主动调用" class="headerlink" title="2. 劫持重载函数，主动调用"></a>2. 劫持重载函数，主动调用</h3><p>例子<a href="https://github.com/11x256/frida-android-examples/tree/master/examples/2" target="_blank" rel="noopener">下载链接</a></p>
+<p>同样先安装apk，然后打开<br>主要代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.a11x256.frida_test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">my_activity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String total = <span class="string">"@@@###@@@"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_my_activity);</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            fun(<span class="number">50</span>,<span class="number">30</span>);</span><br><span class="line">            Log.d(<span class="string">"string"</span> , fun(<span class="string">"LoWeRcAsE Me!!!!!!!!!"</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">fun</span><span class="params">(<span class="keyword">int</span> x , <span class="keyword">int</span> y )</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        Log.d(<span class="string">"Sum"</span> , String.valueOf(x+y));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">String <span class="title">fun</span><span class="params">(String x)</span></span>&#123;</span><br><span class="line">        total +=x;</span><br><span class="line">        <span class="keyword">return</span> x.toLowerCase();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">String <span class="title">secret</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> total;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>与例子一比较，多了2个地方，一个fun的重载函数和一个secret函数。</p>
+<p>启动app后使用logcat查看打印的日志</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">01-22 01:54:11.019  5264  5264 D Sum     : 80</span><br><span class="line">01-22 01:54:11.019  5264  5264 D string  : lowercase me!!!!!!!!!</span><br><span class="line">01-22 01:54:12.020  5264  5264 D Sum     : 80</span><br><span class="line">01-22 01:54:12.020  5264  5264 D string  : lowercase me!!!!!!!!!</span><br><span class="line">01-22 01:54:13.030  5264  5264 D Sum     : 80</span><br><span class="line">01-22 01:54:13.030  5264  5264 D string  : lowercase me!!!!!!!!!</span><br><span class="line">01-22 01:54:14.037  5264  5264 D Sum     : 80</span><br><span class="line">01-22 01:54:14.037  5264  5264 D string  : lowercase me!!!!!!!!!</span><br><span class="line">01-22 01:54:15.038  5264  5264 D Sum     : 80</span><br><span class="line">01-22 01:54:15.038  5264  5264 D string  : lowercase me!!!!!!!!!</span><br><span class="line">01-22 01:54:16.040  5264  5264 D Sum     : 80</span><br><span class="line">01-22 01:54:16.040  5264  5264 D string  : lowercase me!!!!!!!!!</span><br><span class="line">01-22 01:54:17.045  5264  5264 D Sum     : 80</span><br><span class="line">01-22 01:54:17.045  5264  5264 D string  : lowercase me!!!!!!!!!</span><br><span class="line">01-22 01:54:18.049  5264  5264 D Sum     : 80</span><br><span class="line">01-22 01:54:18.049  5264  5264 D string  : lowercase me!!!!!!!!!</span><br><span class="line">01-22 01:54:19.055  5264  5264 D Sum     : 80</span><br><span class="line">01-22 01:54:19.055  5264  5264 D string  : lowercase me!!!!!!!!!</span><br></pre></td></tr></table></figure>
+
+<p>重载函数需要加一个overload来处理，参数为String类的时候，由于String类不是Java基本数据类型，而是java.lang.String类型，所以在替换参数的构造上，需要使用java.lang.String类。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">my_class.fun.overload(<span class="string">"int"</span> , <span class="string">"int"</span>).implementation = <span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>)</span>&#123;</span><br><span class="line">...</span><br><span class="line">my_class.fun.overload(<span class="string">"java.lang.String"</span>).implementation = <span class="function"><span class="keyword">function</span>(<span class="params">x</span>)</span>&#123;</span><br></pre></td></tr></table></figure>
+
+<p>js脚本就变成了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Java.perform(<span class="function"><span class="keyword">function</span> <span class="title">x</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"Inside java perform function"</span>);</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">var</span> my_class= Java.use(<span class="string">"com.example.a11x256.frida_test.my_activity"</span>)</span><br><span class="line">    <span class="keyword">var</span> string_class = Java.use(<span class="string">"java.lang.String"</span>);   <span class="comment">//参数为String类的时候，由于String类不是Java基本数据类型，而是java.lang.String类型，所以在替换参数的构造上，需要使用java.lang.String类</span></span><br><span class="line">  </span><br><span class="line">    my_class.fun.overload(<span class="string">"java.lang.String"</span>).implementation = <span class="function"><span class="keyword">function</span> (<span class="params">x</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"****************"</span>)</span><br><span class="line">        <span class="comment">//print the original arguments</span></span><br><span class="line">        <span class="keyword">var</span> my_string = string_class.$<span class="keyword">new</span>(<span class="string">"MYSTRINGS"</span>);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"original call: fun("</span> + <span class="keyword">this</span>.fun(x)+<span class="string">")"</span>);        <span class="comment">//调用原函数</span></span><br><span class="line">        <span class="keyword">var</span> ret_value = <span class="keyword">this</span>.fun(my_string);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"modefied strings is :"</span> + my_string);  </span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"****************"</span>)</span><br><span class="line">        <span class="keyword">return</span> ret_value;  <span class="comment">//返回修改后的值MYSTRINGS</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">     my_class.fun.overload(<span class="string">"int"</span>,<span class="string">"int"</span>).implementation = <span class="function"><span class="keyword">function</span> (<span class="params">x,y</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"****************"</span>)</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"original call: fun("</span> +x+<span class="string">","</span>+y+<span class="string">")"</span>); <span class="comment">//打印原来的参数</span></span><br><span class="line">        <span class="keyword">var</span> ret_value = <span class="keyword">this</span>.fun(x,<span class="number">45</span>);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"modefied args is :"</span> + x+<span class="string">",45"</span> );</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"****************"</span>)</span><br><span class="line">        <span class="keyword">return</span> ret_value;  <span class="comment">//返回修改后的值X+45</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>在此处再加一个python的消息处理接受函数，使用script.on()调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">def <span class="title">on_message</span><span class="params">(message, data)</span>:</span></span><br><span class="line"><span class="function">    <span class="keyword">if</span> message['type'] </span>== <span class="string">'seend'</span>:</span><br><span class="line">        print(<span class="string">"[*] &#123;0&#125;"</span>.format(message[<span class="string">'payload'</span>]))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        print(message)</span><br></pre></td></tr></table></figure>
+
+<p>完整的python脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys, frida, time</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">on_message</span><span class="params">(message, data)</span>:</span>   <span class="comment">#消息处理</span></span><br><span class="line">    <span class="keyword">if</span> message[<span class="string">'type'</span>] == <span class="string">'seend'</span>:</span><br><span class="line">        print(<span class="string">"[*] &#123;0&#125;"</span>.format(message[<span class="string">'payload'</span>]))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        print(message)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">"./demo2.js"</span>,<span class="string">"r+"</span>) <span class="keyword">as</span> jsfile: <span class="comment">#读取js文件的内容</span></span><br><span class="line">    jscode=jsfile.read()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">device = frida.get_usb_device()   <span class="comment">#使用usb设备</span></span><br><span class="line">pid = device.spawn(<span class="string">"com.example.a11x256.frida_test"</span>)   <span class="comment">#使用spwan模式</span></span><br><span class="line">device.resume(pid)  </span><br><span class="line">time.sleep(<span class="number">1</span>)   <span class="comment">#休眠一秒</span></span><br><span class="line">session = device.attach(pid)   </span><br><span class="line">script = session.create_script(jscode)   <span class="comment">#创建脚本  </span></span><br><span class="line">script.on(<span class="string">"message"</span>, on_message)   <span class="comment">#消息处理</span></span><br><span class="line">script.load()    <span class="comment">#加载脚本</span></span><br><span class="line">sys.stdin.read()</span><br></pre></td></tr></table></figure>
+
+<p>启动脚本，并且查看logcat的日志输出的日志变成了劫持后的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">01-22 01:56:36.312  5291  5291 D Sum     : 95</span><br><span class="line">01-22 01:56:36.323  5291  5291 D string  : mystrings</span><br><span class="line">01-22 01:56:37.324  5291  5291 D Sum     : 95</span><br><span class="line">01-22 01:56:37.328  5291  5291 D string  : mystrings</span><br><span class="line">01-22 01:56:38.328  5291  5291 D Sum     : 95</span><br><span class="line">01-22 01:56:38.329  5291  5291 D string  : mystrings</span><br><span class="line">01-22 01:56:39.329  5291  5291 D Sum     : 95</span><br><span class="line">01-22 01:56:39.330  5291  5291 D string  : mystrings</span><br><span class="line">01-22 01:56:40.331  5291  5291 D Sum     : 95</span><br><span class="line">01-22 01:56:40.332  5291  5291 D string  : mystrings</span><br><span class="line">01-22 01:56:41.332  5291  5291 D Sum     : 95</span><br><span class="line">01-22 01:56:41.333  5291  5291 D string  : mystrings</span><br><span class="line">01-22 01:56:42.334  5291  5291 D Sum     : 95</span><br><span class="line">01-22 01:56:42.335  5291  5291 D string  : mystrings</span><br><span class="line">01-22 01:56:43.336  5291  5291 D Sum     : 95</span><br><span class="line">01-22 01:56:43.337  5291  5291 D string  : mystrings</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-主动调用，远程调用"><a href="#3-主动调用，远程调用" class="headerlink" title="3. 主动调用，远程调用"></a>3. 主动调用，远程调用</h3><p>此时还有一个sercet函数没有调用。想要调用可以搜索内存中的此函数并进行调用。搜索函数使用Java.choose</p>
+<blockquote>
+<p>关于Java.use和Java.choose的</p>
+<p><strong>Java.use(fn):</strong> 把当前线程附加到Java VM环境中去，并且执行Java函数fn（如果已经在Java函数的回调中，则不需要再附加到VM）</p>
+<p><strong>Java.choose(className, callbacks):</strong> 在Java的内存堆上扫描指定类名称的Java对象，每次扫描到一个对象，则回调<strong>callbacks</strong>:</p>
+<ul>
+<li><strong>onMatch: function(instance):</strong> 每次扫描到一个实例对象，调用一次，函数返回<strong>stop</strong>结束扫描的过程</li>
+<li><strong>onComplete: function():</strong> 当所有的对象都扫描完毕之后进行回调</li>
+</ul>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">"Script loaded successfully "</span>);</span><br><span class="line">Java.perform(<span class="function"><span class="keyword">function</span> <span class="title">x</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"Inside java perform function"</span>);</span><br><span class="line"></span><br><span class="line">    Java.choose(<span class="string">"com.example.a11x256.frida_test.my_activity"</span>, &#123;</span><br><span class="line">        onMatch: <span class="function"><span class="keyword">function</span> (<span class="params">instance</span>) </span>&#123;    <span class="comment">//在内存上搜索class的实例</span></span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"Found instance: "</span> + instance);     <span class="comment">//搜索到后打印</span></span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"Result of secret func: "</span> + instance.secret());   <span class="comment">//调用隐藏方法</span></span><br><span class="line">        &#125;,</span><br><span class="line">        onComplete: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>python脚本如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys, frida, time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">on_message</span><span class="params">(message, data)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> message[<span class="string">'type'</span>] == <span class="string">'seend'</span>:</span><br><span class="line">        print(<span class="string">"[*] &#123;0&#125;"</span>.format(message[<span class="string">'payload'</span>]))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        print(message)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">"./demo2.js"</span>,<span class="string">"r+"</span>) <span class="keyword">as</span> jsfile:</span><br><span class="line">    jscode=jsfile.read()</span><br><span class="line"></span><br><span class="line">device = frida.get_usb_device()</span><br><span class="line">pid = device.spawn(<span class="string">"com.example.a11x256.frida_test"</span>)</span><br><span class="line">device.resume(pid)</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line">session = device.attach(pid)</span><br><span class="line">script = session.create_script(jscode)</span><br><span class="line">script.on(<span class="string">"message"</span>, on_message)</span><br><span class="line">script.load()</span><br></pre></td></tr></table></figure>
+
+<p>python的输出结果为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Script loaded successfully </span><br><span class="line">Inside java perform <span class="keyword">function</span></span><br><span class="line">Found instance: com.example.a11x256.frida_test.my_activity@e0b1cfc</span><br><span class="line">Result of secret func: @@@<span class="comment">###@@@LoWeRcAsE Me!!!!!!!!!</span></span><br><span class="line">end...</span><br><span class="line"></span><br><span class="line">Process finished with <span class="built_in">exit</span> code 0</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这么写只能调用一次，现在需要调用很多次时候。rpc.exports登场</p>
+<blockquote>
+<p><strong>rpc.exports:</strong> 可以在你的程序中导出一些 <strong>RPC-Style</strong> API函数，Key指定导出的名称，Value指定导出的函数，函数可以直接返回一个值，也可以是异步方式以 <strong>Promise</strong> 的方式返回</p>
+</blockquote>
+<p>对上面的代码用一个函数包起来</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Secret</span>(<span class="params"></span>) </span>&#123;   <span class="comment">//Defining the function that will be exported</span></span><br><span class="line">    Java.perform(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;    <span class="comment">//code that calls `secret` function from the previous example</span></span><br><span class="line">        Java.choose(<span class="string">"com.example.a11x256.frida_test.my_activity"</span>, &#123;</span><br><span class="line">            onMatch: <span class="function"><span class="keyword">function</span> (<span class="params">instance</span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"Found instance: "</span> + instance);</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"Result of secret func: "</span> + instance.secret());</span><br><span class="line">            &#125;,</span><br><span class="line">            onComplete: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pc.exports = &#123;</span><br><span class="line">  secret:Secret  <span class="comment">//使用secret函数名称代替Secret函数名，不能有大写字母下划线。在处理的时候会被转化成小写，下划线会被去掉</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>python脚本如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> frida,time</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">on_message</span><span class="params">(message, data)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> message[<span class="string">'type'</span>] == <span class="string">'seend'</span>:</span><br><span class="line">        print(<span class="string">"[*] &#123;0&#125;"</span>.format(message[<span class="string">'payload'</span>]))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        print(message)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open (<span class="string">"./demo3.js"</span>,<span class="string">"r+"</span>) <span class="keyword">as</span> jsfile:</span><br><span class="line">    jscode=jsfile.read()</span><br><span class="line"></span><br><span class="line">device =frida.get_usb_device()</span><br><span class="line">pid = device.attach(<span class="string">"com.example.a11x256.frida_test"</span>)</span><br><span class="line">script=pid.create_script(jscode)</span><br><span class="line">script.on(<span class="string">"message"</span>,on_message)</span><br><span class="line">script.load()</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span> :</span><br><span class="line">    script.exports.call()</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x02-参考资料"><a href="#0x02-参考资料" class="headerlink" title="0x02 参考资料"></a>0x02 参考资料</h2><p><a href="https://11x256.github.io/" target="_blank" rel="noopener">https://11x256.github.io/</a><br><a href="https://frida.re/docs/javascript-api/" target="_blank" rel="noopener">https://frida.re/docs/javascript-api/</a><br><a href="https://github.com/r0ysue/AndroidSecurityStudy" target="_blank" rel="noopener">https://github.com/r0ysue/AndroidSecurityStudy</a><br><a href="https://eternalsakura13.com/2020/07/04/frida/#more" target="_blank" rel="noopener">https://eternalsakura13.com/2020/07/04/frida/#more</a></p>
+
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2021/02/14/hook%E7%A5%9E%E5%99%A8FRIDA/" data-id="cklfwh3z3002uitq2csvwbpnl"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/frida/" rel="tag">frida</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hook/" rel="tag">hook</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" rel="tag">工具使用</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+    
+      <a href="/2020/11/14/sxf%E9%9D%A2%E8%AF%95/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">sxf面试</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+  <div class="gitalk" id="gitalk-container"></div>
+  
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c2ff86b3b4668317d630',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c',
+      repo: 'sunny250.github.io',
+      owner: 'sunny250',
+      admin: ['sunny250'],
+      // id: location.pathname,      // Ensure uniqueness and length less than 50
+      id: md5(location.pathname),
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      pagerDirection: 'last'
+    })
+
+  gitalk.render('gitalk-container')
+  </script>
+
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        sunny250
+      </li>
+      <li>
+        
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a> by shenyu
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <ul class="list-inline">
+  <li>PV:<span id="busuanzi_value_page_pv"></span></li>
+  <li>UV:<span id="busuanzi_value_site_uv"></span></li>
+</ul>
+        
+      </li>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+    <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    
+    <aside class="sidebar">
+      
+        <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt="sunny250`s blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives/">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/links/">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about/">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      </aside>
+      
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+
+  
+<script src="/js/tocbot.min.js"></script>
+
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+
+<script src="/js/ayer.js"></script>
+
+
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  </div>
+</body>
+
+</html>

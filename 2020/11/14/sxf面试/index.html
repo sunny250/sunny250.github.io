@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="blog" />
+   
+  <meta name="description" content="sunny250`s blog" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    sxf面试 |  sunny250`s blog
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+  
+<script src="/js/pace.min.js"></script>
+
+
+  
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="sunny250`s blog" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-sxf面试" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  sxf面试
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/11/14/sxf%E9%9D%A2%E8%AF%95/" class="article-date">
+  <time datetime="2020-11-14T06:20:01.000Z" itemprop="datePublished">2020-11-14</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9D%A2%E8%AF%95/">面试</a>
+  </div>
+
+    </div>
+    
+
+    
+    
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <script src=/js/crypto-js.js></script>
+<script>
+function doDecrypt (pwd, onError) {
+	console.log('in doDecrypt');
+	const txt = document.getElementById('enc_content').innerHTML;
+	let plantext;
+	try {
+		const bytes = CryptoJS.AES.decrypt(txt, pwd);
+		var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+	} catch(err) {
+		if(onError) {
+			onError(err);
+		}
+		return;
+	}
+	document.getElementById('enc_content').innerHTML = plaintext;
+	document.getElementById('enc_content').style.display = 'block';
+	document.getElementById('enc_passwd').style.display = 'none';
+	if(typeof MathJax !== 'undefined') {
+		MathJax.Hub.Queue(
+			['resetEquationNumbers', MathJax.InputJax.TeX],
+			['PreProcess', MathJax.Hub],
+			['Reprocess', MathJax.Hub]
+		);
+	}
+}
+</script>
+<div id="enc_content" style="display:none">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</div>
+<div id="enc_passwd"> <input id="enc_pwd_input" type="password" style="border-radius: 5px;border-style: groove;height: 30px;width: 50%;cursor: auto;font-size: 102%;color: currentColor;outline: none;text-overflow: initial;padding-left: 5px;" onkeydown="if (event.keyCode == 13) { decrypt(); return false;}"> <input type="submit" value="解&nbsp;密" onclick="decrypt()" style="width: 58px;height: 34px;border-radius: 5px;background-color: white;border-style: solid;color: currentColor;"><div id="enc_error" style="display: inline-block;color: #d84527;margin-left: 10px"></div>
+<script>
+var onError = function(error) {
+	document.getElementById("enc_error").innerHTML = "password error!"
+};
+function decrypt() {
+var passwd = document.getElementById("enc_pwd_input").value;
+console.log(passwd);
+doDecrypt(passwd, onError);
+}
+</script>
+</div>
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/11/14/sxf%E9%9D%A2%E8%AF%95/" data-id="cklfwh3zf003gitq221kn1wvb"
+        class="article-share-link">分享</a>
+      
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2021/02/14/hook%E7%A5%9E%E5%99%A8FRIDA/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            hook神器FRIDA
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/11/11/brida%20%E5%AE%89%E5%8D%93%E6%B8%97%E9%80%8F%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">安卓渗透工具安装</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+  <div class="gitalk" id="gitalk-container"></div>
+  
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c2ff86b3b4668317d630',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c',
+      repo: 'sunny250.github.io',
+      owner: 'sunny250',
+      admin: ['sunny250'],
+      // id: location.pathname,      // Ensure uniqueness and length less than 50
+      id: md5(location.pathname),
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      pagerDirection: 'last'
+    })
+
+  gitalk.render('gitalk-container')
+  </script>
+
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        sunny250
+      </li>
+      <li>
+        
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a> by shenyu
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <ul class="list-inline">
+  <li>PV:<span id="busuanzi_value_page_pv"></span></li>
+  <li>UV:<span id="busuanzi_value_site_uv"></span></li>
+</ul>
+        
+      </li>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+    <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    
+    <aside class="sidebar">
+      
+        <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt="sunny250`s blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives/">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/links/">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about/">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      </aside>
+      
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+
+  
+<script src="/js/tocbot.min.js"></script>
+
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+
+<script src="/js/ayer.js"></script>
+
+
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  </div>
+</body>
+
+</html>

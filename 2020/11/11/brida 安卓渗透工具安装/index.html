@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="blog" />
+   
+  <meta name="description" content="sunny250`s blog" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    安卓渗透工具安装 |  sunny250`s blog
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+  
+<script src="/js/pace.min.js"></script>
+
+
+  
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="sunny250`s blog" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-brida 安卓渗透工具安装" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  安卓渗透工具安装
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/11/11/brida%20%E5%AE%89%E5%8D%93%E6%B8%97%E9%80%8F%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="article-date">
+  <time datetime="2020-11-11T02:25:34.000Z" itemprop="datePublished">2020-11-11</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%B5%8B%E8%AF%95/">移动端测试</a>
+  </div>
+
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="brida-安卓渗透工具安装"><a href="#brida-安卓渗透工具安装" class="headerlink" title="brida 安卓渗透工具安装"></a>brida 安卓渗透工具安装</h1><p>阅读此文需要一点点基础，如有不懂，可直接私聊作者</p>
+<p>进行安卓测试时，会出现一些数据包抓不到的情况，究其原因是因为做了https程序校验。此时brida就派上用场了。</p>
+<h3 id="1-安装-pyro4"><a href="#1-安装-pyro4" class="headerlink" title="1. 安装 pyro4"></a>1. 安装 pyro4</h3><p>有python3环境的可以直接安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install pyro4</span><br></pre></td></tr></table></figure>
+
+<p>有python但是没有pip的例如mac os，执行下面的命令即可安装对应python版本的pip</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://bootstrap.pypa.io/get-pip.py</span><br><span class="line">sudo python get-pip.py</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>注：没有python环境的直接去官网下载python安装包即可<strong>（建议3.8.6版本）</strong>，其他版本未测试</p>
+<h3 id="2-安装frida-compile"><a href="#2-安装frida-compile" class="headerlink" title="2. 安装frida-compile"></a>2. 安装frida-compile</h3><p>进入nodejs<a href="https://nodejs.org/en/download/" target="_blank" rel="noopener">官网</a>找到对应版本直接下载，根据安装程序一直点击下一步即可</p>
+<p>随后在控制台执行，<strong>在哪里执行，frida-compile就安装在哪里</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install frida-compile@9.5.2.  # 最新版本没有-x选项，作者说近段时间会更新一个没有-x选项的 brida，但是目前还没更新</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-安装frida"><a href="#3-安装frida" class="headerlink" title="3. 安装frida"></a>3. 安装frida</h3><p>在需要测试的地方pc上安装firda client</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 install -m pip frida</span><br></pre></td></tr></table></figure>
+
+<p>前往frida <a href="https://github.com/frida/frida/releases" target="_blank" rel="noopener">github</a>上下载对应手机系统版本的frida-server</p>
+<p>安卓64位手机一般是选择<a href="https://github.com/frida/frida/releases/download/14.0.8/frida-server-14.0.8-android-arm64.xz" target="_blank" rel="noopener">friida-server-14.0.8-android-arm64.xz</a></p>
+<p>下载后解压，然后下载adb工具 前往<a href="https://developer.android.com/studio/releases/platform-tools" target="_blank" rel="noopener">官网</a>下载</p>
+<p>使用电脑连接安卓手机（需要root）由于篇幅原因就不在展开如何root，<a href="https://developer.android.com/studio/debug/dev-options?hl=zh-cn" target="_blank" rel="noopener">开启开发者模式</a></p>
+<p>使用控制台进入到adb的目录执行如下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb devices</span><br></pre></td></tr></table></figure>
+
+<p>如果出现了设备，说明连接手机成功。</p>
+<p>随后执行如下命令（需要将frida-server-14.0.8-android-arm64放入adb所在的目录中，知道frida-server的路径也可以直接使用frida-server的绝对路径，就不用移动文件了）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb push frida-server-14.0.8-android-arm64 /data/<span class="built_in">local</span>/tmp <span class="comment">#将frida-server文件导入到手机</span></span><br><span class="line">adb shell   <span class="comment"># 执行完这条命了后即进入了手机的shell</span></span><br></pre></td></tr></table></figure>
+
+<p>以下命令在手机的shell上执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">su <span class="comment">#获取root权限，执行后需要在手机上的root管理器允许</span></span><br><span class="line"><span class="built_in">cd</span> /data/<span class="built_in">local</span>/tmp</span><br><span class="line">chomd +x ./frida-server-14.0.8-android-arm64</span><br><span class="line">./frida-server-14.0.8-android-arm64 &amp;</span><br></pre></td></tr></table></figure>
+
+<p>此时frida-server已经安装好，并已经运行</p>
+<h3 id="4-安装brida"><a href="#4-安装brida" class="headerlink" title="4. 安装brida"></a>4. 安装brida</h3><p>打开burp suite  选择Extender-&gt;App store找到brida-&gt;点击安装即可</p>
+<p>然后选择brida</p>
+<p>第一项 <strong>python binary path</strong> 选择python的安装目录下的<code>python.exe</code>   win下默认安装路径 <em>C:\pyton3\python.exe</em></p>
+<p>第二项<strong>pyro host</strong>  默认配置localhost即可</p>
+<p>第三项 <strong>pyro port</strong>  默认配置9999即可</p>
+<p>第四项  <strong>frida-compile path</strong> 选择当时安装frida-compile时的路径下的 <code>/node_modules/.bin/frida-compile</code></p>
+<p>第五项 <strong>fridaJS file folder</strong> 随意选择一个具有可读写的目录，然后点击<code>load default js file</code></p>
+<p>第六项 <strong>Application ID/PID</strong> 回到手机的shell，查看需要测试的程序运行的pid. 使用<code>frida-ps -U</code> 然后在列表中找到即可 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">python binary path: &#x2F;usr&#x2F;local&#x2F;bin&#x2F;python3(这里选择python可执行文件的位置)</span><br><span class="line">Pyro host: localhost</span><br><span class="line">pyro port: 9999</span><br><span class="line">frida-compile path: &#x2F;node_modules&#x2F;.bin&#x2F;frida-compile(这里选择刚才安装的.&#x2F;bin下面的frida-compile文件)</span><br><span class="line">fridaJS file folder: #这里存在的是将要执行的js代码</span><br><span class="line">Application ID&#x2F;PID: #这里填写要hook的pid</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-成功启动"><a href="#5-成功启动" class="headerlink" title="5.成功启动"></a>5.成功启动</h3><p>所有步骤做好了之后，依次点击    <code>start server</code>，    <code>attach application</code>出现如下结果说明成功</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Application with PID 3414 attached correctly    #此处的3414是被测试的程序的pid</span><br><span class="line">Platform: Android</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-遇到的问题"><a href="#6-遇到的问题" class="headerlink" title="6. 遇到的问题"></a>6. 遇到的问题</h3><h4 id="1、env-node-No-such-file-or-directorys"><a href="#1、env-node-No-such-file-or-directorys" class="headerlink" title="1、env: node: No such file or directorys"></a>1、env: node: No such file or directorys</h4><p>mac 执行如下命令 <code>sudo launchctl config user path/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin</code></p>
+<h4 id="2-Unknown-option-x"><a href="#2-Unknown-option-x" class="headerlink" title="2. Unknown option -x"></a>2. Unknown option -x</h4><p>使用9.x版本，卸载最新的10.0版本，然后下载9.x版本即可</p>
+<pre><code>npm uninstall frida-compile 
+npm install frida-compile@9.5.2</code></pre><h4 id="3-Exception-with-attach-application"><a href="#3-Exception-with-attach-application" class="headerlink" title="3. Exception with attach application"></a>3. Exception with attach application</h4><p>net.razorvine.pyro.PyroException:     [frida.InvalidArgumentError] device not found   </p>
+<p>设备未找到</p>
+<p>net.razorvine.pyro.PyroException:     [frida.ProcessNotFoundError] unable to find process with pid 4908   </p>
+<p>未找到此进程。重新检查程序pid，并重试 </p>
+<h3 id="7-参考"><a href="#7-参考" class="headerlink" title="7. 参考"></a>7. 参考</h3><p><a href="https://developer.android.com/studio/debug/dev-options?hl=zh-cn" target="_blank" rel="noopener">https://developer.android.com/studio/debug/dev-options?hl=zh-cn</a><br><a href="https://github.com/federicodotta/Brida/issues/67" target="_blank" rel="noopener">https://github.com/federicodotta/Brida/issues/67</a><br><a href="https://github.com/federicodotta/Brida/issues/47" target="_blank" rel="noopener">https://github.com/federicodotta/Brida/issues/47</a></p>
+
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2020/11/11/brida%20%E5%AE%89%E5%8D%93%E6%B8%97%E9%80%8F%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" data-id="cklfwh3yv0027itq2dcnvg9bl"
+        class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/frida/" rel="tag">frida</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" rel="tag">工具使用</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/11/14/sxf%E9%9D%A2%E8%AF%95/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            sxf面试
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/05/26/GKCTF2019-web/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">GKCTF2019-web</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+  <div class="gitalk" id="gitalk-container"></div>
+  
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c2ff86b3b4668317d630',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c',
+      repo: 'sunny250.github.io',
+      owner: 'sunny250',
+      admin: ['sunny250'],
+      // id: location.pathname,      // Ensure uniqueness and length less than 50
+      id: md5(location.pathname),
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      pagerDirection: 'last'
+    })
+
+  gitalk.render('gitalk-container')
+  </script>
+
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        sunny250
+      </li>
+      <li>
+        
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a> by shenyu
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <ul class="list-inline">
+  <li>PV:<span id="busuanzi_value_page_pv"></span></li>
+  <li>UV:<span id="busuanzi_value_site_uv"></span></li>
+</ul>
+        
+      </li>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+    <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    
+    <aside class="sidebar">
+      
+        <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt="sunny250`s blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives/">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/links/">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about/">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      </aside>
+      
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+
+  
+<script src="/js/tocbot.min.js"></script>
+
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+
+<script src="/js/ayer.js"></script>
+
+
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  </div>
+</body>
+
+</html>
