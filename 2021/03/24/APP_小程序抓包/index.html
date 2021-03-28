@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="blog" />
+   
+  <meta name="description" content="sunny250`s blog" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    APP/小程序抓包 |  sunny250`s blog
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+  
+<script src="/js/pace.min.js"></script>
+
+
+  
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="sunny250`s blog" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-APP_小程序抓包" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  APP/小程序抓包
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/03/24/APP_%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85/" class="article-date">
+  <time datetime="2021-03-24T08:03:30.000Z" itemprop="datePublished">2021-03-24</time>
+</a>
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="0x00前言"><a href="#0x00前言" class="headerlink" title="0x00前言"></a>0x00前言</h1><p>在测试小程序或app总会遇到抓不到包的情况，也听很多大佬说过，抓不到包使用低版本安卓。小程序比较好解决，毕竟是在微信上运行的程序，可以加的东西比较少；独立的app可以加的东西就很多了，例如添加非标准的http协议，如可自定义的的http模块okhttp；或者证书校验；独立函数校验。这就分很多中情况了。</p>
+<a id="more"></a>
+<h1 id="0x01-安卓7-0以上不能抓包根源"><a href="#0x01-安卓7-0以上不能抓包根源" class="headerlink" title="0x01 安卓7.0以上不能抓包根源"></a>0x01 安卓7.0以上不能抓包根源</h1><p>在 Android7.0 及以上的系统中，每个应用可以定义自己的可信 CA 集集。</p>
+<p>默认情况下，应用只会信任系统预装的 CA 证书，而不会信任用户安装的 CA 证书。</p>
+<p>而回想我们抓包的过程，无论是 fiddler 还是 Charles，想抓 https，都必须手机安装对应的证书，通过 fiddler/Charles 安装的证书恰恰正属于用户安装的 CA 证书，因此会被视作不安全的证书。</p>
+<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>把手机root，然后安装证书到系统证书目录下<br>系统证书的目录是：/system/etc/security/cacerts/</p>
+<p>每个证书的命名规则为：<Certificate_Hash>.<Number></p>
+<p>Certificate_Hash表示证书文件的 hash 值，Number是为了防止证书文件的 hash 值一致而增加的后缀;</p>
+<p>证书的 hash 值可以由命令计算出来，在终端输入openssl x509 -subject_hash_old -in <Certificate_File>，其中Certificate_File为证书路径，将证书重命名为hash.0放入系统证书目录，之后你就可以正常抓包了。</p>
+<h1 id="0x02小程序抓包"><a href="#0x02小程序抓包" class="headerlink" title="0x02小程序抓包"></a>0x02小程序抓包</h1><ol>
+<li>安卓系统 7.0 以下版本，不管微信任意版本，都会信任系统提供的证书</li>
+<li>安卓系统 7.0 以上版本，微信 7.0 以下版本，微信会信任系统提供的证书</li>
+<li>安卓系统 7.0 以上版本，微信 7.0 以上版本，微信只信任它自己配置的证书列表<br>解决方法一：使用苹果系统<br>解决方法二：使用低版本安卓<br>解决方法三：root后安装证书到系统证书处，使用低版本微信<br>解决方法四：hook微信</li>
+</ol>
+<p>最简单的方法就是使用苹果系统进行抓包或者使用低版本安卓</p>
+<h1 id="0x03-app无法抓包"><a href="#0x03-app无法抓包" class="headerlink" title="0x03 app无法抓包"></a>0x03 app无法抓包</h1><p>目前大多使用了各种手段以确保安全。首先要解决抓包问题，然后还要解决各种解密问题。<br>根据app对证书的处理分为以下几种方式</p>
+<ol>
+<li>使用自定义http模块，例如okhttp，不实现其http代理功能，或者不完整的http代理功能</li>
+<li>客户端对服务器的证书做校验</li>
+<li>在客户端代码层对证书做校验</li>
+<li>服务器对客户端证书做校验</li>
+<li>在代码层判断是否启用了vpn</li>
+</ol>
+<p>以上5中方法是对于http(s)的抓包，目前大多数app也都是这几种进行组合。<br>下面给出解决办法</p>
+<ol>
+<li><p>使用vpn软件，将所有数据包走vpn通道<br> 在bp或者其他抓包软件中设置好代理后，使用Postern输入ip，端口进行连接<br> <img src="/pic/upload_87e5e7106fcdc309a733a538e2b59408.png" alt=""><br> <img src="/pic/upload_7a16234ba09a4795d36027a875450a15.png" alt=""></p>
+</li>
+<li><p>将抓包软件的证书导入到系统中<br> 上面说到了如何将证书导入到系统证书中</p>
+</li>
+<li><p>hook校验证书的函数，使其失效（又被称为ssl pinning）<br> 使用frida，hook验证函数，也可以直接使用objection<br> <code>#android sslpinning disable</code><br> <img src="/pic/upload_12ad68db8bdd3cdd123ea918df0259c0.png" alt=""></p>
+</li>
+<li><p>将抓包软件导入app的证书<br> 直接抓包会出现400错误<br> <img src="/pic/upload_7de4d19f4c961863eacc726fad44a1f7.png" alt=""></p>
+<p> 使用jadx反编译后，一般直接搜索client或者p12(可能有些是其他格式)就可以搜索到<br> <img src="/pic/upload_d3fb09d32bc128cc173d94917d6680f0.png" alt=""><br> 在app未启动时，使用objection抓取密码，大多数情况下可用<br> <code>#objection -g com.boqianyi.havefun explore --startup-command &#39;android hooking watch class_method  java.security.KeyStore.load --dump-args e --dump-return&#39;</code><br> <img src="/pic/upload_9ebde0412f6f3bd6c40387efb564afbd.png" alt=""><br> 然后选择对应对证书格式导入<br> <img src="/pic/upload_ae8208f5b8d992f142ece12f6f05ad04.png" alt=""><br> 最后选择证书，输入密码就可以愉快的抓包了<br> <img src="/pic/upload_bde30b9f8ee0772accb2fa7076a85966.png" alt=""></p>
+</li>
+<li><p>hook校验函数，使其失效 </p>
+</li>
+</ol>
+<h1 id="0x04参考文章"><a href="#0x04参考文章" class="headerlink" title="0x04参考文章"></a>0x04参考文章</h1><p><a href="https://www.anquanke.com/post/id/197657" target="_blank" rel="noopener">https://www.anquanke.com/post/id/197657</a><br><a href="https://testerhome.com/articles/17746" target="_blank" rel="noopener">https://testerhome.com/articles/17746</a></p>
+
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2021/03/24/APP_%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85/" data-id="ckmt8pfez00089xq282ambgcd"
+        class="article-share-link">分享</a>
+      
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+    
+      <a href="/2021/03/05/%E5%86%8D%E6%AC%A1%E5%AD%A6%E4%B9%A0docker%E6%93%8D%E4%BD%9C/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">再次学习docker操作</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+  <div class="gitalk" id="gitalk-container"></div>
+  
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c2ff86b3b4668317d630',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c',
+      repo: 'sunny250.github.io',
+      owner: 'sunny250',
+      admin: ['sunny250'],
+      // id: location.pathname,      // Ensure uniqueness and length less than 50
+      id: md5(location.pathname),
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      pagerDirection: 'last'
+    })
+
+  gitalk.render('gitalk-container')
+  </script>
+
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        sunny250
+      </li>
+      <li>
+        
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a> by shenyu
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <ul class="list-inline">
+  <li>PV:<span id="busuanzi_value_page_pv"></span></li>
+  <li>UV:<span id="busuanzi_value_site_uv"></span></li>
+</ul>
+        
+      </li>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+    <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    
+    <aside class="sidebar">
+      
+        <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt="sunny250`s blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives/">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/links/">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about/">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      </aside>
+      
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+
+  
+<script src="/js/tocbot.min.js"></script>
+
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+
+<script src="/js/ayer.js"></script>
+
+
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  </div>
+</body>
+
+</html>
