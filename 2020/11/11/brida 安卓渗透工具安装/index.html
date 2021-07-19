@@ -107,7 +107,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb push frida-server-14.0.8-android-arm64 /data/<span class="built_in">local</span>/tmp <span class="comment">#将frida-server文件导入到手机</span></span><br><span class="line">adb shell   <span class="comment"># 执行完这条命了后即进入了手机的shell</span></span><br></pre></td></tr></table></figure>
 
 <p>以下命令在手机的shell上执行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">su <span class="comment">#获取root权限，执行后需要在手机上的root管理器允许</span></span><br><span class="line"><span class="built_in">cd</span> /data/<span class="built_in">local</span>/tmp</span><br><span class="line">chomd +x ./frida-server-14.0.8-android-arm64</span><br><span class="line">./frida-server-14.0.8-android-arm64 &amp;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">su <span class="comment">#获取root权限，执行后需要在手机上的root管理器允许</span></span><br><span class="line"><span class="built_in">cd</span> /data/<span class="built_in">local</span>/tmp</span><br><span class="line">chmod +x ./frida-server-14.0.8-android-arm64</span><br><span class="line">./frida-server-14.0.8-android-arm64 &amp;</span><br></pre></td></tr></table></figure>
 
 <p>此时frida-server已经安装好，并已经运行</p>
 <h3 id="4-安装brida"><a href="#4-安装brida" class="headerlink" title="4. 安装brida"></a>4. 安装brida</h3><p>打开burp suite  选择Extender-&gt;App store找到brida-&gt;点击安装即可</p>
@@ -137,7 +137,7 @@ npm install frida-compile@9.5.2</code></pre><h4 id="3-Exception-with-attach-appl
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://sunny250.github.io/2020/11/11/brida%20%E5%AE%89%E5%8D%93%E6%B8%97%E9%80%8F%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" data-id="ckmt8pff9000n9xq2f7f7cxdx"
+      <a data-url="https://sunny250.github.io/2020/11/11/brida%20%E5%AE%89%E5%8D%93%E6%B8%97%E9%80%8F%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" data-id="ckraclh06001cjcq20hao4hs6"
         class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/frida/" rel="tag">frida</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" rel="tag">工具使用</a></li></ul>

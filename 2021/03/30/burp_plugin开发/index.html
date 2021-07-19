@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="blog" />
+   
+  <meta name="description" content="sunny250`s blog" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    burp_plugin开发 |  sunny250`s blog
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+  
+<script src="/js/pace.min.js"></script>
+
+
+  
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="sunny250`s blog" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-burp_plugin开发" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  burp_plugin开发
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/03/30/burp_plugin%E5%BC%80%E5%8F%91/" class="article-date">
+  <time datetime="2021-03-30T07:16:40.000Z" itemprop="datePublished">2021-03-30</time>
+</a>
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="burp-plugin开发"><a href="#burp-plugin开发" class="headerlink" title="burp_plugin开发"></a>burp_plugin开发</h1><h2 id="0x00-序"><a href="#0x00-序" class="headerlink" title="0x00 序"></a>0x00 序</h2><p>由于测试app，需要用到brida，brida的高级功能需要动手写js+bp插件，还是需要单独编写的burp插件，很早就知道burp可以用py开发插件，但从前都是拿来主义（现在也是），毕竟白嫖的不香嘛？但是独立的bp插件又不能都让其他的师傅帮忙，于是就有了此篇文章。</p>
+<a id="more"></a>
+<h2 id="0x01-基础"><a href="#0x01-基础" class="headerlink" title="0x01 基础"></a>0x01 基础</h2><p>首先是打开burp的插件官网去看看，上面写的介绍<br><a href="https://portswigger.net/burp/extender/writing-your-first-burp-suite-extension" target="_blank" rel="noopener">编写你的第一个burp插件</a><br>里面的写法和java很像，都是写一个类。<br>文中给出了一个可以正常导入而不会报错的一个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">from burp import IBurpExtender</span><br><span class="line">class BurpExtender(IBurpExtender):</span><br><span class="line">    def registerExtenderCallbacks( self, callbacks):</span><br><span class="line">    # your extension code here</span><br><span class="line">        return</span><br></pre></td></tr></table></figure>
+<p>于是跟着这个例子和文中提到的其他接口写出了自己的第一个demo</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line">from burp import IBurpExtender</span><br><span class="line">from java.io import PrintWriter</span><br><span class="line"></span><br><span class="line">class BurpExtender(IBurpExtender):</span><br><span class="line">    def registerExtenderCallbacks( self, callbacks):</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">        stdout &#x3D; PrintWriter(callbacks.getStdout(), True) #取得标准输出流</span><br><span class="line">        stderr &#x3D; PrintWriter(callbacks.getStderr(), True) #取得标准错误流</span><br><span class="line">        callbacks.setExtensionName(&quot;demo1&quot;) #burp插件命名语句</span><br><span class="line">        </span><br><span class="line">        stdout.println(&quot;Hello My first demo!&quot;)</span><br><span class="line">        return</span><br></pre></td></tr></table></figure>
+<h1 id="0x02-尝试改写repeate模块的请求"><a href="#0x02-尝试改写repeate模块的请求" class="headerlink" title="0x02 尝试改写repeate模块的请求"></a>0x02 尝试改写repeate模块的请求</h1><p>尝试改写repeate发送的数据</p>
+<ol>
+<li>先需要在<code>registerExtenderCallbacks</code>注册一个HttpListener，否则无法调用<code>processHttpMessage</code>函数<br>注册代码<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">registerExtenderCallbacks</span><span class="params">( self, callbacks)</span>:</span></span><br><span class="line">   self._helpers = callbacks.getHelpers()</span><br><span class="line">   self._callbacks = callbacks</span><br><span class="line">   callbacks.setExtensionName(<span class="string">"demo2"</span>)  <span class="comment"># burp插件命名语句</span></span><br><span class="line">   callbacks.registerHttpListener(self) <span class="comment">#注册HttpListener</span></span><br></pre></td></tr></table></figure></li>
+<li>注册完之后需要调用的函数<br><img src="/pic/upload_ea0bcbe647e20197a0e864591322e177.png" alt=""><br>toolFlag的定义在这<br><img src="/pic/upload_d3ffa0b0200f7848b069d0270430537f.png" alt=""><br>用来标记来自burp的哪一个模块，如下代码是只处理来自repeate模块的请求，如果需要处理其他模块的数据包，就在添加几个or if即可。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">def processHttpMessage(self, toolFlag, messageIsRequest, messageInfo):</span><br><span class="line">        if toolFlag &#x3D;&#x3D; self._callbacks.TOOL_REPEATER:  #处理来自repeate的包</span><br></pre></td></tr></table></figure></li>
+<li>然后是messageIsRequest参数，用来标记是否发送了请求，发送了就是true</li>
+<li>messageInfo参数是需要处理的整个请求的的对象<br>查看messageInfo对象可调用参数<br><img src="/pic/upload_61c34a41aa97972535616fb8084e581d.png" alt=""></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">getRequest()  &#x2F;&#x2F;获取请求的完整信息，返回参数是byte类型</span><br><span class="line">getHttpService()  &#x2F;&#x2F;获取http服务，其中包含的参数是</span><br></pre></td></tr></table></figure>
+
+<p><img src="/pic/upload_8d6fed5dd61b33b60aff36598fd7c50e.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setRequest()&#x2F;&#x2F;更新请求</span><br></pre></td></tr></table></figure>
+
+
+<p>后续联动brida插件时还需要用到一下函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setResponse() &#x2F;&#x2F;用来修改返回的报文</span><br></pre></td></tr></table></figure>
+
+
+
+
+<ol start="5">
+<li>还需要用到的函数有<br>IExtensionHelpers接口下的<br><img src="/pic/upload_21f1ff8255e9f90b8cef81c0ce59446c.png" alt=""><br><img src="/pic/upload_98437ab52eeef718e040112a3f933b67.png" alt=""></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">analyzeRequest()&#x2F;&#x2F;用来将request请求信息转化方便操作的IHttpInfo对象</span><br></pre></td></tr></table></figure>
+
+<p>IHttpInfo接口所有的函数<br><img src="/pic/upload_ddcbf0e9cc0eb1328dcbc8602fe19807.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">buildRequest()&#x2F;&#x2F;处理完后构建新的request请求</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line"></span><br><span class="line">6. 再来说说IHttpInfo接口所包含的函数</span><br></pre></td></tr></table></figure>
+<p>getBodyOffset()//函数是获取body部分的开偏移值<br>getHeaders() //获取header，如果是一个完整的GET，header就是所有的请求部分；如果是一个post请求，header+body就是整个部分。<br>getParameters() //有好几个接口都有这个函数，但是这个函数吧，不好用，也可能是没学会这个函数的用法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">完整代码如下</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;python</span><br><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line">from burp import IBurpExtender</span><br><span class="line">from burp import IHttpListener</span><br><span class="line"></span><br><span class="line">class BurpExtender(IBurpExtender,IHttpListener):</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    def registerExtenderCallbacks( self, callbacks):</span><br><span class="line">        self._helpers &#x3D; callbacks.getHelpers()</span><br><span class="line">        self._callbacks &#x3D; callbacks</span><br><span class="line">        callbacks.setExtensionName(&quot;demo2&quot;)  # burp插件命名语句</span><br><span class="line">        callbacks.registerHttpListener(self)</span><br><span class="line"></span><br><span class="line">    def processHttpMessage(self, toolFlag, messageIsRequest, messageInfo):</span><br><span class="line">        if toolFlag &#x3D;&#x3D; self._callbacks.TOOL_REPEATER:  #处理来自repeate的包</span><br><span class="line">            if messageIsRequest:   #获取请求数据</span><br><span class="line">                Httpservice&#x3D;messageInfo.getHttpService()</span><br><span class="line">                para&#x3D;&#123;&#125;</span><br><span class="line">                host&#x3D;Httpservice.getHost()  #获取host</span><br><span class="line">                port&#x3D;Httpservice.getPort()  #获取端口</span><br><span class="line">                </span><br><span class="line">                raw&#x3D;messageInfo.getRequest()  #获取完整请求信息</span><br><span class="line">                analyzeraw&#x3D;self._helpers.analyzeRequest(raw)  #将完整请求转换成IRequestInfo实例</span><br><span class="line">                request_header&#x3D;analyzeraw.getHeaders()   #获取请求header</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                request_body &#x3D; raw[analyzeraw.getBodyOffset():].tostring()  #获取body</span><br><span class="line">                print(&#39; HOST:&#39;,host,&#39;\n Port: &#39;,port,&#39; \nHeader:&#39;,request_header,&#39;\nBody:&#39;,request_body)  #打印请求</span><br><span class="line"></span><br><span class="line">                request_header0&#x3D;request_header[0].split(&quot; &quot;)    #分割requestheader第一行</span><br><span class="line">                path&#x3D;request_header0[1]     #取中间的参数 &#x2F;index.php?a&#x3D;aaa</span><br><span class="line">                print(path)   #打印path</span><br><span class="line">                parastr&#x3D;path.split(&quot;?&quot;)[1]  # 取参数合集的字符串</span><br><span class="line">                paras&#x3D;parastr.split(&quot;&amp;&quot;)  #将参数用列表保存每一个参数</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                paras0&#x3D;paras[0].split(&quot;&#x3D;&quot;)[0]+&quot;&#x3D;new_a&quot; #将第一个参数值替换为 new_a</span><br><span class="line"></span><br><span class="line">                request_header[0]&#x3D;request_header[0].replace(paras[0],paras0)  #在requests_header中将原参数替换为new_a</span><br><span class="line"></span><br><span class="line">                print(request_header[0]..tostring())    #打印request_header第一行</span><br><span class="line">                http&#x3D;self._helpers.buildHttpMessage(request_header,request_body) #构建新的http request</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                print(http.tostring())  # 打印新的http request</span><br><span class="line">                messageInfo.setRequest(http) #用新构建的http request更新当前request</span><br></pre></td></tr></table></figure>
+
+
+<p>在本地起一个php的简易服务器，传入a参数，打印a参数的值<br><img src="/pic/upload_9ba998e3b1f5006b66a9b2a30f472477.png" alt=""><br>启用后的效果<br><img src="/pic/upload_809262d9a018f70ca1dde12ea46dfd50.png" alt=""></p>
+<p>下一篇文章将联合brida插件，进行自动加解密。</p>
+<h1 id="0x03总结"><a href="#0x03总结" class="headerlink" title="0x03总结"></a>0x03总结</h1><p>google，百度了一便，发现直接教python编写burp的插件的文章少得可怜，讲的我也不太看的明白，只好自己去翻burp的doc。一点一点的看，一点一点的学。做开发真的没有提示很容易敲错代码，然后调试调半天，还不知道那里错了。</p>
+<h1 id="0x04-参考"><a href="#0x04-参考" class="headerlink" title="0x04 参考"></a>0x04 参考</h1><p><a href="https://portswigger.net/burp/extender/api/" target="_blank" rel="noopener">https://portswigger.net/burp/extender/api/</a></p>
+
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2021/03/30/burp_plugin%E5%BC%80%E5%8F%91/" data-id="ckraclgzx000qjcq2bubw0q03"
+        class="article-share-link">分享</a>
+      
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2021/07/19/%E8%8B%B9%E6%9E%9C%E7%9A%84%E8%B6%8A%E7%8B%B1%E4%B9%8B%E8%B7%AF/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            苹果的越狱之路
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/03/24/APP_%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">APP/小程序抓包</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+  <div class="gitalk" id="gitalk-container"></div>
+  
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c2ff86b3b4668317d630',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c',
+      repo: 'sunny250.github.io',
+      owner: 'sunny250',
+      admin: ['sunny250'],
+      // id: location.pathname,      // Ensure uniqueness and length less than 50
+      id: md5(location.pathname),
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      pagerDirection: 'last'
+    })
+
+  gitalk.render('gitalk-container')
+  </script>
+
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        sunny250
+      </li>
+      <li>
+        
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a> by shenyu
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <ul class="list-inline">
+  <li>PV:<span id="busuanzi_value_page_pv"></span></li>
+  <li>UV:<span id="busuanzi_value_site_uv"></span></li>
+</ul>
+        
+      </li>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+    <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    
+    <aside class="sidebar">
+      
+        <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt="sunny250`s blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives/">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/links/">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about/">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      </aside>
+      
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+
+  
+<script src="/js/tocbot.min.js"></script>
+
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+
+<script src="/js/ayer.js"></script>
+
+
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  </div>
+</body>
+
+</html>

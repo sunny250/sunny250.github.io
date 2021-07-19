@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="blog" />
+   
+  <meta name="description" content="sunny250`s blog" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    苹果的越狱之路 |  sunny250`s blog
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+  
+<script src="/js/pace.min.js"></script>
+
+
+  
+
+  
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="sunny250`s blog" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content">
+      <section class="outer">
+  <article id="post-苹果的越狱之路" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  苹果的越狱之路
+</h1>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2021/07/19/%E8%8B%B9%E6%9E%9C%E7%9A%84%E8%B6%8A%E7%8B%B1%E4%B9%8B%E8%B7%AF/" class="article-date">
+  <time datetime="2021-07-19T08:10:20.099Z" itemprop="datePublished">2021-07-19</time>
+</a>
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="苹果的越狱之路"><a href="#苹果的越狱之路" class="headerlink" title="苹果的越狱之路"></a>苹果的越狱之路</h1><h2 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h2><p>下周有ios App要测试，公司新购入了2台iphone6s 用来测试，越狱这个任务就交到我了头上。这玩意之前只听过，自己也没做过（之前穷的很，没钱买苹果手机）。买之前还特地吩咐过注意看哪些系统可以越狱，当时我以为只要越狱了就能降级。（越狱了也不一定能降级，高版本的ios都是未完全越狱，重启后就失效的那种）一台是14.2的系统，另一台是11.2.1的系统。于是开启了越狱之路</p>
+<a id="more"></a>
+<h2 id="0x01-越狱之路"><a href="#0x01-越狱之路" class="headerlink" title="0x01 越狱之路"></a>0x01 越狱之路</h2><p>两台越狱都挺简单的，but在安装插件的时候出了很多问题。</p>
+<h3 id="11-2-1的系统"><a href="#11-2-1的系统" class="headerlink" title="11.2.1的系统"></a>11.2.1的系统</h3><ol>
+<li>使用windows版本的爱思助手，直接一键越狱，之后会在手机上安装unc0ver，需要手动去设置-&gt;通用-&gt;设备管理，信任xxx，如图。<br>76084DB9-2303-4f71-BB1F-D8303AB0857E.png<img src="/pic/upload_dcc77f6505c2b17c5705f96408bba8df.png" alt=""></li>
+</ol>
+<ol start="2">
+<li><p>越狱之后安装必要的插件，先是打开cydia软件出现网络无法访问，根据爱思助手的帮助找到了<a href="https://m.i4.cn/channels/apps/app_content.html?id=269617" target="_blank" rel="noopener">教程</a>。</p>
+</li>
+<li><p>下载乐网后，开启劫持会出现一个vpn选项，随后cydia成功联网。</p>
+<blockquote>
+<p>得知原因是系统没给cydia开启联网权限</p>
+</blockquote>
+</li>
+<li><p>下载acf2，appsync，opensh，frida等插件，但是这个过程中又出现了错误，能下载成功但是安装的时候报错<code>Sub - process /usr/libexec/cydia/cydo returned an error code (2).</code>安装所有插件都是如此。怀疑可能cydia的问题，随后又下载了很多中越狱软件比如unc0ver，再重启使越狱失效后，用unc0ver重新越狱，发现还是同样的问题。</p>
+</li>
+<li><p>重置设备，重新越狱。重复上诉1，2，3操作。又到了下载插件的过程，但是这次报错的是<code>Dpkg locked</code>，根据<a href="https://www.cydiaos.com/fix-cydia-dpkg-was-interrupted-error/" target="_blank" rel="noopener">教程</a>，说要删除dpkg目录下的所有000，111开头的文件。使用i4助手的打开ssh通道（有时能用有时候提示要安装openssh，但是有时候没安装也能开）进入了ios的shell。进去之后发现<code>/var</code>下居然没有lib目录！！！！</p>
+</li>
+<li><p>谨慎的把设备升级到14.2，毕竟升级之后就降不回去了。</p>
+</li>
+</ol>
+<h3 id="14-2的系统"><a href="#14-2的系统" class="headerlink" title="14.2的系统"></a>14.2的系统</h3><ol>
+<li><p>使用爱思助手发现还不支持，其实是爱思助手还没更新，最新的<a href="https://checkra.in/" target="_blank" rel="noopener">checkra1n</a>-0.12.1已经支持了。下载下来打开</p>
+<p>截屏2020-12-31 下午5.52.08.png<img src="/pic/upload_7c6661ad6d48e2997226050560b74a56.png" alt=""></p>
+</li>
+</ol>
+<p>截屏2020-12-31 下午6.14.35.png<img src="" alt="Uploading file..._0hs4esayu"></p>
+<ol start="2">
+<li><p>usb连接ios设备，如果支持，start按钮会变成可点击的。然后点击start进入下一个界面，点击next。随后设备会进入恢复模式。</p>
+<p>截屏2020-12-31 下午6.14.35.png<img src="/pic/upload_7c25aaadf3a8428e11ecac1c44788d3e.png" alt=""></p>
+</li>
+</ol>
+<ol start="3">
+<li>点击start，然后按住home键和电源键，等待第一次计时结束，松开电源键，继续按着home键，等待进入一个出现进度条的页面就可以松开了。就已经开始安装了，等进度条结束就已经越狱完成。 <pre><code>截屏2020-12-31 下午6.16.04.png![](/pic/upload_3ead2c8f60d0594b69037856d46a5bf5.png)</code></pre></li>
+</ol>
+<ol start="4">
+<li><p>打开cydia，添加软件源，frida 对应的源是 <a href="https://build.frida.re" target="_blank" rel="noopener">https://build.frida.re</a> ，appsync对应的软件源是<a href="https://apt.pandahelp.vip，点开搜索frida。选择frida" target="_blank" rel="noopener">https://apt.pandahelp.vip，点开搜索frida。选择frida</a> for pre-a12 （6s是a9所以选择A12以前的），然后搜索appsync  安装appsync unifies for ios 14，搜索afc2，会出现一个pandahelper源的，还会有一个bigboss的，选择bigboss的，如果选择了pandahelper会导致无法连接爱思助手，其他暂时测试无影响。</p>
+</li>
+<li><p>电脑上打开frida-ps -U测试连接,出现如下结果，说明frida正常连接成功。</p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"> frida-ps -U   </span><br><span class="line">PID  Name</span><br><span class="line">---  --------------------------------------------------------</span><br><span class="line">207  Cydia</span><br><span class="line">192  Siri搜索</span><br><span class="line">870  相机</span><br><span class="line">839  设置</span><br><span class="line">119  ACCHWComponentAuthService</span><br><span class="line">863  ASPCarryLog</span><br><span class="line"> 41  AppleCredentialManagerDaemon</span><br><span class="line">868  AssetCacheLocatorService</span><br><span class="line">131  BlueTool</span><br><span class="line">180  CAReportingService</span><br><span class="line">511  CMFSyncAgent</span><br><span class="line">560  CacheDeleteAppContainerCaches</span><br><span class="line">568  CacheDeleteExtension</span><br><span class="line">480  CategoriesService</span><br><span class="line">267  CategoriesService</span><br><span class="line">226  CategoriesService</span><br><span class="line">224  CategoriesService</span><br><span class="line">122  CloudKeychainProxy</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<p>至此，可以顺利使用frida进行hook操作。</p>
+<h2 id="0x02-参考链接"><a href="#0x02-参考链接" class="headerlink" title="0x02 参考链接"></a>0x02 参考链接</h2><p><a href="https://www.cydiaos.com/fix-cydia-dpkg-was-interrupted-error/" target="_blank" rel="noopener">https://www.cydiaos.com/fix-cydia-dpkg-was-interrupted-error/</a><br><a href="https://checkra.in" target="_blank" rel="noopener">https://checkra.in</a><br><a href="https://m.i4.cn/channels/apps/app_content.html?id=269617" target="_blank" rel="noopener">https://m.i4.cn/channels/apps/app_content.html?id=269617</a><br><a href="https://www.i4.cn/news_detail_18849.html" target="_blank" rel="noopener">https://www.i4.cn/news_detail_18849.html</a></p>
+
+      
+      <!-- 打赏 -->
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://sunny250.github.io/2021/07/19/%E8%8B%B9%E6%9E%9C%E7%9A%84%E8%B6%8A%E7%8B%B1%E4%B9%8B%E8%B7%AF/" data-id="ckraclh0y003mjcq2a0wzdhhj"
+        class="article-share-link">分享</a>
+      
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+    
+      <a href="/2021/03/30/burp_plugin%E5%BC%80%E5%8F%91/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">burp_plugin开发</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+  <div class="gitalk" id="gitalk-container"></div>
+  
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'c2ff86b3b4668317d630',
+      clientSecret: '92facc954b6661c7556b845f2cb775dfb77df12c',
+      repo: 'sunny250.github.io',
+      owner: 'sunny250',
+      admin: ['sunny250'],
+      // id: location.pathname,      // Ensure uniqueness and length less than 50
+      id: md5(location.pathname),
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      pagerDirection: 'last'
+    })
+
+  gitalk.render('gitalk-container')
+  </script>
+
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2019-2021
+        sunny250
+      </li>
+      <li>
+        
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a> by shenyu
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <ul class="list-inline">
+  <li>PV:<span id="busuanzi_value_page_pv"></span></li>
+  <li>UV:<span id="busuanzi_value_site_uv"></span></li>
+</ul>
+        
+      </li>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+    <div class="to_top">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+      </div>
+    </main>
+    
+    <aside class="sidebar">
+      
+        <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt="sunny250`s blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives/">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/links/">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about/">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      </aside>
+      
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+
+  
+<script src="/js/tocbot.min.js"></script>
+
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+
+<script src="/js/ayer.js"></script>
+
+
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  </div>
+</body>
+
+</html>
